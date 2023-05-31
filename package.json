@@ -1,0 +1,29 @@
+{
+  "name": "xky",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@uxuip/eslint-config": "^0.1.7",
+    "cross-env": "^7.0.2",
+    "eslint": "^8.21.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^12.5.0"
+  },
+  "commitlint": {
+    "extends": "@commitlint/config-conventional"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "eslint --fix"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "@uxuip"
+  }
+}
