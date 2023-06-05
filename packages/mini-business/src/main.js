@@ -12,7 +12,8 @@ import Dialog from '@/wxcomponents/vant/dialog/dialog'
 // 公共组件，只能在main.js里注册
 import Container from '@/components/business/container'
 
-import 'windi.css'
+// import 'windi.css'
+import 'uno.css'
 
 Vue.component('container', Container)
 Vue.mixin(vantMixin)
