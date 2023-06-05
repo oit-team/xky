@@ -1,14 +1,31 @@
 <script>
+import * as api from '@/api/system'
+
 export default {
   data() {
     return {
+      shopId: '',
+      shopInfo: {},
     }
   },
   computed: {
   },
   watch: {
   },
+  onLoad(option) {
+    if (option.id)
+      this.shopId = option.id
+  },
+  onShow() {
+    this.getShopById()
+  },
   methods: {
+    async getShopById() {
+      const res = await api.getShopById({
+        shopId: this.shopId,
+      })
+      this.shopInfo = res.body
+    },
   },
 }
 </script>
@@ -35,13 +52,10 @@ export default {
 </template>
 
 <style scoped>
-:deep(.van-image__img){
+::v-deep .van-image__img{
   border-radius: 8px;
 }
-:deep(.van-image){
-  display: block
-}
-:deep(van-image){
+::v-deep .van-image{
   display: block
 }
 </style>

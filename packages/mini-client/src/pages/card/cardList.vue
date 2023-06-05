@@ -39,7 +39,7 @@ export default {
     },
     toInfo(item) {
       uni.navigateTo({
-        url: `/pages/index/qrCode?item=${JSON.stringify(item)}`,
+        url: `/pages/card/qrCode?item=${JSON.stringify(item)}`,
       })
     },
   },
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <template>
-  <container classes="w-full h-full bg-gray-100 text-[#888]">
+  <container classes="w-full h-full bg-neutral-100">
     <view v-if="showEmpty">
       <van-empty description="暂无数据" />
     </view>
