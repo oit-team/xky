@@ -80,3 +80,39 @@ export function addPrizeExchangeRecord(params) {
 export function getProductListById(params) {
   return post('/liveBroadcast/adverts/getProductListById', params)
 }
+
+/**
+ * 获取活动列表
+ * @param {*} params
+ * @returns
+ */
+export function getActivityList(params) {
+  return post('jackpot/activity/getActivityList', params)
+}
+
+/**
+ * 获取活动详情
+ * @param {*} params
+ * @returns
+ */
+export function getActivityById(params) {
+  return post('jackpot/activity/getActivityById', params)
+}
+
+/**
+ * 获取活动详情
+ * @param {*} params
+ * @returns
+ */
+export function addParticipateActivity(params) {
+  return post('jackpot/activity/addParticipateActivity', params)
+}
+
+/**
+ * 获取活动详情降权列表
+ * @param {*} params
+ * @returns
+ */
+export function getActivityJackpotList(params) {
+  return post('jackpot/jackpotInfo/getActivityJackpotList', params)
+}

@@ -1,16 +1,16 @@
 {
   "pages": [
     {
-      "path": "pages/template/education/detail"
-    },
-    {
-      "path": "pages/template/jewelry/detail",
+      "path": "pages/index/index",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/index/index",
+      "path": "pages/template/education/detail"
+    },
+    {
+      "path": "pages/template/jewelry/detail",
       "style": {
         "navigationStyle": "custom"
       }
@@ -112,6 +112,22 @@
       "style": {
         "navigationBarTitleText": "服务列表"
       }
+    },
+    {
+      "path": "pages/operation/operation",
+      "style": {
+        "navigationBarTitleText": "活动",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+      }
+    },
+    {
+      "path": "pages/operation/detail",
+      "style": {
+        "navigationBarTitleText": "活动详情",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+      }
     }
   ],
   "globalStyle": {
@@ -144,6 +160,7 @@
       "van-calendar": "/wxcomponents/vant/calendar/index",
       "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index",
       "van-search": "/wxcomponents/vant/search/index",
+      "van-skeleton": "/wxcomponents/vant/skeleton/index",
       "van-tag": "/wxcomponents/vant/tag/index"
     }
   },
@@ -167,6 +184,11 @@
       "iconPath": "static/image/luck.png",
       "selectedIconPath": "static/image/luck-b.png",
       "text": "奖池"
+    }, {
+      "pagePath": "pages/operation/operation",
+      "iconPath": "static/image/luck.png",
+      "selectedIconPath": "static/image/luck-b.png",
+      "text": "活动"
     }, {
       "pagePath": "pages/my/my",
       "iconPath": "static/image/my.png",

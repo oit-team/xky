@@ -406,8 +406,6 @@ importers:
         specifier: ^3.5.6
         version: 3.5.6
 
-  packages/mini-common: {}
-
 packages:
 
   /@achrinza/node-ipc@9.2.2:
