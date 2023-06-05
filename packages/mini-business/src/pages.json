@@ -97,6 +97,12 @@
       "style": {
         "navigationBarTitleText": ""
       }
+    },
+    {
+      "path": "pages/service/serviceList",
+      "style": {
+        "navigationBarTitleText": "服务列表"
+      }
     }
   ],
   "globalStyle": {
@@ -127,7 +133,9 @@
       "van-dialog": "/wxcomponents/vant/dialog/index",
       "van-switch": "/wxcomponents/vant/switch/index",
       "van-calendar": "/wxcomponents/vant/calendar/index",
-      "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index"
+      "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index",
+      "van-search": "/wxcomponents/vant/search/index",
+      "van-tag": "/wxcomponents/vant/tag/index"
     }
   },
   "tabBar": {
@@ -140,6 +148,11 @@
       "iconPath": "static/image/large.png",
       "selectedIconPath": "static/image/large-b.png",
       "text": "互动屏"
+    }, {
+      "pagePath": "pages/service/serviceList",
+      "iconPath": "static/image/luck.png",
+      "selectedIconPath": "static/image/luck-b.png",
+      "text": "服务"
     }, {
       "pagePath": "pages/activity/activity",
       "iconPath": "static/image/luck.png",
