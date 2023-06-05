@@ -12,7 +12,6 @@ export default {
   },
   onShow() {
     const { windowHeight } = uni.getWindowInfo()
-    console.log(windowHeight)
     this.contentHeight = windowHeight - 54
     this.getServiceInfoList()
   },
