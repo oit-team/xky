@@ -28,7 +28,7 @@ export default {
       this.getData()
     }
     else {
-      sessionStorage.setItem('op-confrim', op)
+      uni.setStorageSync('op-confrim', op)
     }
   },
   onShow() {

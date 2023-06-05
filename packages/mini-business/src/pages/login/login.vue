@@ -36,9 +36,9 @@ export default {
       this.$toast.clear()
       uni.setStorageSync('token', res.body.accessToken)
       this.$store.commit('setUserInfo', res.body.resultList)
-      if (sessionStorage.getItem('op-confirm')) {
+      if (uni.getStorageSync('op-confirm')) {
         uni.switchTab({
-          url: `/pages/activity/confirm?q=${sessionStorage.getItem('op-confirm')}`,
+          url: `/pages/activity/confirm?q=${uni.getStorageSync('op-confirm')}`,
         })
       }
       else {
