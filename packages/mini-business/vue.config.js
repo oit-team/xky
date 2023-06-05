@@ -1,11 +1,17 @@
-const MiniProgramTailwindWebpackPlugin = require('@dcasia/mini-program-tailwind-webpack-plugin')
+const UnoCSS = require('@unocss/webpack').default
 
 module.exports = {
   configureWebpack: {
+    // resolve: {
+    //   symlinks: false,
+    // },
     plugins: [
-      new MiniProgramTailwindWebpackPlugin({
-        designWidth: 375,
-      }),
+      new UnoCSS(),
     ],
+  },
+  css: {
+    extract: {
+      filename: '[name].[hash:9].css',
+    },
   },
 }
