@@ -1,10 +1,10 @@
 <script>
-import LuckItem from '../activity/components/luckItem'
+import cardItem from './components/cardItem.vue'
 import { addParticipateActivity, getActivityById, getActivityJackpotList } from '@/api/luck'
 
 export default {
   components: {
-    LuckItem,
+    CardItem: cardItem,
   },
   data: () => ({
     list: [
@@ -25,17 +25,56 @@ export default {
     activityId: '',
     activity: {},
     pms: false,
-    jackpotForm: {
+    myJackpotForm: {
       pageSize: 20,
       pageNum: 1,
     },
+    myJackpotList: [],
+    myJackpotEmpty: true,
+    jackpotForm: {
+      pageSize: 20,
+      pageNum: 1,
+      jackpotType: 0,
+    },
     jackpotList: [],
     jackpotEmpty: true,
+    canReloadMy: true,
+    canReload: true,
+    jackpotArray: {},
+    selectCards: {},
+    show: false,
   }),
+  computed: {
+    total() {
+      return Object.keys(this.selectCards).length
+    },
+  },
+  async onPullDownRefresh() {
+    if (this.active === 1) {
+      this.jackpotForm.pageNum = 1
+      await this.getActivity()
+    }
+    if (this.active === 2) {
+      this.myJackpotForm.pageNum = 1
+      await this.getMyActivity()
+    }
+    uni.stopPullDownRefresh()
+  },
+  async onReachBottom() {
+    if (this.active === 1) {
+      this.jackpotForm.pageNum++
+      await this.reload()
+    }
+    if (this.active === 2) {
+      this.myJackpotForm.pageNum++
+      await this.reloadMy()
+    }
+  },
   onLoad(option) {
     if (option.activityId) {
       this.activityId = option.activityId
       this.getData()
+      this.getMyActivity()
       this.getActivity()
     }
   },
@@ -48,16 +87,57 @@ export default {
       this.pms = true
       this.activity = body
     },
+    // 活动奖券列表
     async getActivity() {
       const { body } = await getActivityJackpotList({
         ...this.jackpotForm,
         activityId: this.activityId,
       })
-      this.jackpotList = body.resultList
+      this.jackpotList = body.resultList.map(item => ({
+        ...item,
+        stepper: 0,
+      }))
       this.jackpotEmpty = body.count === 0
+      this.canReload = body.count !== this.jackpotForm.pageSize
+    },
+    async reload() {
+      const { body } = await getActivityJackpotList({
+        ...this.jackpotForm,
+        activityId: this.activityId,
+      })
+      this.jackpotList = [...this.jackpotList, ...body.resultList]
+      this.canReload = body.count === this.jackpotList.length
+    },
+    // 商家活动奖券列表
+    async getMyActivity() {
+      const { body } = await getActivityJackpotList({
+        ...this.myJackpotForm,
+        activityId: this.activityId,
+        shopId: this.$store.state.userInfo.shopId,
+      })
+      this.myJackpotList = body.resultList
+      this.myJackpotEmpty = body.count === 0
+      this.canReloadMy = body.count !== this.myJackpotForm.pageSize
+    },
+    async reloadMy() {
+      const { body } = await getActivityJackpotList({
+        ...this.myJackpotForm,
+        activityId: this.activityId,
+        shopId: this.$store.state.userInfo.shopId,
+      })
+      this.myJackpotList = [...this.myJackpotList, ...body.resultList]
+      this.canReloadMy = body.count === this.myJackpotList.length
     },
     onChange(e) {
       this.active = e.detail.name
+    },
+    stepperChange(e, id) {
+      if (this.selectCards[id].jackpotInventory < e.detail) {
+        this.selectCards[id].stepper = this.selectCards[id].jackpotInventory
+        return
+      }
+
+      this.selectCards[id].stepper = e.detail
     },
     join() {
       this.$dialog.confirm({
@@ -71,14 +151,58 @@ export default {
         uni.navigateBack()
       })
     },
+    toList() {
+      uni.navigateTo({
+        // url: '/pages/operation/cardList',
+        url: `/pages/operation/cardList?activityId=${this.activityId}`,
+      })
+    },
+    // 删除照片
+    delSingle(item) {
+      this.$delete(this.selectCards, item.jackpotId)
+    },
+    checkSelected(item) {
+      return !!this.selectCards[item.jackpotId]
+    },
+    changeArray(item) {
+      this.$set(this.selectCards, item.jackpotId, item)
+    },
+    clickShow() {
+      if (this.total === 0)
+        this.$toast('您还未选择奖券')
+      else
+        this.show = true
+    },
+    onsubmit() {
+      if (this.total === 0) { this.$toast.fail('您还未选择奖券') }
+      else {
+        this.$dialog.confirm({
+          title: '提示',
+          message: '确定添加奖券吗？',
+        }).then(async () => {
+          console.log(233)
+          console.log(this.selectCards)
+          // const list = Object.values(this.selectCards)
+          // await addAddActivityJackpot({
+          //   jackpotIds: list.map(item => ({
+          //     jackpotId: item.jackpotId,
+          //     jackpotNumber: item.stepper,
+          //   })),
+          //   activityId: this.activityId,
+          // })
+          // this.getActivity()
+        })
+      }
+    },
   },
 }
 </script>
 
 <template>
-  <container classes="bg-gray-100 text-sm flex flex-col" :class="activity.isParticipate === 0 ? 'pb-20' : ''">
-    <view v-if="!pms" class="w-full bg-white flex-1 p-2 box-border">
-      <van-skeleton title row="4" class="h-full" />
+  <!-- :classes="activity.isParticipate === 0 ? 'pb-14' : ''" -->
+  <container classes="bg-gray-100 text-sm flex flex-col">
+    <view v-if="!pms" class="w-full bg-white flex-1 pt-4 box-border">
+      <van-skeleton title row="3" class="h-full" />
     </view>
     <view v-if="pms" class="flex-1 w-full">
       <van-tabs color="#6FA7FF" :active="active" sticky @change="onChange">
@@ -114,16 +238,74 @@ export default {
             </view>
           </view>
         </van-tab>
-        <van-tab title="奖券" :name="1">
-          <view v-if="jackpotEmpty">
-            <van-empty />
-          </view>
-          <view v-else class="w-full h-full">
-            <luck-item :list="jackpotList" />
+        <van-tab title="活动奖券" :name="1">
+          <view class="w-full h-full relative">
+            <view v-if="myJackpotEmpty">
+              <van-empty />
+            </view>
+            <view v-else class="w-full h-full relative p-2 box-border">
+              <view
+                v-for="(item, index) in jackpotList"
+                :key="index.jackpotId"
+                class="bg-white rounded-md mt-2 box-border"
+              >
+                <card-item :item="item">
+                  <view v-if="!checkSelected(item)">
+                    <van-button color="#f9591d" size="mini" round @click="() => changeArray(item)">
+                      购买
+                    </van-button>
+                  </view>
+                  <!-- <view v-else class="flex items-center text-sm">
+                      <van-stepper
+                        :value="item.stepper"
+                        integer
+                        min="1"
+                        :max="item.jackpotInventory"
+                        input-width="45px"
+                        button-size="25px"
+                        @change="($event) => $emit('change', $event, item.jackpotId)"
+                      />
+                    </view> -->
+                </card-item>
+              </view>
+            </view>
+
+            <view
+              class="page-btm bgf !fixed bottom-0 text-sm flex justify-end w-full items-center px-2 box-border bg-white z-10"
+            >
+              <view class="mr-2 text-[#60a5fa]" @click.stop="clickShow()">
+                已选：{{ total }}
+              </view>
+              <van-button class="py-2" size="small" type="info" round @click="onsubmit()">
+                确认购买
+              </van-button>
+            </view>
           </view>
         </van-tab>
-        <van-tab title="活动订单" :name="2">
-          33
+        <van-tab title="商家奖券" :name="2">
+          <view class="w-full h-full relative">
+            <view v-if="myJackpotEmpty">
+              <van-empty />
+            </view>
+            <view v-else class="w-full h-full relative p-2 box-border">
+              <view
+                v-for="(item, index) in myJackpotList"
+                :key="index.jackpotId"
+                class="bg-white rounded-md mt-2 box-border"
+              >
+                <card-item :item="item" />
+              </view>
+            </view>
+
+            <view v-if="activity.isParticipate === 1" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border">
+              <van-button color="#f9591d" block round @click.self="toList()">
+                添加奖券
+              </van-button>
+            </view>
+          </view>
+        </van-tab>
+        <van-tab title="活动订单" :name="3">
+          444
         </van-tab>
       </van-tabs>
     </view>
@@ -133,6 +315,45 @@ export default {
         立即参与
       </van-button>
     </view>
+
+    <!--    弹出层 -->
+    <van-popup
+      :show="show"
+      round
+      position="bottom"
+      class="overflow-hidden pt-3 box-border max-h-7/10"
+      @click-overlay="show = false"
+    >
+      <view class="overflow-y-auto h-full">
+        <view class="grid grid-cols-3 gap-3 p-3">
+          <view
+            v-for="item of selectCards"
+            :key="item.jackpotId"
+            class="p-1 box-border relative rounded"
+          >
+            <view class="pop-item__del" @click="delSingle(item)">
+              <van-icon name="cross" color="#fff" size="14" />
+            </view>
+            <van-image
+              height="110px"
+              :src="item.impUrl"
+              fit="contain"
+            />
+            <view class="w-full flex justify-center">
+              <van-stepper
+                :value="item.stepper"
+                integer
+                min="1"
+                :max="item.jackpotInventory"
+                input-width="45px"
+                button-size="25px"
+                @change="($event) => stepperChange($event, item.jackpotId)"
+              />
+            </view>
+          </view>
+        </view>
+      </view>
+    </van-popup>
   </container>
 </template>
 

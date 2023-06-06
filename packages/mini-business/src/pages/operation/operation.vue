@@ -31,7 +31,7 @@ export default {
     },
     activityList: [],
     canReload: true,
-    isEmpty: false,
+    isEmpty: true,
   }),
   computed: {
     logged() {
@@ -75,6 +75,7 @@ export default {
     },
     onChange(e) {
       this.active = e.detail.name
+      this.isEmpty = true
       this.formData.shopActivityType = this.active
       this.getData()
     },
