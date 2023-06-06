@@ -103,6 +103,32 @@
       "style": {
         "navigationBarTitleText": "服务列表"
       }
+    },
+    {
+      "path": "pages/service/serviceDetail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/serviceOrder/orderList",
+      "style": {
+        "navigationBarTitleText": "服务订单",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+      }
+    },
+    {
+      "path": "pages/serviceOrder/orderDetail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/serviceOrder/confirm",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     }
   ],
   "globalStyle": {
