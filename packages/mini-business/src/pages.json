@@ -7,6 +7,9 @@
       }
     },
     {
+      "path": "pages/template/list"
+    },
+    {
       "path": "pages/template/education/detail"
     },
     {
@@ -34,7 +37,7 @@
       }
     },
     {
-      "path": "pages/template/list",
+      "path": "pages/template-ad/list",
       "style": {
         "navigationBarTitleText": "模板列表",
         "enablePullDownRefresh": true,
@@ -42,7 +45,7 @@
       }
     },
     {
-      "path": "pages/template/config",
+      "path": "pages/template-ad/config",
       "style": {
         "navigationBarTitleText": "新增模板"
       }
@@ -238,6 +241,6 @@
     }]
   },
   "easycom": {
-    "^v-(.*)": "mini-common/components/v-$1/v-$1.vue"
+    "^vc-(.*)": "@/components/basic/vc-$1.vue"
   }
 }

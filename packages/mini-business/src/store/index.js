@@ -45,9 +45,16 @@ export default new Vuex.Store({
     // 更新用户信息
     async updateUserInfo(ctx) {
       ctx.state.userPromise = getTokenUser()
-      const res = await ctx.state.userPromise
-      setToken(res.body.token)
-      ctx.commit('setUserInfo', res.body)
+      try {
+        const res = await ctx.state.userPromise
+        setToken(res.body.token)
+        ctx.commit('setUserInfo', res.body)
+      }
+      catch (err) {
+        uni.navigateTo({
+          url: '/pages/login/login',
+        })
+      }
     },
   },
 })

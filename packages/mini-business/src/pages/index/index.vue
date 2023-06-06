@@ -180,7 +180,7 @@ export default {
     },
     selectTemplate() {
       uni.navigateTo({
-        url: '/pages/template/list',
+        url: '/pages/template-ad/list',
       })
       uni.$on(SELECT_TEMPLATE, async (id) => {
         const res = await getAdvertsShopById({
