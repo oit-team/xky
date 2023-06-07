@@ -6,27 +6,89 @@ export default {
   data() {
     return {
       contentHeight: '',
+      refresherTriggered: false,
       serviceList: [],
+      tagList: [],
       searchValue: '',
+      formData: {
+        pageNum: 1,
+        pageSize: 1,
+      },
     }
   },
-  onShow() {
+  async onShow() {
     const { windowHeight } = uni.getWindowInfo()
     this.contentHeight = windowHeight - 54
-    this.getServiceInfoList()
+
+    await this.$store.state.userPromise
+    this.getServiceInfo()
   },
   computed: {
   },
   methods: {
-    async getServiceInfoList() {
-      const res = await getServiceInfoList({
-        name: '',
+    async getServiceInfo() {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
+      const res = await this.$loading(getServiceInfoList({
+        name: this.searchValue,
         content: '',
         remarks: '',
-        pageSize: 20,
-        pageNum: 1,
+        ...this.formData,
+      }))
+      this.$toast.clear()
+      this.serviceList = [...res.body.advertsList]
+      this.showEmpty = this.serviceList.length <= 0
+    },
+
+    async reload() {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
       })
-      this.serviceList = res.body.advertsList
+      const res = await getServiceInfoList({
+        name: this.searchValue,
+        content: '',
+        remarks: '',
+        ...this.formData,
+      })
+      this.$toast.clear()
+      this.serviceList = [...this.serviceList, ...res.body.advertsList]
+    },
+
+    search(e) {
+      this.searchValue = e.detail
+      this.getServiceInfo()
+    },
+
+    async searchClear() {
+      this.searchValue = ''
+      await this.getServiceInfo()
+    },
+
+    async handleScrolltolower() {
+      this.formData.pageNum++
+      await this.reload()
+    },
+
+    async handleRefresherrefresh() {
+      this.searchValue = ''
+      this.formData.pageNum = 1
+      this.refresherTriggered = true
+
+      await this.getServiceInfo()
+      setTimeout(() => {
+        this.refresherTriggered = false
+      }, 500)
+    },
+
+    goToDetailPage(itemId) {
+      uni.navigateTo({
+        url: `/pages/service/serviceDetail?id=${itemId}`,
+      })
     },
   },
 }
@@ -34,31 +96,61 @@ export default {
 
 <template>
   <container classes="flex flex-col items-center bg-gray-100">
-    <van-search class="w-full" shape="round" :value="searchValue" placeholder="请输入搜索关键词" />
+    <van-search
+      class="w-full"
+      shape="round"
+      :value="searchValue"
+      placeholder="请输入搜索服务名称"
+      @search="search"
+      @clear="searchClear"
+    />
     <scroll-view
       class="w-full"
       :style="{ height: `${contentHeight}px` }"
       scroll-y="true"
       refresher-enabled="true"
+      :refresher-triggered="refresherTriggered"
+      @scrolltolower="handleScrolltolower"
+      @refresherrefresh="handleRefresherrefresh"
     >
-      <view class="px-2 mt-2">
-        <view v-for="(item, index) in serviceList" :key="index" class="p-2 bg-white rounded-md flex items-center mb-2">
+      <view v-if="serviceList.length > 0" class="px-2 mt-2">
+        <view v-for="(item, index) in serviceList" :key="index" class="p-2 bg-white rounded-md flex items-center mb-2" @click="goToDetailPage(item.id)">
           <van-image class="mr-2" width="100" height="100" radius="5" :src="item.resourceUrl" />
-          <view class="flex-1 flex flex-col justify-around h-100px">
-            <p class="w-full truncate text-base font-bold">
+          <view class="flex-1 grid gap-2 flex flex-col h-100px overflow-hidden">
+            <p class="truncate text-base font-bold">
               {{ item.name }}
             </p>
-            <p class="text-sm">
-              456
+            <p class="truncate text-xs text-gray-500">
+              {{ item.content }}
             </p>
-            <p class="text-sm">
-              <van-tag type="warning" color="#FFE5D4" text-color="#F07623">
-                标签
-              </van-tag>
-            </p>
+            <view class="text-sm truncate flex">
+              <view v-if="item.labels">
+                <van-tag
+                  v-for="tag of item.labels.split(',')"
+                  :key="tag"
+                  class="mr-2"
+                  type="warning"
+                  color="#FFE5D4"
+                  text-color="#F07623"
+                >
+                  {{ tag }}
+                </van-tag>
+              </view>
+            </view>
+            <view class="flex justify-between">
+              <view class="text-red-500">
+                <span class="text-xs">￥</span>
+                <span>{{ item.price }}</span>
+              </view>
+              <view />
+            </view>
           </view>
         </view>
+        <view v-if="serviceList.length > 6" class="text-xs text-gray-500 py-1 flex justify-center">
+          没有更多了~
+        </view>
       </view>
+      <van-empty v-else description="暂无数据" />
     </scroll-view>
   </container>
 </template>

@@ -114,6 +114,38 @@
       }
     },
     {
+      "path": "pages/service/serviceDetail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/serviceOrder/orderList",
+      "style": {
+        "navigationBarTitleText": "服务订单",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+      }
+    },
+    {
+      "path": "pages/serviceOrder/orderDetail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/serviceOrder/confirm",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/shopAudio/List",
+      "style": {
+        "navigationBarTitleText": "音频列表"
+      }
+    },
+    {
       "path": "pages/operation/operation",
       "style": {
         "navigationBarTitleText": "活动",
@@ -185,8 +217,8 @@
       "text": "互动屏"
     }, {
       "pagePath": "pages/service/serviceList",
-      "iconPath": "static/image/luck.png",
-      "selectedIconPath": "static/image/luck-b.png",
+      "iconPath": "static/image/service.png",
+      "selectedIconPath": "static/image/service-b.png",
       "text": "服务"
     }, {
       "pagePath": "pages/activity/activity",
@@ -195,8 +227,8 @@
       "text": "奖池"
     }, {
       "pagePath": "pages/operation/operation",
-      "iconPath": "static/image/luck.png",
-      "selectedIconPath": "static/image/luck-b.png",
+      "iconPath": "static/image/activity.png",
+      "selectedIconPath": "static/image/activity-b.png",
       "text": "活动"
     }, {
       "pagePath": "pages/my/my",
