@@ -1,17 +1,13 @@
 <script>
 export default {
+  emits: ['login'],
   data() {
     return {}
   },
   methods: {
     async login() {
-      await this.$loading(
-        this.$store.dispatch('wxLogin'),
-        {
-          message: '正在登录...',
-          delay: false,
-        },
-      )
+      this.$toast.loading()
+      await this.$store.dispatch('wxLogin').finally(() => this.$toast.clear())
 
       this.$emit('login')
     },

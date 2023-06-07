@@ -1,26 +1,33 @@
 <script>
-import LuckItem from './components/luckItem'
-import { getLotteryTicketShop } from '@/api/luck'
-import { convertImageSize } from '@/utils/helper'
-import notLogged from '@/components/business/notLogged/notLogged'
+import shopItem from './components/shopItem.vue'
+import goodsItem from './components/goodsItem.vue'
+import { hasToken } from '@/utils/token'
+import { getDictItemList } from '@/api/system'
+import * as api from '@/api/goods'
+import NotLogged from '@/components/business/notLogged/notLogged'
+import scrollBtm from '@/components/business/ScrollBtm/ScrollBtm'
 
 export default {
   components: {
-    LuckItem,
-    NotLogged: notLogged,
+    NotLogged,
+    ScrollBtm: scrollBtm,
+    // ShopItem: shopItem,
+    GoodsItem: goodsItem,
   },
   data() {
     return {
-      winList: [],
-      cardList: [],
-      showEmpty: true,
-      showPopup: false,
+      data: {},
+      active: 0,
+      industryAll: [], // 行业列表
+      services: [], // 服务列表
+      products: [], // 商品列表
       formData: {
-        pageSize: 15,
+        pageSize: 20,
         pageNum: 1,
-        weChatId: '',
       },
-      showItem: {},
+      canReload: false,
+      showEmpty: true,
+      current: 0,
     }
   },
   computed: {
@@ -28,119 +35,165 @@ export default {
       return this.$store.getters.logged
     },
   },
-  onLoad() {
-    // this.$toast.loading({
-    //   message: '加载中...',
-    //   forbidClick: true,
-    // })
-  },
   async onShow() {
+    if (!hasToken())
+      return
+
     await this.$store.state.userPromise
-    if (this.logged)
-      await this.getLotteryTicketShop()
+    this.getDictItemList()
   },
   async onPullDownRefresh() {
     this.formData.pageNum = 1
-    await this.getLotteryTicketShop()
+    await this.getProducts()
     uni.stopPullDownRefresh()
   },
   async onReachBottom() {
+    if (!this.canReload)
+      return
     this.formData.pageNum++
     await this.reload()
   },
   methods: {
-    convertImageSize,
-    async getLotteryTicketShop() {
-      this.formData.weChatId = this.$store.state.userInfo.id
-      const res = await getLotteryTicketShop({
-        ...this.formData,
+    async getDictItemList() {
+      const res = await getDictItemList({
+        dictCode: 'INDUSTRY_CATEGORY',
       })
-
-      this.winList = res.body.result
-      this.showEmpty = this.winList.length === 0
-      this.$toast.clear()
-      uni.stopPullDownRefresh()
+      this.industryAll = res.body.resultList
+      this.industryAll.forEach((item) => {
+        item.url = 'https://picsum.photos/200/200'
+      })
+      this.getProducts()
+    },
+    async getProducts() {
+      this.$toast.loading({
+        duration: 60000,
+        forbidClick: true,
+        message: '加载中...',
+      })
+      const res = await api.getProducts(this.formData).finally(() => this.$toast.clear())
+      this.products = res.body.resultList
+      this.canReload = res.body.count > 20
+      this.showEmpty = res.body.count === 0
     },
     async reload() {
-      const res = await this.$loading(
-        getLotteryTicketShop({
-          ...this.formData,
-        }),
-      )
-      this.winList = [...this.winList, ...res.body.allStateCount]
-      if (res.body.allStateCount.length === 0)
-        this.$toast('加载完毕')
-      else
-        this.$toast('加载成功')
-
-      this.$toast.clear()
-    },
-    show(item) {
-      uni.navigateTo({
-        url: `/pages/index/cardList?id=${item.shopId}`,
+      this.$toast.loading({
+        duration: 60000,
+        forbidClick: true,
+        message: '加载中...',
       })
-      this.showItem = item
-      // console.log('show')
-      // this.getCard(item.shopId)
-      // this.showPopup = true
-      // this.cardList = []
+      const res = await api.getProducts(this.formData).finally(() => this.$toast.clear())
+      this.products = [...this.products, ...res.body.resultList]
+      this.canReload = res.body.count > this.products.length
+    },
+    change(e) {
+      this.current = e.detail.current
     },
   },
 }
 </script>
 
 <template>
-  <container classes="flex flex-col items-center bg-gray-100 text-[#888]">
+  <container classes="bg-neutral-100 flex flex-col h-full">
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
-      <not-logged @login="getLotteryTicketShop()" />
+      <not-logged class="w-full h-full" @login="getDictItemList()" />
     </view>
-    <view v-if="logged" class="content w-full">
-      <view v-if="showEmpty">
-        <van-empty description="暂无数据" />
+    <view v-if="logged" class="content w-full p-2 box-border">
+      <!-- 顶部行业 -->
+      <view class="w-auto h-300px flex flex-col gap-2 gap-y-1 justify-between flex-wrap p-2 box-border bg-white rounded overflow-hidden overflow-x-auto">
+        <view v-for="item in industryAll" :key="item.id" class="rounded text-sm text-center">
+          <view class="w-100px text-center">
+            <image
+              class="w-15 h-15 rounded"
+              :src="item.url"
+            />
+            <view class="w-full truncate">
+              {{ item.name }}
+            </view>
+          </view>
+        </view>
       </view>
-      <view v-else class="flex flex-col py-3 px-2">
-        <luck-item :list="winList" @show="show()" />
-      </view>
-    </view>
 
-    <!--    <van-popup -->
-    <!--      :show="showPopup" -->
-    <!--      position="bottom" -->
-    <!--      custom-style="height: 70%;" -->
-    <!--      round -->
-    <!--      @click-overlay="showPopup = false" -->
-    <!--    > -->
-    <!--    </van-popup> -->
+      <!-- <view>
+        <swiper
+          indicator-dots
+          :current="current"
+          @change="change"
+        >
+          <swiper-item>
+            <view>
+              <view v-for="item in industryAll" :key="item.id" class="rounded text-sm text-center">
+                <view class="w-100px text-center">
+                  <image
+                    class="w-15 h-15 rounded"
+                    :src="item.url"
+                  />
+                  <view class="w-full truncate">
+                    {{ item.name }}
+                  </view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>Slide 2</swiper-item>
+          <swiper-item>Slide 3</swiper-item>
+        </swiper>
+      </view> -->
+      <!-- 商品 / 店铺 / 服务 -->
+      <!-- <view class="mt-2">
+        <van-tabs :active="active">
+          <van-tab title="商品">
+            <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
+              <van-empty />
+            </view>
+            <view v-else>
+              <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
+                <goods-item v-for="item in products" :key="item.productId" :item="item" />
+              </view>
+              <scroll-btm :can-reload="canReload" />
+            </view>
+          </van-tab>
+          <van-tab title="店铺">
+            <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
+              <van-empty />
+            </view>
+            <view v-else>
+              <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
+                <shop-item v-for="item in products" :key="item.productId" :item="item" />
+              </view>
+              <scroll-btm :can-reload="canReload" />
+            </view>
+          </van-tab>
+          <van-tab title="服务">
+            <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
+              <van-empty />
+            </view>
+            <view v-else>
+              <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
+                <shop-item v-for="item in products" :key="item.productId" :item="item" />
+              </view>
+              <scroll-btm :can-reload="canReload" />
+            </view>
+          </van-tab>
+        </van-tabs>
+      </view> -->
+
+      <view class="mt-2">
+        <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
+          <van-empty />
+        </view>
+        <view v-else>
+          <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
+            <goods-item v-for="item in products" :key="item.productId" :item="item" />
+          </view>
+          <scroll-btm :can-reload="canReload" />
+        </view>
+      </view>
+    </view>
   </container>
 </template>
 
 <style scoped>
-::v-deep .van-image__img {
-    border-radius: 8px;
+::v-deep van-image{
+  display: flex;
 }
-
-::v-deep .van-image {
-    display: block
-}
-.card-item{
-    border: 1px solid #E3E6E9;
-}
-/*.card-item_left{*/
-/*    border: 1px solid #ccc;*/
-/*    position: absolute;*/
-/*    left: 0px;*/
-/*    top: 50%;*/
-/*    transform: translate(-50%, -50%);*/
-/*    background-color: #fff;*/
-/*    z-index: 9999;*/
-/*}*/
-/*.card-item_right{*/
-/*    border: 1px solid #ccc;*/
-/*    position: absolute;*/
-/*    right: 0px;*/
-/*    top: 50%;*/
-/*    transform: translate(50%, -50%);*/
-/*    background-color: #fff;*/
-/*    z-index: 9999;*/
-/*}*/
 </style>

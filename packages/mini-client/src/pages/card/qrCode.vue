@@ -30,7 +30,7 @@ export default {
 </script>
 
 <template>
-  <container classes="flex flex-col items-center bg-gray-100 p-2 box-border">
+  <container classes="flex flex-col items-center bg-neutral-100 p-2 box-border">
     <view class="w-full flex-1 flex flex-col bg-white rounded-xl p-2 box-border">
       <view class="w-full py-2 px-4 box-border font-semibold ">
         {{ cardInfo.vouchersName }}

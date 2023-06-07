@@ -7,6 +7,15 @@
       }
     },
     {
+      "path": "pages/template/education/detail"
+    },
+    {
+      "path": "pages/template/jewelry/detail",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/activity/activity",
       "style": {
         "navigationBarTitleText": ""
@@ -105,6 +114,7 @@
       }
     },
     {
+<<<<<<< HEAD
       "path": "pages/service/serviceDetail",
       "style": {
         "navigationBarTitleText": ""
@@ -114,11 +124,17 @@
       "path": "pages/serviceOrder/orderList",
       "style": {
         "navigationBarTitleText": "服务订单",
+=======
+      "path": "pages/operation/operation",
+      "style": {
+        "navigationBarTitleText": "活动",
+>>>>>>> 03b982fb5756f5e501a1118a644127c1be51a131
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50
       }
     },
     {
+<<<<<<< HEAD
       "path": "pages/serviceOrder/orderDetail",
       "style": {
         "navigationBarTitleText": ""
@@ -128,6 +144,13 @@
       "path": "pages/serviceOrder/confirm",
       "style": {
         "navigationBarTitleText": ""
+=======
+      "path": "pages/operation/detail",
+      "style": {
+        "navigationBarTitleText": "活动详情",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+>>>>>>> 03b982fb5756f5e501a1118a644127c1be51a131
       }
     }
   ],
@@ -161,6 +184,7 @@
       "van-calendar": "/wxcomponents/vant/calendar/index",
       "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index",
       "van-search": "/wxcomponents/vant/search/index",
+      "van-skeleton": "/wxcomponents/vant/skeleton/index",
       "van-tag": "/wxcomponents/vant/tag/index"
     }
   },
@@ -185,10 +209,18 @@
       "selectedIconPath": "static/image/luck-b.png",
       "text": "奖池"
     }, {
+      "pagePath": "pages/operation/operation",
+      "iconPath": "static/image/luck.png",
+      "selectedIconPath": "static/image/luck-b.png",
+      "text": "活动"
+    }, {
       "pagePath": "pages/my/my",
       "iconPath": "static/image/my.png",
       "selectedIconPath": "static/image/my-b.png",
       "text": "我的"
     }]
+  },
+  "easycom": {
+    "^v-(.*)": "mini-common/components/v-$1/v-$1.vue"
   }
 }

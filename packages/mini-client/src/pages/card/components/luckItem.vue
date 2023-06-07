@@ -5,6 +5,7 @@ export default {
   props: {
     list: Array,
   },
+  emits: ['show'],
   methods: {
     convertImageSize,
   },
@@ -23,9 +24,10 @@ export default {
         <van-image
           width="70"
           height="70"
-          :src="convertImageSize(item.headPortrait, 's')"
-          class="mx-3 rounded-md bg-gray-100 overflow-hidden"
+          :src="item.headPortrait"
+          class="mx-3 rounded-md bg-neutral-100 overflow-hidden"
         />
+        <!-- :src="convertImageSize(item.headPortrait, 's')" -->
         <view class="">
           <view class="font-extrabold">
             {{ item.shopName }}

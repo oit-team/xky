@@ -49,11 +49,12 @@ export default new Vuex.Store({
       })
       const { code } = await loginPromise
 
-      const res = await wxLogin({
+      ctx.state.userPromise = wxLogin({
         encryptedData,
         iv,
         jsCode: code,
       })
+      const res = await ctx.state.userPromise
 
       setToken(res.body.token)
 

@@ -61,6 +61,7 @@ export default {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
+        duration: 0,
       })
       const res = await getProductListById({
         ...this.formData,
@@ -126,7 +127,7 @@ export default {
     <!--      <view></view> -->
     <!--    </view> -->
     <view class="w-full mb-2 bg-white shadow-gray-500 shadow-gray-300 shadow-md">
-      <timer-tab ref="timeTab" @changeData="changeDate()" @showCalendar="show = true" />
+      <timer-tab ref="timeTab" @change-data="changeDate()" @show-calendar="show = true" />
     </view>
 
     <view class="w-full py-2 px-4 box-border rounded-full">

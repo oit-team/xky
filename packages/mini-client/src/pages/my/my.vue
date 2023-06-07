@@ -49,6 +49,16 @@ export default {
         url: '/pages/my/info',
       })
     },
+    toOrder() {
+      // uni.navigateTo({
+      //   url: '/pages/my/info',
+      // })
+    },
+    toCard() {
+      uni.navigateTo({
+        url: '/pages/card/index',
+      })
+    },
   },
 }
 </script>
@@ -70,15 +80,11 @@ export default {
       </view>
       <view class="px-1 w-full flex-1 py-2 box-border">
         <van-cell-group inset>
-          <van-cell title="扫一扫" is-link @click="scan()">
-            <van-icon slot="icon" name="scan" size="18" class="mr-2" />
-          </van-cell>
-          <van-cell title="隐私与协议" is-link @click="uni.navigateTo({ url: '/pages/my/agreement' })">
-            <van-icon slot="icon" name="warn-o" size="18" class="mr-2" />
-          </van-cell>
-          <van-cell title="联系我们" is-link @click="call()">
-            <van-icon slot="icon" name="phone-o" size="18" class="mr-2" />
-          </van-cell>
+          <van-cell title="我的订单" is-link @click="toOrder()" />
+          <van-cell title="我的卡包" is-link @click="toCard()" />
+          <van-cell title="扫一扫" is-link @click="scan()" />
+          <van-cell title="隐私与协议" is-link @click="uni.navigateTo({ url: '/pages/my/agreement' })" />
+          <van-cell title="联系我们" is-link @click="call()" />
         </van-cell-group>
       </view>
     </view>

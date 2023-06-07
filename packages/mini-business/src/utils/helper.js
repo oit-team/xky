@@ -100,3 +100,11 @@ export function wxPayment(data) {
     }),
   )
 }
+
+export function isImage(url) {
+  return /\.(png|jpe?g|gif|svg|webp)?$/.test(url)
+}
+
+export function isVideo(url) {
+  return /\.(mp4|mov|webm|ogg|avi|wmv|flv)?$/.test(url)
+}

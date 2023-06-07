@@ -23,10 +23,7 @@ export default {
   },
   async onLoad(op) {
     this.opt = this.parseURLQueryParams(decodeURIComponent(op.q))
-    if (this.logged) {
-      await this.$store.state.userPromise
-      this.getData()
-    }
+    this.logged && this.getData()
   },
   onShow() {
     if (this.logged)
@@ -89,7 +86,7 @@ export default {
 </script>
 
 <template>
-  <container classes="flex justify-center items-center bg-gray-100">
+  <container classes="flex justify-center items-center bg-neutral-100">
     <view v-if="logged" class="flex flex-col items-center px-2">
       <view class="mb-4">
         {{ isSuccess ? '领奖完成' : '领奖失败' }}
