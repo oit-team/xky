@@ -36,6 +36,11 @@ export default {
         url: '/pages/activity/writeOff',
       })
     },
+    toServiceOrder() {
+      uni.navigateTo({
+        url: '/pages/serviceOrder/orderList',
+      })
+    },
     // 扫码
     scan() {
       uni.scanCode({
@@ -43,10 +48,20 @@ export default {
         onlyFromCamera: true,
         success(res) {
           const data = res.result
+          // 去订单核销页
+          const toServerOrderPage = data.split('?')[0].includes('serverOrder')
+
           const url = encodeURIComponent(data)
-          uni.navigateTo({
-            url: `/pages/activity/confirm?q=${url}`,
-          })
+          if (toServerOrderPage) {
+            uni.navigateTo({
+              url: `/pages/serviceOrder/confirm?q=${url}`,
+            })
+          }
+          else {
+            uni.navigateTo({
+              url: `/pages/activity/confirm?q=${url}`,
+            })
+          }
         },
         fail(err) {
           this.$toast.fail(err)
@@ -77,6 +92,9 @@ export default {
         </view>
       </view>
       <van-cell-group inset>
+        <van-cell title="服务订单" is-link @click="toServiceOrder()">
+          <van-icon slot="icon" name="cart-o" size="18" class="mr-2" />
+        </van-cell>
         <van-cell title="核销记录" is-link @click="toWriteOff()">
           <van-icon slot="icon" name="coupon-o" size="18" class="mr-2" />
         </van-cell>
@@ -85,6 +103,9 @@ export default {
         </van-cell>
         <van-cell title="扫一扫" is-link @click="scan()">
           <van-icon slot="icon" name="scan" size="18" class="mr-2" />
+        </van-cell>
+        <van-cell title="音频设置" is-link @click="uni.navigateTo({ url: '/pages/shopAudio/List' })">
+          <van-icon slot="icon" name="volume-o" size="18" class="mr-2" />
         </van-cell>
         <van-cell title="隐私与协议" is-link @click="uni.navigateTo({ url: '/pages/my/agreement' })">
           <van-icon slot="icon" name="warn-o" size="18" class="mr-2" />
