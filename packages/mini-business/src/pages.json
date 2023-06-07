@@ -114,7 +114,6 @@
       }
     },
     {
-<<<<<<< HEAD
       "path": "pages/service/serviceDetail",
       "style": {
         "navigationBarTitleText": ""
@@ -124,17 +123,11 @@
       "path": "pages/serviceOrder/orderList",
       "style": {
         "navigationBarTitleText": "服务订单",
-=======
-      "path": "pages/operation/operation",
-      "style": {
-        "navigationBarTitleText": "活动",
->>>>>>> 03b982fb5756f5e501a1118a644127c1be51a131
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50
       }
     },
     {
-<<<<<<< HEAD
       "path": "pages/serviceOrder/orderDetail",
       "style": {
         "navigationBarTitleText": ""
@@ -144,13 +137,28 @@
       "path": "pages/serviceOrder/confirm",
       "style": {
         "navigationBarTitleText": ""
-=======
+      }
+    },
+    {
+      "path": "pages/shopAudio/List",
+      "style": {
+        "navigationBarTitleText": "音频列表"
+      }
+    },
+    {
+      "path": "pages/operation/operation",
+      "style": {
+        "navigationBarTitleText": "活动",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+      }
+    },
+    {
       "path": "pages/operation/detail",
       "style": {
         "navigationBarTitleText": "活动详情",
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50
->>>>>>> 03b982fb5756f5e501a1118a644127c1be51a131
       }
     }
   ],
@@ -184,7 +192,7 @@
       "van-calendar": "/wxcomponents/vant/calendar/index",
       "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index",
       "van-search": "/wxcomponents/vant/search/index",
-      "van-skeleton": "/wxcomponents/vant/skeleton/index",
+      // "van-skeleton": "/wxcomponents/vant/skeleton/index",
       "van-tag": "/wxcomponents/vant/tag/index"
     }
   },
@@ -200,8 +208,8 @@
       "text": "互动屏"
     }, {
       "pagePath": "pages/service/serviceList",
-      "iconPath": "static/image/luck.png",
-      "selectedIconPath": "static/image/luck-b.png",
+      "iconPath": "static/image/service.png",
+      "selectedIconPath": "static/image/service-b.png",
       "text": "服务"
     }, {
       "pagePath": "pages/activity/activity",
@@ -210,8 +218,8 @@
       "text": "奖池"
     }, {
       "pagePath": "pages/operation/operation",
-      "iconPath": "static/image/luck.png",
-      "selectedIconPath": "static/image/luck-b.png",
+      "iconPath": "static/image/activity.png",
+      "selectedIconPath": "static/image/activity-b.png",
       "text": "活动"
     }, {
       "pagePath": "pages/my/my",
