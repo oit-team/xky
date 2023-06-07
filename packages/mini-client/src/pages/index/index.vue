@@ -97,9 +97,9 @@ export default {
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
       <not-logged class="w-full h-full" @login="getDictItemList()" />
     </view>
-    <view v-if="logged" class="content w-full p-2 box-border">
+    <view v-if="logged" class="content w-full box-border">
       <!-- 顶部行业 -->
-      <view class="w-auto h-300px flex flex-col gap-2 gap-y-1 justify-between flex-wrap p-2 box-border bg-white rounded overflow-hidden overflow-x-auto">
+      <!-- <view class="w-auto h-300px flex flex-col gap-2 gap-y-1 justify-between flex-wrap p-2 box-border bg-white rounded overflow-hidden overflow-x-auto">
         <view v-for="item in industryAll" :key="item.id" class="rounded text-sm text-center">
           <view class="w-100px text-center">
             <image
@@ -111,7 +111,10 @@ export default {
             </view>
           </view>
         </view>
-      </view>
+      </view> -->
+      <van-tabs :active="active" color="#6FA7FF">
+        <van-tab v-for="item in industryAll" :key="item.id" :title="item.name" />
+      </van-tabs>
 
       <!-- <view>
         <swiper
@@ -181,7 +184,7 @@ export default {
         <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
           <van-empty />
         </view>
-        <view v-else>
+        <view v-else class="p-2">
           <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
             <goods-item v-for="item in products" :key="item.productId" :item="item" />
           </view>
