@@ -160,6 +160,14 @@
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50
       }
+    },
+    {
+      "path": "pages/operation/cardList",
+      "style": {
+        "navigationBarTitleText": "奖券列表",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50
+      }
     }
   ],
   "globalStyle": {
@@ -192,7 +200,8 @@
       "van-calendar": "/wxcomponents/vant/calendar/index",
       "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index",
       "van-search": "/wxcomponents/vant/search/index",
-      // "van-skeleton": "/wxcomponents/vant/skeleton/index",
+      "van-skeleton": "/wxcomponents/vant/skeleton/index",
+      "van-stepper": "/wxcomponents/vant/stepper/index",
       "van-tag": "/wxcomponents/vant/tag/index"
     }
   },

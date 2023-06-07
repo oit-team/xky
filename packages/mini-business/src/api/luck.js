@@ -109,10 +109,28 @@ export function addParticipateActivity(params) {
 }
 
 /**
- * 获取活动详情降权列表
+ * 获取活动详情奖券列表
  * @param {*} params
  * @returns
  */
 export function getActivityJackpotList(params) {
   return post('jackpot/jackpotInfo/getActivityJackpotList', params)
+}
+
+/**
+ * 获取奖券列表
+ * @param {*} params
+ * @returns
+ */
+export function getJackpotStyleAll(params) {
+  return post('jackpot/jackpotInfo/getJackpotStyleAll', params)
+}
+
+/**
+ * 新增商家奖券
+ * @param {*} params
+ * @returns
+ */
+export function addAddActivityJackpot(params) {
+  return post('/jackpot/activity/addAddActivityJackpot', params)
 }
