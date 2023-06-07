@@ -1,95 +1,101 @@
 <script>
+const STATUS = {
+  INACTIVE: 0,
+  LOADING: 1,
+  ERROR: 2,
+  DONE: 3,
+}
+
+const REFRESH_STATUS = {
+  INACTIVE: 0,
+  LOADING: 1,
+  ERROR: 2,
+  DONE: 3,
+}
+
 export default {
   options: {
     virtualHost: true,
   },
   props: {
-    load: Function,
-    refresh: Function,
     immediate: {
       type: Boolean,
       default: true,
     },
-    scope: {
-      type: String,
-      validator: value => ['root', 'parent'].includes(value),
-      default: 'root',
+    pullRefresh: {
+      type: Boolean,
+      default: false,
     },
+    loadMore: {
+      type: Boolean,
+      default: false,
+    },
+    scope: { type: Object },
   },
   data() {
     return {
-      pageData: {
-        pageNum: 1,
-        pageSize: 20,
-      },
-      state: {
-        loading: false,
-        finished: false,
-      },
+      STATUS,
+      REFRESH_STATUS,
+      page: 1,
+      status: STATUS.INACTIVE,
+      refreshStatus: REFRESH_STATUS.INACTIVE,
     }
   },
   computed: {
-    refresherEnabled() {
-      return !!this.refresh
+    isLoading() {
+      return this.status === STATUS.LOADING
     },
   },
-  created() {
-    this.immediate && this.callLoad()
-    console.log(this)
+  mounted() {
+    this.immediate && this.load()
   },
   methods: {
-    callLoad() {
-      if (typeof this.load === 'function')
-        return this.load.call(this.getScope(), this.pageData)
-    },
-    callRefresh() {
-      if (typeof this.refresh === 'function')
-        return this.refresh.call(this.getScope(), typeof this.load === 'function' ? this.pageData : undefined)
-    },
-    getScope() {
-      return this.scope === 'root' ? this.$root : this.$parent
-    },
     async scrolltolower() {
-      if (this.state.loading || this.state.finished || typeof this.load !== 'function')
+      if (!this.loadMore || [STATUS.DONE, STATUS.LOADING].includes(this.status))
         return
 
-      try {
-        this.loading(true)
-        await this.callLoad()
-        this.pageData.pageNum++
-      }
-      finally {
-        this.loading(false)
-      }
+      this.load()
     },
-    async refresherrefresh() {
-      if (this.state.loading || typeof this.refresh !== 'function')
+    async refresh() {
+      if (!this.pullRefresh || REFRESH_STATUS.LOADING === this.refreshStatus)
         return
 
-      try {
-        this.reset()
-        this.loading(true)
-        await this.callRefresh()
-      }
-      finally {
-        this.loading(false)
-      }
+      this.reset()
+      this.refreshStatus = REFRESH_STATUS.LOADING
+      this.$emit('refresh', {
+        page: this.page,
+        next: () => {
+          this.refreshStatus = REFRESH_STATUS.INACTIVE
+        },
+        done: () => {
+          this.refreshStatus = REFRESH_STATUS.DONE
+        },
+        fail: () => {
+          this.refreshStatus = REFRESH_STATUS.ERROR
+        },
+      })
     },
-    loading(loading) {
-      this.state.loading = loading
-    },
-    finished(finished = true) {
-      this.state.finished = finished
+    load() {
+      this.status = STATUS.LOADING
+      this.$emit('load', {
+        page: this.page,
+        next: () => {
+          this.page++
+          this.status = STATUS.INACTIVE
+        },
+        done: () => {
+          this.status = STATUS.DONE
+        },
+        fail: () => {
+          this.status = STATUS.ERROR
+        },
+      })
     },
     reset() {
-      this.pageData = {
-        pageNum: 1,
-        pageSize: 20,
-      }
-      this.state = {
-        loading: false,
-        finished: false,
-      }
+      this.page = 1
+      this.status = STATUS.INACTIVE
+      this.refreshStatus = REFRESH_STATUS.INACTIVE
+      return this
     },
   },
 }
@@ -101,18 +107,24 @@ export default {
     :class="[classes]"
     scroll-y
     enable-back-to-top
-    :refresher-enabled="refresherEnabled"
-    :refresher-triggered="state.loading"
+    :refresher-enabled="pullRefresh"
+    :refresher-triggered="refreshStatus === REFRESH_STATUS.LOADING"
     @scrolltolower="scrolltolower"
-    @refresherrefresh="refresherrefresh"
+    @refresherrefresh="refresh"
   >
     <slot />
-    <slot name="load-more" :loading="state.loading" :finished="state.finished">
-      <div class="flex items-center justify-center py-2">
-        <van-loading v-if="state.loading" size="16px">
+    <slot v-if="loadMore" name="load-more" :loading="status === STATUS.LOADING" :finished="status === STATUS.DONE">
+      <div class="flex items-center justify-center py-2 text-sm text-gray-400">
+        <div v-if="status === STATUS.INACTIVE" size="16px" @click="load">
+          加载更多
+        </div>
+        <van-loading v-if="isLoading" size="16px">
           加载中...
         </van-loading>
-        <div v-else-if="state.finished">
+        <div v-if="status === STATUS.ERROR" size="16px">
+          加载出错，请重试
+        </div>
+        <div v-if="status === STATUS.DONE">
           没有更多了
         </div>
       </div>

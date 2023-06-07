@@ -7,7 +7,7 @@
       }
     },
     {
-      "path": "pages/template/list"
+      "path": "pages/product/list"
     },
     {
       "path": "pages/template/education/detail"
@@ -214,6 +214,11 @@
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [{
+      "pagePath": "pages/product/list",
+      "iconPath": "static/image/large.png",
+      "selectedIconPath": "static/image/large-b.png",
+      "text": "首页"
+    }, {
       "pagePath": "pages/index/index",
       "iconPath": "static/image/large.png",
       "selectedIconPath": "static/image/large-b.png",
