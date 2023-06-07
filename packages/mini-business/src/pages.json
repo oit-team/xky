@@ -229,11 +229,6 @@
       "selectedIconPath": "static/image/service-b.png",
       "text": "服务"
     }, {
-      "pagePath": "pages/activity/activity",
-      "iconPath": "static/image/luck.png",
-      "selectedIconPath": "static/image/luck-b.png",
-      "text": "奖池"
-    }, {
       "pagePath": "pages/operation/operation",
       "iconPath": "static/image/activity.png",
       "selectedIconPath": "static/image/activity-b.png",
