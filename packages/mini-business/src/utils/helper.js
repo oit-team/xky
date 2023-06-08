@@ -108,3 +108,7 @@ export function isImage(url) {
 export function isVideo(url) {
   return /\.(mp4|mov|webm|ogg|avi|wmv|flv)?$/.test(url)
 }
+
+export function getVideoFrame(src) {
+  return src && src.replace(/(.*)\..*/, '$1_s.jpg')
+}

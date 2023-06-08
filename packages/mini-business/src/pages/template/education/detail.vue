@@ -1,13 +1,24 @@
 <script>
+import product from '../mixins/product'
+import { getVideoFrame, isVideo } from '@/utils/helper'
+
 export default {
-  data: () => ({
-    imageList: [
-      'https://picsum.photos/500?random=1',
-      'https://picsum.photos/500?random=2',
-      'https://picsum.photos/500?random=3',
-    ],
-  }),
-  created() {
+  mixins: [product],
+  methods: {
+    isVideo,
+    getVideoFrame,
+    getImageUrl(item) {
+      return this.isVideo(item) ? this.getVideoFrame(item) : item
+    },
+    transformImageList(list) {
+      return list?.map((item) => {
+        return {
+          type: this.isVideo(item) ? 'video' : 'image',
+          image: this.getImageUrl(item),
+          url: item,
+        }
+      })
+    },
   },
 }
 </script>
@@ -20,8 +31,8 @@ export default {
         circular
         indicator-dots
       >
-        <swiper-item v-for="img of imageList" :key="img">
-          <image :src="img" class="w-full h-full" />
+        <swiper-item v-for="img of data.imgList" :key="img">
+          <image :src="img" class="w-full h-full" mode="aspectFit" />
         </swiper-item>
       </swiper>
     </div>
@@ -34,73 +45,64 @@ export default {
                 title-class="title-class"
                 value-class="value-class"
                 title="姓名"
-                value="内容"
+                :value="getValue('productName')"
               />
               <van-cell
                 title-class="title-class"
                 value-class="value-class"
-                title="联系电话"
-                value="1818181818"
+                :title="getLabel('contactPhone')"
+                :value="getValue('contactPhone', '暂无')"
               />
               <van-cell
                 title-class="title-class"
                 value-class="value-class"
-                title="从业时间"
-                value="50"
+                :title="getLabel('employmentTime')"
+                :value="getValue('employmentTime', '暂无')"
               />
               <van-cell
                 title-class="title-class"
                 value-class="value-class"
-                title="所获荣誉"
-                value="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
-              />
+                :title="getLabel('honor')"
+              >
+                <rich-text :nodes="getValue('honor', '暂无')" />
+              </van-cell>
               <van-cell
                 title-class="title-class"
                 value-class="value-class"
-                title="个性签名"
-                value="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
-              />
+                :title="getLabel('personalSignature')"
+              >
+                <rich-text :nodes="getValue('personalSignature', '暂无')" />
+              </van-cell>
               <van-cell
                 title-class="title-class"
                 value-class="value-class"
-                title="详情介绍"
-                value="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
-              />
-            </van-cell-group>
-            <van-cell-group inset>
-              <van-cell
-                title-class="title-class"
-                value-class="value-class"
-                title="联系电话"
-                value="暂无"
-              />
-              <van-cell
-                title-class="title-class"
-                value-class="value-class"
-                title="联系地址"
-                value="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
-              />
-              <van-cell
-                title-class="title-class"
-                value-class="value-class"
-                title="介绍"
-                value="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
-              />
+                :title="getLabel('detailedIntroduction')"
+              >
+                <rich-text :nodes="getValue('detailedIntroduction', '暂无')" />
+              </van-cell>
             </van-cell-group>
           </div>
         </van-tab>
         <van-tab title="案例与课程">
-          <div class="grid grid-cols-2 gap-3 p-3">
-            <div v-for="img of 20" :key="img" class="aspect-3/4 bg-gray-50 rounded-lg overflow-hidden">
-              <image src="https://picsum.photos/300" class="h-full w-full" />
-            </div>
+          <div class="p-3">
+            <vc-waterfall :data="data.detailsImgList" gap="12px">
+              <template #default="{ item }">
+                <div class="bg-gray-50 rounded-lg overflow-hidden flex">
+                  <image :src="item" class="w-full" mode="widthFix" />
+                </div>
+              </template>
+            </vc-waterfall>
           </div>
         </van-tab>
         <van-tab title="精彩瞬间">
-          <div class="grid grid-cols-2 gap-3 p-3">
-            <div v-for="img of 20" :key="img" class="aspect-3/4 bg-gray-50 rounded-lg overflow-hidden">
-              <image src="https://picsum.photos/300" class="h-full w-full" />
-            </div>
+          <div class="p-3">
+            <vc-waterfall :data="transformImageList(data.videoList)" item-key="url" gap="12px">
+              <template #default="{ item }">
+                <div class="bg-gray-50 rounded-lg overflow-hidden flex">
+                  <image :src="item.image" class="w-full" mode="widthFix" />
+                </div>
+              </template>
+            </vc-waterfall>
           </div>
         </van-tab>
       </van-tabs>

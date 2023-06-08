@@ -39,13 +39,14 @@ export default {
     toProductPage(item) {
       const routeMap = {
         clothing: '/pages/template/clothing/detail',
+        education: '/pages/template/education/detail',
       }
       const path = routeMap[item.industryIdKey]
       if (!path)
         return console.warn('未匹配到商品详情页')
 
       uni.navigateTo({
-        url: `${path}?id=${item.productId}`,
+        url: `${path}?productId=${item.productId}`,
       })
     },
   },

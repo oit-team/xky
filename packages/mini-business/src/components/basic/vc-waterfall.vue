@@ -2,15 +2,15 @@
 export default {
   props: {
     data: { type: Array, required: true },
-    itemKey: { type: String, required: true },
+    itemKey: { type: String },
     // 列数
-    columns: { type: Number, required: true },
+    columns: { type: Number, required: true, default: 2 },
     // 间距
     gap: String,
   },
   computed: {
     transformData() {
-      const arr = this.data
+      const arr = this.data ?? []
       const resultArr = Array.from({ length: this.columns }, () => [])
       for (let i = 0; i < arr.length; i += this.columns) {
         for (let j = 0; j < this.columns; j++) {
@@ -19,6 +19,11 @@ export default {
         }
       }
       return resultArr
+    },
+  },
+  methods: {
+    getKey(item) {
+      return typeof item === 'object' ? item[this.itemKey] : item
     },
   },
 }
@@ -32,7 +37,7 @@ export default {
       class="vc-waterfall-columns"
       :style="{ gap }"
     >
-      <div v-for="item of group" :key="item[itemKey]" class="vc-waterfall-item">
+      <div v-for="item of group" :key="getKey(item)" class="vc-waterfall-item">
         <slot :item="item" />
       </div>
     </div>
