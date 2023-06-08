@@ -36,6 +36,18 @@ export default {
     search() {
       this.$refs.list.reset().load()
     },
+    toProductPage(item) {
+      const routeMap = {
+        clothing: '/pages/template/clothing/detail',
+      }
+      const path = routeMap[item.industryIdKey]
+      if (!path)
+        return console.warn('未匹配到商品详情页')
+
+      uni.navigateTo({
+        url: `${path}?id=${item.productId}`,
+      })
+    },
   },
 }
 </script>
@@ -62,7 +74,7 @@ export default {
         <div class="p-3">
           <vc-waterfall :data="list" :columns="2" gap="12px" item-key="productId">
             <template #default="{ item }">
-              <div class="bg-white rounded-lg overflow-hidden">
+              <div class="bg-white rounded-lg overflow-hidden" @click="toProductPage(item)">
                 <image :src="item.productUrl" class="w-full" mode="widthFix" />
                 <div class="line-clamp-2 text-sm m-2">
                   {{ item.productName }}

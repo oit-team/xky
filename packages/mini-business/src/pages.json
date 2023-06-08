@@ -1,22 +1,19 @@
 {
   "pages": [
     {
+      "path": "pages/product/list"
+    },
+    {
       "path": "pages/index/index",
       "style": {
         "navigationStyle": "custom"
       }
     },
     {
-      "path": "pages/product/list"
-    },
-    {
       "path": "pages/template/education/detail"
     },
     {
-      "path": "pages/template/jewelry/detail",
-      "style": {
-        "navigationStyle": "custom"
-      }
+      "path": "pages/template/clothing/detail"
     },
     {
       "path": "pages/activity/activity",
@@ -228,11 +225,6 @@
       "iconPath": "static/image/service.png",
       "selectedIconPath": "static/image/service-b.png",
       "text": "服务"
-    }, {
-      "pagePath": "pages/activity/activity",
-      "iconPath": "static/image/luck.png",
-      "selectedIconPath": "static/image/luck-b.png",
-      "text": "奖池"
     }, {
       "pagePath": "pages/operation/operation",
       "iconPath": "static/image/activity.png",
