@@ -128,7 +128,7 @@
     {
       "path": "pages/serviceOrder/orderList",
       "style": {
-        "navigationBarTitleText": "服务订单",
+        "navigationBarTitleText": "预约订单",
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50
       }
@@ -152,6 +152,12 @@
       }
     },
     {
+      "path": "pages/setting/setting",
+      "style": {
+        "navigationBarTitleText": "系统设置"
+      }
+    },
+    {
       "path": "pages/operation/operation",
       "style": {
         "navigationBarTitleText": "活动",
@@ -165,6 +171,12 @@
         "navigationBarTitleText": "活动详情",
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50
+      }
+    },
+    {
+      "path": "pages/operation/orderInfo",
+      "style": {
+        "navigationBarTitleText": "订单详情"
       }
     },
     {
