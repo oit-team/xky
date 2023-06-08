@@ -149,8 +149,8 @@ export function addActivityOrder(params) {
  * @param {*} params
  * @returns
  */
-export function getActivityOrders(params) {
-  return post('/jackpot/activity/getActivityOrders', params)
+export function getActivityOrderList(params) {
+  return post('/jackpot/activity/getActivityOrderList', params)
 }
 
 /**

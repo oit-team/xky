@@ -1,6 +1,6 @@
 <script>
 import cardItem from './components/cardItem.vue'
-import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList, getActivityOrders } from '@/api/luck'
+import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList, getActivityOrderList } from '@/api/luck'
 
 export default {
   components: {
@@ -103,6 +103,11 @@ export default {
   methods: {
     // 活动详情
     async getData() {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
       this.$toast.loading({ mesage: '加载中' })
       const { body } = await getActivityById({
         activityId: this.activityId,
@@ -153,7 +158,7 @@ export default {
     },
     // 购买订单列表
     async getOrder() {
-      const { body } = await getActivityOrders({
+      const { body } = await getActivityOrderList({
         ...this.orderForm,
         activityId: this.activityId,
       })
@@ -162,7 +167,7 @@ export default {
       this.canReloadOrder = body.count > this.orderForm.pageSize
     },
     async reloadOrder() {
-      const { body } = await getActivityOrders({
+      const { body } = await getActivityOrderList({
         ...this.orderForm,
         activityId: this.activityId,
       })
@@ -272,26 +277,70 @@ export default {
                 {{ activity.startDateTime }} 至 {{ activity.endDateTime }}
               </view>
             </view>
-            <view class="box-border">
-              <view class="py-2">
-                活动介绍
-              </view>
-              <view class="bg-white p-2 rounded-md text-xs">
-                <rich-text :nodes="activity.content" />
-              </view>
-              <view class="py-2">
-                活动说明
-              </view>
-              <view class="bg-white p-2 rounded-md text-xs">
-                <rich-text :nodes="activity.remarks" />
-              </view>
+            <view class="mt-2">
+              <van-tabs>
+                <van-tab title="活动介绍">
+                  <view class="mt-2">
+                    <view class="bg-white p-2 rounded-md">
+                      <view class="flex flex-col">
+                        <view class="text-xs flex flex-wrap overflow-hidden text-gray-500">
+                          <rich-text v-if="activity.content" :nodes="activity.content" />
+                          <view v-else>
+                            暂无
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </van-tab>
+                <van-tab title="活动须知">
+                  <view class="mt-2">
+                    <view class="bg-white p-2 rounded-md">
+                      <view class="flex flex-col">
+                        <view class="text-xs flex flex-wrap overflow-hidden text-gray-500">
+                          <rich-text v-if="activity.remarks" :nodes="activity.remarks" />
+                          <view v-else>
+                            暂无
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </van-tab>
+              </van-tabs>
+              <!-- <view class="bg-white rounded-md mt-2 px-2">
+                <view class="text-sm font-bold py-2">
+                  活动介绍
+                </view>
+                <view class="flex flex-col">
+                  <view class="text-xs flex flex-wrap overflow-hidden text-gray-500">
+                    <rich-text v-if="activity.content" :nodes="activity.content" />
+                    <view v-else>
+                      暂无
+                    </view>
+                  </view>
+                </view>
+              </view> -->
+              <!-- <view class="bg-white rounded-md mt-2 px-2">
+                <view class="text-sm font-bold py-2">
+                  活动须知
+                </view>
+                <view class="flex flex-col">
+                  <view class="text-xs flex flex-wrap overflow-hidden text-gray-500">
+                    <rich-text v-if="activity.remarks" :nodes="activity.remarks" />
+                    <view v-else>
+                      暂无
+                    </view>
+                  </view>
+                </view>
+              </view> -->
             </view>
           </view>
         </van-tab>
-        <van-tab title="活动奖券" :name="1">
+        <van-tab title="活动奖池" :name="1">
           <view class="w-full h-full relative">
             <view v-if="jackpotEmpty">
-              <van-empty />
+              <van-empty description="敬请期待" />
             </view>
             <view v-else class="w-full h-full relative p-2 pb-14 box-border">
               <view
@@ -328,7 +377,7 @@ export default {
             </view>
           </view>
         </van-tab>
-        <van-tab title="商家奖券" :name="2">
+        <van-tab title="我的奖池" :name="2">
           <view class="w-full h-full relative">
             <view v-if="myJackpotEmpty">
               <van-empty />
@@ -350,7 +399,7 @@ export default {
             </view>
           </view>
         </van-tab>
-        <van-tab title="活动订单" :name="3">
+        <van-tab title="购买记录" :name="3">
           <view class="w-full h-full relative">
             <view v-if="orderEmpty">
               <van-empty />
@@ -363,12 +412,25 @@ export default {
                     {{ item.orderStatus }}
                   </van-tag>
                 </view>
-                <view class="flex justify-between mt-2">
-                  <view class="text-red-500">
-                    ￥{{ item.amount }}
+                <view class="flex justify-between items-center">
+                  <van-image
+                    :src="item.jackpotImg"
+                    width="60"
+                    height="60"
+                  />
+
+                  <view class="flex justify-between mt-2">
+                    <view class="ml-4">
+                      ×{{ item.totalNumber }}
+                    </view>
                   </view>
-                  <view>
-                    ×{{ item.totalNumber }}
+                </view>
+                <view class="flex justify-between text-[#888] text-xs">
+                  <view class="text-sm">
+                    {{ item.orderCreateTime }}
+                  </view>
+                  <view class="text-[#ff0000]">
+                    ￥<span class="text-sm">{{ item.amount }}</span>
                   </view>
                 </view>
               </view>

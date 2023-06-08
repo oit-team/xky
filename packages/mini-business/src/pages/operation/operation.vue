@@ -57,7 +57,11 @@ export default {
   },
   methods: {
     async getData() {
-      this.$toast.loading({ mesage: '加载中' })
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
       const { body } = await getActivityList({
         ...this.formData,
       }).finally(() => this.$toast.clear())
@@ -66,7 +70,11 @@ export default {
       this.canReload = body.count > this.formData.pageSize
     },
     async reload() {
-      this.$toast.loading({ mesage: '加载中' })
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
       const { body } = await getActivityList({
         ...this.formData,
       }).finally(() => this.$toast.clear())
@@ -125,24 +133,23 @@ export default {
       <view v-else class="w-full p-2 pt-0 box-border">
         <view v-for="(item, index) in activityList" :key="index" class="mt-2 bg-white rounded-md p-2 box-border flex" @click="toDetail(item.activityId)">
           <view class="">
-            <van-image width="80px" height="80px" :src="item.activityImg" class="rounded-md mr-2" />
+            <van-image width="60px" height="60px" :src="item.activityImg" class="rounded-md mr-2" />
           </view>
           <!-- flex flex-col justify-between -->
-          <view class=" w-full">
+          <view class="flex flex-col justify-between w-full">
             <view class="font-600">
               {{ item.activityName }}
             </view>
-            <view class="text-xs">
-              活动时间：
+            <view class="text-xs flex justify-between items-center">
               <view>
                 {{ item.startDateTime }}至{{ item.endDateTime }}
               </view>
+              <view v-if="active === 0 && item.activityStatusKey === 1" @click.stop>
+                <van-button color="#f9591d" size="mini" round @click="join(item.activityId)">
+                  立即参与
+                </van-button>
+              </view>
             </view>
-          </view>
-          <view v-if="active === 0 && item.activityStatusKey === 1" class="flex justify-end items-end" @click.stop>
-            <van-button color="#f9591d" size="mini" round @click="join(item.activityId)">
-              立即参与
-            </van-button>
           </view>
         </view>
       </view>

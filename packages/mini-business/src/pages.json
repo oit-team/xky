@@ -116,7 +116,7 @@
     {
       "path": "pages/service/serviceList",
       "style": {
-        "navigationBarTitleText": "服务列表"
+        "navigationBarTitleText": "服务"
       }
     },
     {
@@ -155,6 +155,12 @@
       "path": "pages/setting/setting",
       "style": {
         "navigationBarTitleText": "系统设置"
+      }
+    },
+    {
+      "path": "pages/setting/editPassword",
+      "style": {
+        "navigationBarTitleText": "修改密码"
       }
     },
     {
@@ -235,20 +241,20 @@
       "selectedIconPath": "static/image/large-b.png",
       "text": "首页"
     }, {
-      "pagePath": "pages/index/index",
-      "iconPath": "static/image/large.png",
-      "selectedIconPath": "static/image/large-b.png",
-      "text": "互动屏"
+      "pagePath": "pages/operation/operation",
+      "iconPath": "static/image/activity.png",
+      "selectedIconPath": "static/image/activity-b.png",
+      "text": "活动"
     }, {
       "pagePath": "pages/service/serviceList",
       "iconPath": "static/image/service.png",
       "selectedIconPath": "static/image/service-b.png",
       "text": "服务"
     }, {
-      "pagePath": "pages/operation/operation",
-      "iconPath": "static/image/activity.png",
-      "selectedIconPath": "static/image/activity-b.png",
-      "text": "活动"
+      "pagePath": "pages/index/index",
+      "iconPath": "static/image/large.png",
+      "selectedIconPath": "static/image/large-b.png",
+      "text": "互动屏"
     }, {
       "pagePath": "pages/my/my",
       "iconPath": "static/image/my.png",

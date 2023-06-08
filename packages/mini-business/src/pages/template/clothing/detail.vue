@@ -25,17 +25,17 @@ export default {
       <div class="bg-white p-2 rounded">
         <div class="flex justify-between">
           <div>
-            <span class="color-red-500">￥{{ getValue('productPrice') }}</span>
-            <span v-if="getValue('originalPrice')" class="line-through color-gray-400 text-sm ml-2">￥{{ getValue('originalPrice') }}</span>
+            <span class="color-red-500 text-sm">￥{{ getValue('productPrice') }}</span>
+            <span v-if="getValue('originalPrice')" class="line-through color-gray-400 text-xs ml-2">￥{{ getValue('originalPrice') }}</span>
           </div>
           <span class="text-xs color-gray-500">库存:{{ getValue('productInventory') }}</span>
         </div>
         <div class="flex gap-2">
-          <van-tag v-for="tag of getValue('productLabel')" :key="tag" plain type="danger">
+          <van-tag v-for="tag of getValue('productLabel')" :key="tag" plain type="danger" size="14">
             {{ tag }}
           </van-tag>
         </div>
-        <div>
+        <div class="text-sm">
           {{ getValue('productName') }}
         </div>
       </div>

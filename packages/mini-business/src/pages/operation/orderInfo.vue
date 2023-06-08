@@ -14,9 +14,14 @@ export default {
   },
   methods: {
     async getInfo(id) {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
       const { body } = await getActivitySupplierOrderById({
         activityOrderId: id,
-      })
+      }).finally(() => this.$toast.clear())
       this.info = body
       this.pms = true
     },
@@ -43,15 +48,33 @@ export default {
       <van-skeleton title row="3" class="h-full" />
     </view>
     <view v-if="pms" class="w-full flex-1">
-      <view class="p-2 box-border rounded bg-white">
-        <view class="w-full flex justify-between items-center">
-          {{ info.activityOrderNo }}
-          <van-tag type="primary">
-            {{ info.orderStatus }}
-          </van-tag>
+      <view class="p-2 py-3 box-border rounded bg-white grid grid-cols-1 gap-2 text-sm">
+        <view class="text-sm font-600 ">
+          订单信息
         </view>
         <view>
-          {{ info.procureShopName }}
+          <span class="text-[#888] text-xs">订单编号：</span>{{ info.activityOrderNo }}
+        </view>
+        <view>
+          <span class="text-[#888] text-xs">订单状态：</span>{{ info.orderStatus }}
+        </view>
+        <view>
+          <span class="text-[#888] text-xs">下单时间：</span>{{ info.orderCreateTime }}
+        </view>
+      </view>
+
+      <view class="p-2 py-3 mt-2 box-border rounded bg-white grid grid-cols-1 gap-2 text-sm">
+        <view class="text-sm font-bold">
+          配送信息
+        </view>
+        <view>
+          <span class="text-[#888] text-xs">收货店铺：</span>{{ info.procureShopAddress }}
+        </view>
+        <view>
+          <span class="text-[#888] text-xs">联系方式：</span>{{ info.procureShopPhone }}
+        </view>
+        <view>
+          <span class="text-[#888] text-xs">收货地址：</span>{{ info.procureShopName }}
         </view>
       </view>
 
@@ -62,8 +85,8 @@ export default {
           class="w-full flex"
         >
           <van-image :src="item.impUrl" width="60" height="60" class="rounded mr-2" />
-          <view class="flex-1">
-            <view>
+          <view class="flex-1 text-[#888] text-xs">
+            <view class="text-[#000] text-sm">
               {{ item.vouchersName }}（{{ item.supplierShopName }}）
             </view>
             <view class="flex justify-between">

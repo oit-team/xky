@@ -73,6 +73,11 @@ export default {
         url: '/pages/activity/activity',
       })
     },
+    toSetting() {
+      uni.navigateTo({
+        url: '/pages/setting/setting',
+      })
+    },
   },
 }
 </script>
@@ -92,11 +97,16 @@ export default {
         </view>
       </view>
       <van-cell-group inset>
-        <van-cell title="奖池" is-link @click="toActivity()">
-          <van-icon slot="icon" name="cart-o" size="18" class="mr-2" />
+        <van-cell title="扫一扫" is-link @click="scan()">
+          <van-icon slot="icon" name="scan" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="服务订单" is-link @click="toServiceOrder()">
-          <van-icon slot="icon" name="cart-o" size="18" class="mr-2" />
+        <van-cell title="预约单" is-link @click="toServiceOrder()">
+          <van-icon
+            slot="icon"
+            name="balance-list-o"
+            size="18"
+            class="mr-2"
+          />
         </van-cell>
         <van-cell title="核销记录" is-link @click="toWriteOff()">
           <van-icon slot="icon" name="coupon-o" size="18" class="mr-2" />
@@ -104,14 +114,11 @@ export default {
         <van-cell title="感兴趣" is-link @click="uni.navigateTo({ url: '/pages/my/largeList' })">
           <van-icon slot="icon" name="like-o" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="扫一扫" is-link @click="scan()">
-          <van-icon slot="icon" name="scan" size="18" class="mr-2" />
+        <van-cell title="奖池" is-link @click="toActivity()">
+          <van-icon slot="icon" name="cart-o" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="音频设置" is-link @click="uni.navigateTo({ url: '/pages/shopAudio/List' })">
-          <van-icon slot="icon" name="volume-o" size="18" class="mr-2" />
-        </van-cell>
-        <van-cell title="隐私与协议" is-link @click="uni.navigateTo({ url: '/pages/my/agreement' })">
-          <van-icon slot="icon" name="warn-o" size="18" class="mr-2" />
+        <van-cell title="系统设置" is-link @click="toSetting()">
+          <van-icon slot="icon" name="setting-o" size="18" class="mr-2" />
         </van-cell>
       </van-cell-group>
       <view class="w-full mt-2 flex justify-center">

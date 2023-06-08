@@ -65,7 +65,11 @@ export default {
 
     // 获取商品列表数据
     async getData() {
-      this.$toast.loading({ message: '加载中' })
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
       const { body } = await getJackpotStyleAll({
         ...this.formData,
       })
@@ -78,7 +82,11 @@ export default {
       this.$toast.clear()
     },
     async reload() {
-      this.$toast.loading({ message: '加载中' })
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
 
       const res = await getJackpotStyleAll({
         ...this.formData,
