@@ -20,7 +20,7 @@ export default {
     getLabel(key, defaultValue = '') {
       return this.data?.[key]?.indexDescrip ?? defaultValue
     },
-    getValue(key, defaultValue = '') {
+    getValue(key, defaultValue = '暂无') {
       return this.data?.[key]?.indexValue ?? defaultValue
     },
   },

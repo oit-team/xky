@@ -39,6 +39,8 @@ export default {
     toProductPage(item) {
       const routeMap = {
         clothing: '/pages/template/clothing/detail',
+        catering: '/pages/template/catering/detail',
+        jewellery: '/pages/template/jewelry/detail',
         education: '/pages/template/education/detail',
       }
       const path = routeMap[item.industryIdKey]

@@ -16,6 +16,12 @@
       "path": "pages/template/clothing/detail"
     },
     {
+      "path": "pages/template/jewelry/detail"
+    },
+    {
+      "path": "pages/template/catering/detail"
+    },
+    {
       "path": "pages/activity/activity",
       "style": {
         "navigationBarTitleText": ""
@@ -202,7 +208,8 @@
       "van-search": "/wxcomponents/vant/search/index",
       "van-skeleton": "/wxcomponents/vant/skeleton/index",
       "van-stepper": "/wxcomponents/vant/stepper/index",
-      "van-tag": "/wxcomponents/vant/tag/index"
+      "van-tag": "/wxcomponents/vant/tag/index",
+      "van-rate": "/wxcomponents/vant/rate/index"
     }
   },
   "tabBar": {
