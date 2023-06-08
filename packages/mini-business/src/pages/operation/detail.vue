@@ -1,6 +1,6 @@
 <script>
 import cardItem from './components/cardItem.vue'
-import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList } from '@/api/luck'
+import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList, getActivityOrders } from '@/api/luck'
 
 export default {
   components: {
@@ -43,6 +43,14 @@ export default {
     jackpotArray: {},
     selectCards: {},
     show: false,
+
+    orderForm: {
+      pageSize: 20,
+      pageNum: 1,
+    },
+    orderList: [],
+    orderEmpty: true,
+    canReloadOrder: true,
   }),
   computed: {
     total() {
@@ -63,6 +71,10 @@ export default {
       this.myJackpotForm.pageNum = 1
       await this.getMyActivity()
     }
+    if (this.active === 3) {
+      this.orderForm.pageNum = 1
+      await this.getOrder()
+    }
     uni.stopPullDownRefresh()
   },
   async onReachBottom() {
@@ -74,6 +86,10 @@ export default {
       this.myJackpotForm.pageNum++
       await this.reloadMy()
     }
+    if (this.active === 3 && this.canReloadOrder) {
+      this.orderForm.pageNum++
+      await this.reloadOrder()
+    }
   },
   onLoad(option) {
     if (option.activityId) {
@@ -81,9 +97,11 @@ export default {
       this.getData()
       this.getMyActivity()
       this.getActivity()
+      this.getOrder()
     }
   },
   methods: {
+    // 活动详情
     async getData() {
       this.$toast.loading({ mesage: '加载中' })
       const { body } = await getActivityById({
@@ -133,6 +151,25 @@ export default {
       this.myJackpotList = [...this.myJackpotList, ...body.resultList]
       this.canReloadMy = body.count > this.myJackpotList.length
     },
+    // 购买订单列表
+    async getOrder() {
+      const { body } = await getActivityOrders({
+        ...this.orderForm,
+        activityId: this.activityId,
+      })
+      this.orderList = body.resultList
+      this.orderEmpty = body.count === 0
+      this.canReloadOrder = body.count > this.orderForm.pageSize
+    },
+    async reloadOrder() {
+      const { body } = await getActivityOrders({
+        ...this.orderForm,
+        activityId: this.activityId,
+      })
+      this.orderList = [...this.orderList, ...body.resultList]
+      this.canReloadOrder = body.count > this.orderList.length
+    },
+    // 顶部tab
     onChange(e) {
       this.active = e.detail.name
     },
@@ -144,6 +181,7 @@ export default {
 
       this.selectCards[id].stepper = e.detail
     },
+    // 参加活动
     join() {
       this.$dialog.confirm({
         title: '提示',
@@ -158,8 +196,12 @@ export default {
     },
     toList() {
       uni.navigateTo({
-        // url: '/pages/operation/cardList',
         url: `/pages/operation/cardList?activityId=${this.activityId}`,
+      })
+    },
+    toInfo(id) {
+      uni.navigateTo({
+        url: `/pages/operation/orderInfo?id=${id}`,
       })
     },
     // 删除选中奖券
@@ -180,6 +222,7 @@ export default {
       else
         this.show = true
     },
+    // 活动奖池下单
     onsubmit() {
       if (this.total === 0)
         return this.$toast.fail('您还未选择奖券')
@@ -207,7 +250,7 @@ export default {
 </script>
 
 <template>
-  <container :classes="[activity.activityType !== 1 ? 'pb-14' : '', 'bg-gray-100 text-sm flex flex-col']">
+  <container :classes="[activity.isParticipate === 0 && activity.activityStatusKey === 1 ? 'pb-14' : '', 'bg-gray-100 text-sm flex flex-col']">
     <view v-if="!pms" class="w-full bg-white flex-1 pt-4 box-border">
       <van-skeleton title row="3" class="h-full" />
     </view>
@@ -247,10 +290,10 @@ export default {
         </van-tab>
         <van-tab title="活动奖券" :name="1">
           <view class="w-full h-full relative">
-            <view v-if="myJackpotEmpty">
+            <view v-if="jackpotEmpty">
               <van-empty />
             </view>
-            <view v-else class="w-full h-full relative p-2 box-border">
+            <view v-else class="w-full h-full relative p-2 pb-14 box-border">
               <view
                 v-for="(item, index) in jackpotList"
                 :key="index.jackpotId"
@@ -262,7 +305,7 @@ export default {
                       ￥{{ item.jackpotBuyPrice || '0' }}
                     </view>
                   </template>
-                  <view v-if="activity.activityType === 1 && !checkSelected(item)">
+                  <view v-if="activity.isParticipate === 1 && activity.isParticipate === 1 && !checkSelected(item)">
                     <van-button color="#f9591d" size="mini" round @click="() => addArray(item)">
                       购买
                     </van-button>
@@ -272,7 +315,7 @@ export default {
             </view>
 
             <view
-              v-if="activity.activityType === 1"
+              v-if="activity.isParticipate"
               class="page-btm bgf !fixed bottom-0 text-sm flex justify-end w-full items-center px-2 box-border bg-white z-10"
             >
               <view class="mr-2 text-[#60a5fa]" @click.stop="clickShow()">
@@ -290,7 +333,7 @@ export default {
             <view v-if="myJackpotEmpty">
               <van-empty />
             </view>
-            <view v-else class="w-full h-full relative p-2 box-border">
+            <view v-else class="w-full h-full relative p-2 pb-14 box-border">
               <view
                 v-for="(item, index) in myJackpotList"
                 :key="index.jackpotId"
@@ -300,7 +343,7 @@ export default {
               </view>
             </view>
 
-            <view v-if="activity.activityType === 1" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border">
+            <view v-if="activity.activityStatusKey === 1 && activity.isParticipate === 1" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border">
               <van-button color="#f9591d" block round @click.self="toList()">
                 添加奖券
               </van-button>
@@ -308,12 +351,34 @@ export default {
           </view>
         </van-tab>
         <van-tab title="活动订单" :name="3">
-          444
+          <view class="w-full h-full relative">
+            <view v-if="orderEmpty">
+              <van-empty />
+            </view>
+            <view v-else class="p-2 box-border">
+              <view v-for="item in orderList" :key="item.activityOrderId" class="bg-white rounded-md p-2 box-border mb-2" @click="toInfo(item.activityOrderId)">
+                <view class="flex justify-between">
+                  <view>{{ item.activityOrderNo }}</view>
+                  <van-tag type="primary">
+                    {{ item.orderStatus }}
+                  </van-tag>
+                </view>
+                <view class="flex justify-between mt-2">
+                  <view class="text-red-500">
+                    ￥{{ item.amount }}
+                  </view>
+                  <view>
+                    ×{{ item.totalNumber }}
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
         </van-tab>
       </van-tabs>
     </view>
 
-    <view v-if="activity.activityType === 0" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border z-20">
+    <view v-if="activity.activityStatusKey === 1 && activity.isParticipate === 0" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border z-20">
       <van-button color="#f9591d" block round @click.self="join()">
         立即参与
       </van-button>

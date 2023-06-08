@@ -1,0 +1,97 @@
+<script>
+import { addActivityOrderConfirm, getActivitySupplierOrderById } from '@/api/luck'
+
+export default {
+  data: () => ({
+    info: {},
+    pms: false,
+    id: '',
+  }),
+  onLoad(opt) {
+    if (opt.id)
+      this.id = opt.id
+    this.getInfo(opt.id)
+  },
+  methods: {
+    async getInfo(id) {
+      const { body } = await getActivitySupplierOrderById({
+        activityOrderId: id,
+      })
+      this.info = body
+      this.pms = true
+    },
+    async submit() {
+      await this.$dialog.confirm({
+        title: '提示',
+        message: '确认执行该操作吗？',
+      })
+      await addActivityOrderConfirm({
+        activityOrderId: this.id,
+        orderStatus: 3,
+      })
+
+      this.$toast.success('成功')
+      setTimeout(() => { uni.navigateBack() }, 300)
+    },
+  },
+}
+</script>
+
+<template>
+  <container classes="flex flex-col items-center bg-gray-100 p-2 box-border text-sm">
+    <view v-if="!pms" class="w-full bg-white flex-1 pt-4 box-border">
+      <van-skeleton title row="3" class="h-full" />
+    </view>
+    <view v-if="pms" class="w-full flex-1">
+      <view class="p-2 box-border rounded bg-white">
+        <view class="w-full flex justify-between items-center">
+          {{ info.activityOrderNo }}
+          <van-tag type="primary">
+            {{ info.orderStatus }}
+          </van-tag>
+        </view>
+        <view>
+          {{ info.procureShopName }}
+        </view>
+      </view>
+
+      <view class="p-2 box-border rounded bg-white grid grid-cols-1 gap-2 mt-2">
+        <view
+          v-for="item in info.activityOrderDetail"
+          :key="item.supplierShopId"
+          class="w-full flex"
+        >
+          <van-image :src="item.impUrl" width="60" height="60" class="rounded mr-2" />
+          <view class="flex-1">
+            <view>
+              {{ item.vouchersName }}（{{ item.supplierShopName }}）
+            </view>
+            <view class="flex justify-between">
+              <view class="text-red-500">
+                ￥{{ item.jackpotBuyPrice }}
+              </view>
+              <view>
+                × {{ item.jackpotNumber }}
+              </view>
+            </view>
+            <view>
+              {{ item.periodValidity }}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view v-if="info.orderStatusKey !== 3" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border z-20">
+        <van-button color="#f9591d" block round @click="submit()">
+          确认
+        </van-button>
+      </view>
+    </view>
+  </container>
+</template>
+
+<style lang='scss' scoped>
+::v-deep van-image{
+  display: flex;
+}
+</style>

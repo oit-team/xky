@@ -139,7 +139,7 @@ export default {
               </view>
             </view>
           </view>
-          <view v-if="active === 0" class="flex justify-end items-end" @click.stop>
+          <view v-if="active === 0 && item.activityStatusKey === 1" class="flex justify-end items-end" @click.stop>
             <van-button color="#f9591d" size="mini" round @click="join(item.activityId)">
               立即参与
             </van-button>

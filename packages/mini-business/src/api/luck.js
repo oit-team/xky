@@ -143,3 +143,30 @@ export function addAddActivityJackpot(params) {
 export function addActivityOrder(params) {
   return post('/jackpot/procurement/addActivityOrder', params)
 }
+
+/**
+ * 购买订单列表
+ * @param {*} params
+ * @returns
+ */
+export function getActivityOrders(params) {
+  return post('/jackpot/activity/getActivityOrders', params)
+}
+
+/**
+ * 购买订单详情
+ * @param {*} params
+ * @returns
+ */
+export function getActivitySupplierOrderById(params) {
+  return post('/jackpot/activity/getActivitySupplierOrderById', params)
+}
+
+/**
+ * 购买订单详情
+ * @param {*} params
+ * @returns
+ */
+export function addActivityOrderConfirm(params) {
+  return post('/jackpot/activity/addActivityOrderConfirm', params)
+}
