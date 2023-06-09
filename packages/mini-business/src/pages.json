@@ -240,8 +240,8 @@
     "backgroundColor": "#ffffff",
     "list": [{
       "pagePath": "pages/dataBoard/index",
-      "iconPath": "static/image/large.png",
-      "selectedIconPath": "static/image/large-b.png",
+      "iconPath": "static/image/home.png",
+      "selectedIconPath": "static/image/home-b.png",
       "text": "首页"
     }, {
       "pagePath": "pages/operation/operation",
