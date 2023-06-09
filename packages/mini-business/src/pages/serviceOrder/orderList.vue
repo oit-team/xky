@@ -139,7 +139,7 @@ export default {
         <view v-for="(item, index) in serviceOrderInfoList" :key="index" class="p-2 bg-white rounded-md flex items-center mb-2" @click="goToDetailPage(item.id)">
           <van-image class="mr-1" width="100" height="100" radius="5" :src="item.resourceUrl" />
           <view class="w-full p-1 flex-1 flex h-100px overflow-hidden">
-            <view class="grow-0 flex-1 flex flex-col overflow-hidden">
+            <view class="flex-1 flex flex-col overflow-hidden">
               <p class="w-full truncate font-sans font-bold">
                 {{ item.serviceName }}
               </p>

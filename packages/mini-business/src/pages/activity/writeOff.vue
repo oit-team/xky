@@ -89,7 +89,7 @@ export default {
 <template>
   <container classes="flex flex-col items-center bg-gray-100 w-full">
     <van-tabs :active="active" class="w-full" @change="onChange">
-      <van-tab title="其他核销" :name="0" />
+      <van-tab title="拓客核销" :name="0" />
       <van-tab title="活动核销" :name="1" />
     </van-tabs>
     <!--   核销记录 -->

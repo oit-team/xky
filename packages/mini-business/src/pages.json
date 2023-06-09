@@ -4,9 +4,6 @@
       "path": "pages/dataBoard/index"
     },
     {
-      "path": "pages/product/list"
-    },
-    {
       "path": "pages/index/index",
       "style": {
         "navigationStyle": "custom"

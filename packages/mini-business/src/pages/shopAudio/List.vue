@@ -48,7 +48,7 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      await this.addOrModifyShopAudioInfo({
+      await addOrModifyShopAudioInfo({
         shopAudioId: this.currentItem.shopAudioId || '',
         textContent: this.textContent,
         textType: this.currentItem.textType,
@@ -118,10 +118,9 @@ export default {
       <view class="flex justify-end text-gray-500 text-xs mr-4">
         *最多30字
       </view>
-      <view class="flex mb-8 items-center">
+      <view class="flex justify-around items-center">
         <van-button
           plain
-          class="ml-20"
           size="small"
           round
           type="default"

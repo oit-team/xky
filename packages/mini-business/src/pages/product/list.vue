@@ -14,8 +14,8 @@ export default {
   },
 
   async mounted() {
-    await this.$store.state.userPromise
-    this.$refs.list.load()
+    // await this.$store.state.userPromise
+    // this.$refs.list.load()
   },
 
   methods: {
@@ -71,7 +71,7 @@ export default {
         ref="list"
         pull-refresh
         load-more
-        :immediate="false"
+        :immediate="true"
         @load="loadData"
         @refresh="loadData"
       >

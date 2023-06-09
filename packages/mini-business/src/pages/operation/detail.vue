@@ -316,7 +316,7 @@ export default {
         <van-tab title="活动奖池" :name="1">
           <view class="w-full h-full relative">
             <view v-if="jackpotEmpty">
-              <van-empty description="敬请期待" />
+              <van-empty />
             </view>
             <view v-else class="w-full h-full relative p-2 pb-14 box-border">
               <view

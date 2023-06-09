@@ -49,7 +49,7 @@ export default {
           <view class="flex">
             <van-image class="mr-2" width="50" height="50" radius="5" :src="serviceOrderInfo.resourceUrl" />
             <view class="flex-1 flex justify-between">
-              <view class="flex-1 flex flex-col flex-wrap grow-0 overflow-hidden">
+              <view class="flex-1 flex flex-col flex-wrap overflow-hidden">
                 <p class="w-full truncate text-sm">
                   {{ serviceOrderInfo.serviceName }}
                 </p>

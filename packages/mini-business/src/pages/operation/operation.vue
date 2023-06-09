@@ -131,7 +131,7 @@ export default {
         </van-tabs>
       </view>
 
-      <van-empty v-if="isEmpty" />
+      <van-empty v-if="isEmpty" :description="active === 0 ? '暂未发布活动' : '暂未参加活动'" />
       <view v-else class="w-full p-2 pt-0 box-border">
         <view v-for="(item, index) in activityList" :key="index" class="mt-2 bg-white rounded-md p-2 box-border flex" @click="toDetail(item.activityId)">
           <view class="">
