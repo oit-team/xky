@@ -120,9 +120,6 @@ export default {
             <p class="truncate text-base font-bold">
               {{ item.name }}
             </p>
-            <p class="truncate text-xs text-gray-500">
-              {{ item.content }}
-            </p>
             <view class="text-sm truncate flex">
               <view v-if="item.labels">
                 <van-tag
@@ -137,8 +134,18 @@ export default {
                 </van-tag>
               </view>
             </view>
+            <p class="truncate text-xs text-gray-500">
+              {{ item.content }}
+            </p>
             <view class="flex justify-between">
               <view class="text-red-500">
+                <van-tag
+                  color="#FFE5D4"
+                  text-color="#ef4444"
+                  class="inline-block"
+                >
+                  预
+                </van-tag>
                 <span class="text-xs">￥</span>
                 <span>{{ item.price }}</span>
               </view>

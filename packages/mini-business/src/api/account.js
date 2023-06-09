@@ -8,3 +8,7 @@ export function userLogin(params) {
 export function getTokenUser() {
   return post('/system/user/getTokenUser')
 }
+
+export function updatePassWord(params) {
+  return post('/system/user/updatePassWord', params)
+}

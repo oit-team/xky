@@ -5,10 +5,14 @@ export default {
   onLaunch() {
     hasToken() && this.$store.dispatch('updateUserInfo')
       .catch(() => {
-        this.$toast('请先进行登录')
         // 忽略错误
         clearToken()
+        uni.reLaunch({
+          url: '/pages/login/login',
+        })
       })
+
+    !hasToken() && uni.reLaunch({ url: '/pages/login/login' })
   },
   onShow() {
   },
@@ -18,6 +22,10 @@ export default {
 </script>
 
 <style>
+page{
+  --tabs-bottom-bar-color: #6FA7FF;
+}
+
 /*每个页面公共css */
 .aspect-9-16 {
   aspect-ratio: 9/16;
