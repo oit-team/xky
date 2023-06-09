@@ -60,10 +60,10 @@ export default {
         <van-image
           width="70"
           height="70"
-          :src="require('../../static/logo.png')"
+          :src="require('../../static/logo.jpg')"
         />
         <view class="leading-normal mt-2 text-sm text-center">
-          欢迎来到享客易
+          欢迎来到TG健身工作室
         </view>
       </view>
       <van-field
