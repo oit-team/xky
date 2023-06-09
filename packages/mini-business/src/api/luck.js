@@ -134,3 +134,12 @@ export function getJackpotStyleAll(params) {
 export function addAddActivityJackpot(params) {
   return post('/jackpot/activity/addAddActivityJackpot', params)
 }
+
+/**
+ * 购买活动奖券下单
+ * @param {*} params
+ * @returns
+ */
+export function addActivityOrder(params) {
+  return post('/jackpot/procurement/addActivityOrder', params)
+}

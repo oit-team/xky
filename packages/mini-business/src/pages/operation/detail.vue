@@ -1,6 +1,6 @@
 <script>
 import cardItem from './components/cardItem.vue'
-import { addParticipateActivity, getActivityById, getActivityJackpotList } from '@/api/luck'
+import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList } from '@/api/luck'
 
 export default {
   components: {
@@ -48,6 +48,11 @@ export default {
     total() {
       return Object.keys(this.selectCards).length
     },
+    totalPrice() {
+      return Object.values(this.selectCards).reduce((num, item) => {
+        return num + (item.stepper * Number.parseFloat(item.jackpotBuyPrice).toFixed(2))
+      }, 0)
+    },
   },
   async onPullDownRefresh() {
     if (this.active === 1) {
@@ -61,11 +66,11 @@ export default {
     uni.stopPullDownRefresh()
   },
   async onReachBottom() {
-    if (this.active === 1) {
+    if (this.active === 1 && this.canReload) {
       this.jackpotForm.pageNum++
       await this.reload()
     }
-    if (this.active === 2) {
+    if (this.active === 2 && this.canReloadMy) {
       this.myJackpotForm.pageNum++
       await this.reloadMy()
     }
@@ -98,7 +103,7 @@ export default {
         stepper: 0,
       }))
       this.jackpotEmpty = body.count === 0
-      this.canReload = body.count !== this.jackpotForm.pageSize
+      this.canReload = body.count > this.jackpotForm.pageSize
     },
     async reload() {
       const { body } = await getActivityJackpotList({
@@ -106,7 +111,7 @@ export default {
         activityId: this.activityId,
       })
       this.jackpotList = [...this.jackpotList, ...body.resultList]
-      this.canReload = body.count === this.jackpotList.length
+      this.canReload = body.count > this.jackpotList.length
     },
     // 商家活动奖券列表
     async getMyActivity() {
@@ -117,7 +122,7 @@ export default {
       })
       this.myJackpotList = body.resultList
       this.myJackpotEmpty = body.count === 0
-      this.canReloadMy = body.count !== this.myJackpotForm.pageSize
+      this.canReloadMy = body.count > this.myJackpotForm.pageSize
     },
     async reloadMy() {
       const { body } = await getActivityJackpotList({
@@ -126,7 +131,7 @@ export default {
         shopId: this.$store.state.userInfo.shopId,
       })
       this.myJackpotList = [...this.myJackpotList, ...body.resultList]
-      this.canReloadMy = body.count === this.myJackpotList.length
+      this.canReloadMy = body.count > this.myJackpotList.length
     },
     onChange(e) {
       this.active = e.detail.name
@@ -157,14 +162,16 @@ export default {
         url: `/pages/operation/cardList?activityId=${this.activityId}`,
       })
     },
-    // 删除照片
+    // 删除选中奖券
     delSingle(item) {
       this.$delete(this.selectCards, item.jackpotId)
     },
     checkSelected(item) {
       return !!this.selectCards[item.jackpotId]
     },
-    changeArray(item) {
+    // 选择奖券
+    addArray(item) {
+      item.stepper = 1
       this.$set(this.selectCards, item.jackpotId, item)
     },
     clickShow() {
@@ -174,33 +181,33 @@ export default {
         this.show = true
     },
     onsubmit() {
-      if (this.total === 0) { this.$toast.fail('您还未选择奖券') }
-      else {
-        this.$dialog.confirm({
-          title: '提示',
-          message: '确定添加奖券吗？',
-        }).then(async () => {
-          console.log(233)
-          console.log(this.selectCards)
-          // const list = Object.values(this.selectCards)
-          // await addAddActivityJackpot({
-          //   jackpotIds: list.map(item => ({
-          //     jackpotId: item.jackpotId,
-          //     jackpotNumber: item.stepper,
-          //   })),
-          //   activityId: this.activityId,
-          // })
-          // this.getActivity()
+      if (this.total === 0)
+        return this.$toast.fail('您还未选择奖券')
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确定添加奖券吗？',
+      }).then(async () => {
+        const list = Object.values(this.selectCards)
+        await addActivityOrder({
+          jackpots: list.map(item => ({
+            jackpotId: item.jackpotId,
+            jackpotNumber: item.stepper,
+          })),
+          payType: 2, // 支付方式
+          orderTotalPrice: this.totalPrice,
         })
-      }
+        this.$toast.success('成功')
+        this.total = 0
+        this.selectCards = {}
+        this.getActivity()
+      })
     },
   },
 }
 </script>
 
 <template>
-  <!-- :classes="activity.isParticipate === 0 ? 'pb-14' : ''" -->
-  <container classes="bg-gray-100 text-sm flex flex-col">
+  <container :classes="[activity.activityType !== 1 ? 'pb-14' : '', 'bg-gray-100 text-sm flex flex-col']">
     <view v-if="!pms" class="w-full bg-white flex-1 pt-4 box-border">
       <van-skeleton title row="3" class="h-full" />
     </view>
@@ -250,31 +257,27 @@ export default {
                 class="bg-white rounded-md mt-2 box-border"
               >
                 <card-item :item="item">
-                  <view v-if="!checkSelected(item)">
-                    <van-button color="#f9591d" size="mini" round @click="() => changeArray(item)">
+                  <template #price>
+                    <view>
+                      ￥{{ item.jackpotBuyPrice || '0' }}
+                    </view>
+                  </template>
+                  <view v-if="activity.activityType === 1 && !checkSelected(item)">
+                    <van-button color="#f9591d" size="mini" round @click="() => addArray(item)">
                       购买
                     </van-button>
                   </view>
-                  <!-- <view v-else class="flex items-center text-sm">
-                      <van-stepper
-                        :value="item.stepper"
-                        integer
-                        min="1"
-                        :max="item.jackpotInventory"
-                        input-width="45px"
-                        button-size="25px"
-                        @change="($event) => $emit('change', $event, item.jackpotId)"
-                      />
-                    </view> -->
                 </card-item>
               </view>
             </view>
 
             <view
+              v-if="activity.activityType === 1"
               class="page-btm bgf !fixed bottom-0 text-sm flex justify-end w-full items-center px-2 box-border bg-white z-10"
             >
               <view class="mr-2 text-[#60a5fa]" @click.stop="clickShow()">
-                已选：{{ total }}
+                <span class="mr-2">已选：{{ total }}</span>
+                <span v-if="total > 0">总价：￥{{ totalPrice }}</span>
               </view>
               <van-button class="py-2" size="small" type="info" round @click="onsubmit()">
                 确认购买
@@ -297,7 +300,7 @@ export default {
               </view>
             </view>
 
-            <view v-if="activity.isParticipate === 1" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border">
+            <view v-if="activity.activityType === 1" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border">
               <van-button color="#f9591d" block round @click.self="toList()">
                 添加奖券
               </van-button>
@@ -310,7 +313,7 @@ export default {
       </van-tabs>
     </view>
 
-    <view v-if="activity.isParticipate === 0" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border">
+    <view v-if="activity.activityType === 0" class="mt-2 fixed bottom-0 left-0 w-full p-2 box-border z-20">
       <van-button color="#f9591d" block round @click.self="join()">
         立即参与
       </van-button>
@@ -335,6 +338,7 @@ export default {
               <van-icon name="cross" color="#fff" size="14" />
             </view>
             <van-image
+              width="110px"
               height="110px"
               :src="item.impUrl"
               fit="contain"
@@ -358,5 +362,20 @@ export default {
 </template>
 
 <style lang='scss' scoped>
-
+::v-deep van-image{
+  display: block;
+}
+.pop-item__del {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background-color: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
 </style>

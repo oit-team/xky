@@ -68,9 +68,9 @@ export default {
         },
       })
     },
-    test() {
+    toActivity() {
       uni.navigateTo({
-        url: '/pages/activity/text',
+        url: '/pages/activity/activity',
       })
     },
   },
@@ -92,6 +92,9 @@ export default {
         </view>
       </view>
       <van-cell-group inset>
+        <van-cell title="奖池" is-link @click="toActivity()">
+          <van-icon slot="icon" name="cart-o" size="18" class="mr-2" />
+        </van-cell>
         <van-cell title="服务订单" is-link @click="toServiceOrder()">
           <van-icon slot="icon" name="cart-o" size="18" class="mr-2" />
         </van-cell>

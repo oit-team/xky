@@ -20,7 +20,7 @@ export default {
           {{ item.vouchersName }}
         </view>
         <view class="text-xs text-gray-500 my-2">
-          ￥{{ item.jackpotPrice || '0' }}
+          <slot name="price" />
         </view>
         <view class="text-xs text-gray-500 ">
           有效期：{{ item.periodValidity }}
@@ -28,7 +28,7 @@ export default {
       </view>
     </view>
     <view class="flex flex-col items-center justify-around text-sm">
-      <view>× {{ item.jackpotInventory }}</view>
+      <view>库存： {{ item.jackpotInventory }}</view>
       <slot />
     </view>
   </view>
