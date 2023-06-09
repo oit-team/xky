@@ -23,6 +23,7 @@ export default {
     selectImgs: {},
     show: false, // 弹出层
     showDate: false,
+    canReload: true,
   }),
   computed: {
     total() {
@@ -38,14 +39,14 @@ export default {
   onShow() {
     this.getData()
   },
-  onReady() {
-  },
   async onPullDownRefresh() {
     this.formData.pageNum = 1
     await this.getData()
     uni.stopPullDownRefresh()
   },
   async onReachBottom() {
+    if (!this.canReload)
+      return
     this.formData.pageNum++
     await this.reload()
   },
@@ -65,10 +66,11 @@ export default {
 
       const res = await getAdvertsRes({
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
+
       this.indexData = res.body.result
-      this.showEmpty = res.body.result.length === 0
+      this.showEmpty = res.body.count === 0
+      this.canReload = res.body.count < this.formData.pageSize
       // let list = []
       this.indexData.forEach((e, i) => {
         this.selectList.forEach((item) => {
@@ -86,11 +88,10 @@ export default {
 
       const res = await getAdvertsRes({
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
+
       this.indexData = [...this.indexData, ...res.body.result]
-      if (res.body.result.length === 0)
-        this.$toast('加载完毕')
+      this.canReload = res.body.count > this.indexData.length
     },
     addSingle(item) {
       const length = this.total + 1
@@ -254,17 +255,6 @@ export default {
   width: 110px;
   height: 110px;
 }
-
-//.addIcon {
-//  position: absolute;
-//  top: 0;
-//  right: 0;
-//  background-color: transparent;
-//  font-size: 26px;
-//  line-height: 30px;
-//  text-align: center;
-//  z-index: 1;
-//}
 
 .pop-item__del {
   position: absolute;

@@ -123,7 +123,9 @@ export default {
   <container classes="flex flex-col items-center bg-gray-100 text-sm">
     <view v-if="logged" class="w-full">
       <view>
-        <van-search :value="activityName" placeholder="请输入活动名称" @search="onSearch" @clear="onClear" />
+        <view class="mb-2">
+          <van-search :value="activityName" placeholder="请输入活动名称" @search="onSearch" @clear="onClear" />
+        </view>
         <van-tabs color="#6FA7FF" :active="active" @change="onChange">
           <van-tab v-for="item in list" :key="item.id" :title="item.title" :name="item.id" />
         </van-tabs>

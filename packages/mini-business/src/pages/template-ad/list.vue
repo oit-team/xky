@@ -49,8 +49,7 @@ export default {
 
       const res = await getAdvertsShopAll({
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.indexData = [...this.indexData, ...res.body.result]
       if (res.body.result.length === 0)
         this.$toast('加载完毕')

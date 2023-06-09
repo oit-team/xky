@@ -8,6 +8,7 @@ export default {
     return {
       username: '',
       password: '',
+      show: true,
     }
   },
   onLoad() {
@@ -45,12 +46,15 @@ export default {
         })
       }
     },
+    changePw(e) {
+      this.password = e.detail
+    },
   },
 }
 </script>
 
 <template>
-  <container classes="flex flex-col items-center">
+  <container classes="flex flex-col items-center pt-12">
     <view class="width-3-5 h-full mt-24">
       <view class="w-full flex flex-col justify-center items-center mb-10">
         <van-image
@@ -68,20 +72,21 @@ export default {
         left-icon="contact"
         clearable
         maxlength="50"
-        :rules="[{ required: true, message: '请填写账号' }]"
         @change="username = $event.detail"
+        @focus="show = false"
+        @blur="show = true"
       />
       <van-field
         :value="password"
         left-icon="lock"
-        type="password"
+        password
         clearable
-        maxlength="50"
         placeholder="密码"
-        :rules="[{ required: true, message: '请填写密码' }]"
-        @change="password = $event.detail"
+        @change="changePw"
+        @focus="show = false"
+        @blur="show = true"
       />
-      <view class="m-5" @click="login()">
+      <view v-show="show" class="m-5" @click="login()">
         <van-button round block type="info" native-type="submit">
           登录
         </van-button>

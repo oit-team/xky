@@ -142,6 +142,7 @@ export default {
         ...this.myJackpotForm,
         activityId: this.activityId,
         shopId: this.$store.state.userInfo.shopId,
+        shopActivityCode: 1,
       })
       this.myJackpotList = body.resultList
       this.myJackpotEmpty = body.count === 0
@@ -152,6 +153,7 @@ export default {
         ...this.myJackpotForm,
         activityId: this.activityId,
         shopId: this.$store.state.userInfo.shopId,
+        shopActivityCode: 1,
       })
       this.myJackpotList = [...this.myJackpotList, ...body.resultList]
       this.canReloadMy = body.count > this.myJackpotList.length
@@ -308,32 +310,6 @@ export default {
                   </view>
                 </van-tab>
               </van-tabs>
-              <!-- <view class="bg-white rounded-md mt-2 px-2">
-                <view class="text-sm font-bold py-2">
-                  活动介绍
-                </view>
-                <view class="flex flex-col">
-                  <view class="text-xs flex flex-wrap overflow-hidden text-gray-500">
-                    <rich-text v-if="activity.content" :nodes="activity.content" />
-                    <view v-else>
-                      暂无
-                    </view>
-                  </view>
-                </view>
-              </view> -->
-              <!-- <view class="bg-white rounded-md mt-2 px-2">
-                <view class="text-sm font-bold py-2">
-                  活动须知
-                </view>
-                <view class="flex flex-col">
-                  <view class="text-xs flex flex-wrap overflow-hidden text-gray-500">
-                    <rich-text v-if="activity.remarks" :nodes="activity.remarks" />
-                    <view v-else>
-                      暂无
-                    </view>
-                  </view>
-                </view>
-              </view> -->
             </view>
           </view>
         </van-tab>

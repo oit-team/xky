@@ -35,7 +35,7 @@ export default {
       modulesTitle: '',
       goodsList: [],
       showPicker: false,
-      columns: ['轮播模式', '交互模式'],
+      columns: ['广告', '交互', '抽奖'],
       iStatusBarHeight: 0,
       topHeight: 0,
       showSwitch: false, // 左上角切换按钮
@@ -86,7 +86,7 @@ export default {
       this.devState = res.body
       if (res.body.resultList.length > 0)
         this.devList = res.body.resultList
-      this.$toast('探测完成')
+      this.$toast.success('探测完成')
     },
     async getAppDevList() {
       const res = await getAppDevList()
@@ -103,7 +103,7 @@ export default {
       this.$refs.config.swipeTo(0)
       this.setConfig(advertsRes?.rotationRules || [])
       this.setFileMap(advertsRes?.resEntityMap || {})
-      this.$toast('加载完成')
+      this.$toast.success('加载完成')
     },
     async addAdvertsTemp() {
       await this.$refs.config.checkConfig()
@@ -122,7 +122,7 @@ export default {
 
       this.saveConfigCache()
 
-      this.$toast('保存成功')
+      this.$toast.success('成功')
     },
     async addAppPublishDeviceAds() {
       await this.$dialog.confirm({
@@ -150,7 +150,7 @@ export default {
       this.hasDraft = false
       this.saveConfigCache()
 
-      this.$toast('发布成功')
+      this.$toast.success('发布成功')
     },
     async selectTab(index) {
       await this.checkNotSaved()
@@ -220,7 +220,7 @@ export default {
           cmd: value === 0 ? 9 : 10,
           mod: 1, // 来源：1（小程序）
         })
-        this.$toast('切换成功')
+        this.$toast.success('切换成功')
       }).catch()
     },
   },

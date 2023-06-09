@@ -65,10 +65,9 @@ export default {
       })
       const res = await getProductListById({
         ...this.formData,
-      })
+      }).finally(() => this.$toast.clear())
       this.indexList = res.body.result
       this.showEmpty = this.indexList.length === 0
-      this.$toast('加载成功')
     },
     async reload() {
       const res = await getProductListById({
@@ -109,23 +108,6 @@ export default {
 
 <template>
   <container classes="bg-gray-100 flex flex-col w-full text-sm">
-    <!--    <view class="navHeight" :style="{ height: `${iStatusBarHeight}px` }"></view> -->
-    <!--    <view class="w-full flex justify-between items-center px-1" :style="{ height: `${topHeight}px` }"> -->
-    <!--      <view class="px-2 py-1 box-border"> -->
-    <!--        <van-icon -->
-    <!--          name="arrow-left" -->
-    <!--          size="16" -->
-    <!--        ></van-icon> -->
-    <!--      </view> -->
-    <!--      <view class="width-1-3 py-1"> -->
-    <!--        <van-field -->
-    <!--          :value="phone" -->
-    <!--          placeholder="请输入用户名" -->
-    <!--          @change="onChange()" -->
-    <!--        /> -->
-    <!--      </view> -->
-    <!--      <view></view> -->
-    <!--    </view> -->
     <view class="w-full mb-2 bg-white shadow-gray-500 shadow-gray-300 shadow-md">
       <timer-tab ref="timeTab" @change-data="changeDate()" @show-calendar="show = true" />
     </view>

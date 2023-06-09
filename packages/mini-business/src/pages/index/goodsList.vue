@@ -67,7 +67,7 @@ export default {
         ...this.formData,
         styleNo: '',
         styleName: '',
-      })
+      }).finally(() => this.$toast.clear())
       this.indexData = res.body.resultList
       this.showEmpty = res.body.resultList.length === 0
     },
@@ -82,8 +82,7 @@ export default {
         ...this.formData,
         styleNo: '',
         styleName: '',
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.indexData = [...this.indexData, ...res.body.result]
       if (res.body.resultList.length === 0)
         this.$toast('加载完毕')

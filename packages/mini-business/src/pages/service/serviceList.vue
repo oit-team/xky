@@ -32,13 +32,12 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      const res = await this.$loading(getServiceInfoList({
+      const res = await getServiceInfoList({
         name: this.searchValue,
         content: '',
         remarks: '',
         ...this.formData,
-      }))
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.serviceList = [...res.body.advertsList]
       this.showEmpty = this.serviceList.length <= 0
     },
@@ -54,8 +53,7 @@ export default {
         content: '',
         remarks: '',
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.serviceList = [...this.serviceList, ...res.body.advertsList]
     },
 

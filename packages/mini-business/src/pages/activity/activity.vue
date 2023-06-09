@@ -52,7 +52,6 @@ export default {
       this.devId = this.devList[this.devIndex]?.devId
       if (this.devList.length > 0)
         this.getLuckyDrawRecord()
-      this.$toast('探测完成')
     },
     async getDrawProduct() {
       const res = await getDrawProduct({

@@ -10,12 +10,17 @@ export default {
         pageNum: 1,
         shopId: '',
         userId: '',
+        lotteryTicket: 0,
       },
       writeOffList: [],
       showEmpty: false,
       cardList: {},
       showPopup: false,
+      active: 0,
+      noReload: false,
     }
+  },
+  watch: {
   },
   onShow() {
     this.getLotteryRecord()
@@ -40,10 +45,10 @@ export default {
       this.formData.shopId = this.$store.state.userInfo.shopId
       const res = await getLotteryRecord({
         ...this.formData,
-      })
-      this.$toast('成功')
+      }).finally(() => this.$toast.clear())
       this.writeOffList = res.body.result
       this.showEmpty = this.writeOffList.length === 0
+      this.noReload = res.body.count < this.formData.pageSize
     },
     async reload() {
       this.$toast.loading({
@@ -53,28 +58,38 @@ export default {
       })
       const res = await getLotteryRecord({
         ...this.formData,
-      })
-      this.$toast('成功')
+      }).finally(() => this.$toast.clear())
       this.writeOffList = [...this.writeOffList, ...res.body.result]
-      if (res.body.result.length === 0)
-        this.$toast('加载完毕')
+      this.noReload = res.body.count < this.formData.pageSize
     },
     async getCard(index) {
-      const res = await this.$loading(getLotteryDetailed({
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
+      const res = awaitgetLotteryDetailed({
         recordId: index,
-      }))
-
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
 
       this.showPopup = true
       this.cardList = res.body.result
+    },
+    onChange(e) {
+      this.active = e.detail.name
+      this.formData.lotteryTicket = this.active
+      this.getLotteryRecord()
     },
   },
 }
 </script>
 
 <template>
-  <container classes="flex flex-col items-center bg-gray-100">
+  <container classes="flex flex-col items-center bg-gray-100 w-full">
+    <van-tabs :active="active" class="w-full" @change="onChange">
+      <van-tab title="其他核销" :name="0" />
+      <van-tab title="活动核销" :name="1" />
+    </van-tabs>
     <!--   核销记录 -->
     <view class="content w-full h-full mt-2">
       <view v-if="showEmpty">
@@ -105,6 +120,10 @@ export default {
               </view>
             </view>
           </view>
+        </view>
+
+        <view v-if="noReload" class="text-center">
+          没有更多了
         </view>
       </view>
     </view>

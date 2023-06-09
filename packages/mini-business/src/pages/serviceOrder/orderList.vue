@@ -16,6 +16,7 @@ export default {
         pageNum: 1,
         pageSize: 20,
       },
+      notReload: true,
     }
   },
   async onShow() {
@@ -39,14 +40,14 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      const res = await this.$loading(getServiceOrderList({
+      const res = await getServiceOrderList({
         searchContent: this.searchValue,
         status: this.activeTab,
         ...this.formData,
-      }))
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.serviceOrderInfoList = [...res.body.serviceOrderInfoList]
       this.showEmpty = this.serviceOrderInfoList.length <= 0
+      this.notReload = res.body.serviceOrderInfoList.length < this.formData.pageSize
     },
 
     async reload() {
@@ -59,9 +60,9 @@ export default {
         searchContent: this.searchValue,
         status: this.activeTab,
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.serviceOrderInfoList = [...this.serviceOrderInfoList, ...res.body.serviceOrderInfoList]
+      this.notReload = res.body.serviceOrderInfoList.length < this.formData.pageSize
     },
 
     search(e) {
@@ -168,7 +169,7 @@ export default {
             </view>
           </view>
         </view>
-        <view v-if="serviceOrderInfoList.length > 6" class="text-xs text-gray-500 pb-2 flex justify-center">
+        <view v-if="notReload" class="text-xs text-gray-500 pb-2 flex justify-center">
           没有更多了~
         </view>
       </view>

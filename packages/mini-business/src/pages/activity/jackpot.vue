@@ -41,7 +41,6 @@ export default {
       }).finally(() => this.$toast.clear())
       this.luckList = [...res.body.result]
       this.showEmpty = this.luckList.length <= 0
-      this.$toast('成功')
     },
     async reload() {
       this.$toast.loading({
@@ -52,8 +51,7 @@ export default {
       this.formData.shopId = this.$store.state.userInfo.shopId
       const res = await getDrawProduct({
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.luckList = [...this.luckList, ...res.body.allStateCount]
     },
   },
