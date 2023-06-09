@@ -14,7 +14,6 @@ export default {
   },
   onShow() {
     // uni.hideHomeButton()
-    this.useVantModel(['username', 'password'])
   },
   methods: {
     async login() {
@@ -32,8 +31,7 @@ export default {
       const res = await userLogin({
         userName: this.username,
         passWord: encrypted,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       uni.setStorageSync('token', res.body.accessToken)
       this.$store.commit('setUserInfo', res.body.resultList)
       if (uni.getStorageSync('op-confirm')) {
@@ -43,7 +41,7 @@ export default {
       }
       else {
         uni.switchTab({
-          url: '/pages/index/index',
+          url: '/pages/product/list',
         })
       }
     },
@@ -65,7 +63,7 @@ export default {
         </view>
       </view>
       <van-field
-        v-model="username"
+        :value="username"
         placeholder="账号"
         left-icon="contact"
         clearable
@@ -74,7 +72,7 @@ export default {
         @change="username = $event.detail"
       />
       <van-field
-        v-model="password"
+        :value="password"
         left-icon="lock"
         type="password"
         clearable
