@@ -46,6 +46,7 @@ export default {
       const res = await getLotteryRecord({
         ...this.formData,
       }).finally(() => this.$toast.clear())
+
       this.writeOffList = res.body.result
       this.showEmpty = this.writeOffList.length === 0
       this.noReload = res.body.count < this.formData.pageSize
@@ -59,6 +60,7 @@ export default {
       const res = await getLotteryRecord({
         ...this.formData,
       }).finally(() => this.$toast.clear())
+
       this.writeOffList = [...this.writeOffList, ...res.body.result]
       this.noReload = res.body.count < this.formData.pageSize
     },

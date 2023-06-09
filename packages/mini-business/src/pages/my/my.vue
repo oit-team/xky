@@ -79,6 +79,11 @@ export default {
         url: '/pages/setting/setting',
       })
     },
+    toGoods() {
+      uni.navigateTo({
+        url: '/pages/product/list',
+      })
+    },
   },
 }
 </script>
@@ -101,10 +106,18 @@ export default {
         <van-cell title="扫一扫" is-link @click="scan()">
           <van-icon slot="icon" name="scan" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="预约单" is-link @click="toServiceOrder()">
+        <van-cell title="预约订单" is-link @click="toServiceOrder()">
           <van-icon
             slot="icon"
             name="balance-list-o"
+            size="18"
+            class="mr-2"
+          />
+        </van-cell>
+        <van-cell title="商品列表" is-link @click="toGoods()">
+          <van-icon
+            slot="icon"
+            name="orders-o"
             size="18"
             class="mr-2"
           />

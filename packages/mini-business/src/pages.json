@@ -1,6 +1,9 @@
 {
   "pages": [
     {
+      "path": "pages/dataBoard/index"
+    },
+    {
       "path": "pages/product/list"
     },
     {
@@ -236,7 +239,7 @@
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [{
-      "pagePath": "pages/product/list",
+      "pagePath": "pages/dataBoard/index",
       "iconPath": "static/image/large.png",
       "selectedIconPath": "static/image/large-b.png",
       "text": "首页"
