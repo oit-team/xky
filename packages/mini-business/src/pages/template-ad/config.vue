@@ -28,7 +28,6 @@ export default {
     }
   },
   created() {
-    this.useVantModel(['templateName'])
   },
   methods: {
     async loadData() {
@@ -86,7 +85,7 @@ export default {
       <template #after>
         <view class="h-full overflow-auto">
           <van-cell-group inset>
-            <van-field v-model.trim="templateName" label="模板名称" placeholder="请输入模板名称" />
+            <van-field :value="templateName" label="模板名称" placeholder="请输入模板名称" @change="templateName = $event.detail" />
           </van-cell-group>
         </view>
       </template>

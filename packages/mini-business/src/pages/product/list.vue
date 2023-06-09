@@ -14,7 +14,8 @@ export default {
   },
 
   async mounted() {
-    await this.$store.state.userPromise && this.$refs.list.load()
+    await this.$store.state.userPromise
+    this.$refs.list.load()
   },
 
   methods: {

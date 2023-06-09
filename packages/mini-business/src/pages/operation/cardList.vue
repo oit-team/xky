@@ -72,14 +72,13 @@ export default {
       })
       const { body } = await getJackpotStyleAll({
         ...this.formData,
-      })
+      }).finally(() => this.$toast.clear())
       this.indexData = body.resultList.map((item) => {
         this.$set(item, '_check', false)
         return item
       })
       this.showEmpty = body.count === 0
       this.canReload = body.count > this.formData.pageSize
-      this.$toast.clear()
     },
     async reload() {
       this.$toast.loading({
@@ -90,8 +89,7 @@ export default {
 
       const res = await getJackpotStyleAll({
         ...this.formData,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.indexData = [...this.indexData, ...res.body.result]
       this.canReload = this.indexData.length < res.body.count
     },

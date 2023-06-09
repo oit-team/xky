@@ -19,7 +19,6 @@ export default {
     },
   },
   onShow() {
-    this.useVantModel(['weChatName', 'headPortrait'])
   },
   methods: {
     onChooseAvatar(e) {
@@ -49,7 +48,7 @@ export default {
     </view>
 
     <van-field
-      v-model="weChatName"
+      :value="weChatName"
       type="nickname"
       placeholder="请输入昵称"
       label="昵称"

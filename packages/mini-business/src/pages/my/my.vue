@@ -26,6 +26,7 @@ export default {
         title: '提示',
         message: '确认退出登录',
       }).then(() => {
+        uni.clearStorageSync()
         uni.reLaunch({
           url: '/pages/login/login',
         })
@@ -114,7 +115,7 @@ export default {
         <van-cell title="感兴趣" is-link @click="uni.navigateTo({ url: '/pages/my/largeList' })">
           <van-icon slot="icon" name="like-o" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="扫一扫" is-link @click="scan()">
+        <van-cell title="奖池" is-link @click="scan()">
           <van-icon slot="icon" name="scan" size="18" class="mr-2" />
         </van-cell>
         <van-cell title="系统设置" is-link @click="toSetting()">

@@ -53,13 +53,13 @@ export default {
           订单信息
         </view>
         <view>
-          <span class="text-[#888] text-xs">订单编号：</span>{{ info.activityOrderNo }}
+          <span class="text-[#888] text-xs">订单编号：</span>{{ info.activityOrderNo || '暂无' }}
         </view>
         <view>
-          <span class="text-[#888] text-xs">订单状态：</span>{{ info.orderStatus }}
+          <span class="text-[#888] text-xs">订单状态：</span>{{ info.orderStatus || '暂无' }}
         </view>
         <view>
-          <span class="text-[#888] text-xs">下单时间：</span>{{ info.orderCreateTime }}
+          <span class="text-[#888] text-xs">下单时间：</span>{{ info.orderCreateTime || '暂无' }}
         </view>
       </view>
 
@@ -68,13 +68,13 @@ export default {
           配送信息
         </view>
         <view>
-          <span class="text-[#888] text-xs">收货店铺：</span>{{ info.procureShopAddress }}
+          <span class="text-[#888] text-xs">收货店铺：</span>{{ info.procureShopAddress || '暂无' }}
         </view>
         <view>
-          <span class="text-[#888] text-xs">联系方式：</span>{{ info.procureShopPhone }}
+          <span class="text-[#888] text-xs">联系方式：</span>{{ info.procureShopPhone || '暂无' }}
         </view>
         <view>
-          <span class="text-[#888] text-xs">收货地址：</span>{{ info.procureShopName }}
+          <span class="text-[#888] text-xs">收货地址：</span>{{ info.procureShopName || '暂无' }}
         </view>
       </view>
 
@@ -91,14 +91,14 @@ export default {
             </view>
             <view class="flex justify-between">
               <view class="text-red-500">
-                ￥{{ item.jackpotBuyPrice }}
+                ￥{{ item.jackpotBuyPrice || '0' }}
               </view>
               <view>
-                × {{ item.jackpotNumber }}
+                × {{ item.jackpotNumber || '0' }}
               </view>
             </view>
             <view>
-              {{ item.periodValidity }}
+              {{ item.periodValidity || '0' }}
             </view>
           </view>
         </view>

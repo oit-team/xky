@@ -47,16 +47,12 @@ export default {
   },
   methods: {
     async getData() {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-      })
       const res = await verificationServiceOrder({ content: this.opt })
       if (res.head.status !== 0) {
         this.isSuccess = false
         clearInterval(this.timer)
       }
+
       else {
         this.isSuccess = true
         this.cardInfo = res.body

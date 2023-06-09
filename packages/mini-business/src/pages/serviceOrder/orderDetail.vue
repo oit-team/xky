@@ -26,8 +26,7 @@ export default {
       })
       const res = await getServiceOrderDetail({
         id: this.id,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       this.serviceOrderInfo = res.body.serviceOrderInfo
     },
   },

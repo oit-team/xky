@@ -8,13 +8,13 @@ export default {
     return {
       username: '',
       password: '',
+      show: true,
     }
   },
   onLoad() {
   },
   onShow() {
     // uni.hideHomeButton()
-    this.useVantModel(['username', 'password'])
   },
   methods: {
     async login() {
@@ -32,8 +32,7 @@ export default {
       const res = await userLogin({
         userName: this.username,
         passWord: encrypted,
-      })
-      this.$toast.clear()
+      }).finally(() => this.$toast.clear())
       uni.setStorageSync('token', res.body.accessToken)
       this.$store.commit('setUserInfo', res.body.resultList)
       if (uni.getStorageSync('op-confirm')) {
@@ -43,16 +42,19 @@ export default {
       }
       else {
         uni.switchTab({
-          url: '/pages/index/index',
+          url: '/pages/product/list',
         })
       }
+    },
+    changePw(e) {
+      this.password = e.detail
     },
   },
 }
 </script>
 
 <template>
-  <container classes="flex flex-col items-center">
+  <container classes="flex flex-col items-center pt-12">
     <view class="width-3-5 h-full mt-24">
       <view class="w-full flex flex-col justify-center items-center mb-10">
         <van-image
@@ -65,25 +67,26 @@ export default {
         </view>
       </view>
       <van-field
-        v-model="username"
+        :value="username"
         placeholder="账号"
         left-icon="contact"
         clearable
         maxlength="50"
-        :rules="[{ required: true, message: '请填写账号' }]"
         @change="username = $event.detail"
+        @focus="show = false"
+        @blur="show = true"
       />
       <van-field
-        v-model="password"
+        :value="password"
         left-icon="lock"
-        type="password"
+        password
         clearable
-        maxlength="50"
         placeholder="密码"
-        :rules="[{ required: true, message: '请填写密码' }]"
-        @change="password = $event.detail"
+        @change="changePw"
+        @focus="show = false"
+        @blur="show = true"
       />
-      <view class="m-5" @click="login()">
+      <view v-show="show" class="m-5" @click="login()">
         <van-button round block type="info" native-type="submit">
           登录
         </van-button>

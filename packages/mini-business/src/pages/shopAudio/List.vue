@@ -31,8 +31,7 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      const res = await this.$loading(getShopAudioList())
-      this.$toast.clear()
+      const res = await this.$loading(getShopAudioList()).finally(() => this.$toast.clear())
       this.shopAudioList = res.body.resultList
       this.showEmpty = this.shopAudioList.length <= 0
     },
@@ -49,11 +48,11 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      await this.$loading(addOrModifyShopAudioInfo({
+      await this.addOrModifyShopAudioInfo({
         shopAudioId: this.currentItem.shopAudioId || '',
         textContent: this.textContent,
         textType: this.currentItem.textType,
-      }))
+      }).finally(() => this.$toast.clear())
       this.$toast.success('编辑成功')
     },
 
