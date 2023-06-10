@@ -42,7 +42,7 @@ export default {
       }
       else {
         uni.switchTab({
-          url: '/pages/product/list',
+          url: '/pages/dataBoard/index',
         })
       }
     },

@@ -21,17 +21,6 @@ export default {
     },
   },
   methods: {
-    login() {
-      this.$dialog.confirm({
-        title: '提示',
-        message: '确认退出登录',
-      }).then(() => {
-        uni.clearStorageSync()
-        uni.reLaunch({
-          url: '/pages/login/login',
-        })
-      })
-    },
     toWriteOff() {
       uni.navigateTo({
         url: '/pages/activity/writeOff',
@@ -98,10 +87,13 @@ export default {
         </view>
       </view>
       <van-cell-group inset>
-        <van-cell title="扫一扫" is-link @click="scan()">
+        <van-cell title="核销扫码" is-link @click="scan()">
           <van-icon slot="icon" name="scan" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="预约单" is-link @click="toServiceOrder()">
+        <van-cell title="核销记录" is-link @click="toWriteOff()">
+          <van-icon slot="icon" name="coupon-o" size="18" class="mr-2" />
+        </van-cell>
+        <van-cell title="预约订单" is-link @click="toServiceOrder()">
           <van-icon
             slot="icon"
             name="balance-list-o"
@@ -109,33 +101,16 @@ export default {
             class="mr-2"
           />
         </van-cell>
-        <van-cell title="核销记录" is-link @click="toWriteOff()">
-          <van-icon slot="icon" name="coupon-o" size="18" class="mr-2" />
-        </van-cell>
         <van-cell title="感兴趣" is-link @click="uni.navigateTo({ url: '/pages/my/largeList' })">
           <van-icon slot="icon" name="like-o" size="18" class="mr-2" />
         </van-cell>
-        <van-cell title="奖池" is-link @click="scan()">
-          <van-icon slot="icon" name="scan" size="18" class="mr-2" />
+        <van-cell title="拓客奖池" is-link @click="toActivity()">
+          <van-icon slot="icon" name="gift-o" size="18" class="mr-2" />
         </van-cell>
         <van-cell title="系统设置" is-link @click="toSetting()">
           <van-icon slot="icon" name="setting-o" size="18" class="mr-2" />
         </van-cell>
       </van-cell-group>
-      <view class="w-full mt-2 flex justify-center">
-        <view class="w-1/2 ">
-          <van-button
-            type="info"
-            block
-            plain
-            round
-            class="w-full"
-            @click="login()"
-          >
-            退出登录
-          </van-button>
-        </view>
-      </view>
     </view>
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
       <not-logged />

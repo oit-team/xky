@@ -35,7 +35,7 @@ export default {
       modulesTitle: '',
       goodsList: [],
       showPicker: false,
-      columns: ['广告', '交互', '抽奖'],
+      columns: ['广告', '交互'],
       iStatusBarHeight: 0,
       topHeight: 0,
       showSwitch: false, // 左上角切换按钮
@@ -237,6 +237,7 @@ export default {
         icon="sort"
         type="default"
         class="mx-2"
+        color="#6FA7FF"
         round
         plain
         size="small"
@@ -272,6 +273,7 @@ export default {
             <van-button
               size="small"
               type="info"
+              color="#6FA7FF"
               round
               @click="addAdvertsTemp()"
             >
@@ -281,6 +283,7 @@ export default {
               v-if="hasDraft"
               type="info"
               size="small"
+              color="#6FA7FF"
               round
               plain
               @click="getRollbackAdverts()"
@@ -304,6 +307,7 @@ export default {
               class="!h-10 w-full"
               type="info"
               block
+              color="#6FA7FF"
               round
               plain
               @click="selectTemplate()"
@@ -313,6 +317,7 @@ export default {
             <van-button
               round
               block
+              color="#6FA7FF"
               type="info"
               class="!h-10 w-full"
               @click="addAppPublishDeviceAds()"

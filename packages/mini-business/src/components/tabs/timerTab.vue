@@ -49,7 +49,7 @@ export default {
         v-for="(item, index) in list"
         :key="index"
         class="text-center px-2 py-1 box-border rounded-md m-1"
-        :class="activeIndex === index ? 'bg-[#6FA7FF] text-white' : ''"
+        :class="[activeIndex === index ? 'bg-[#0ea5e9] text-white' : '']"
         @click="activeChange(item, index)"
       >
         <view class="my-1 truncate">

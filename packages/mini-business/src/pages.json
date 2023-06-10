@@ -1,7 +1,7 @@
 {
   "pages": [
     {
-      "path": "pages/product/list"
+      "path": "pages/dataBoard/index"
     },
     {
       "path": "pages/index/index",
@@ -236,9 +236,9 @@
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [{
-      "pagePath": "pages/product/list",
-      "iconPath": "static/image/large.png",
-      "selectedIconPath": "static/image/large-b.png",
+      "pagePath": "pages/dataBoard/index",
+      "iconPath": "static/image/home.png",
+      "selectedIconPath": "static/image/home-b.png",
       "text": "首页"
     }, {
       "pagePath": "pages/operation/operation",
