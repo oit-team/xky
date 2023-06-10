@@ -48,7 +48,11 @@ export default {
           今日流量
         </view>
         <view class="color-[#28b3eb] font-600 mt-2 flex justify-center items-center">
-          <image :src="today >= yestDay ? '/static/image/top.png' : '/static/image/down.png'" class="w-1em h-1em" />
+          <image
+            v-if="today - yestDay"
+            :src="today >= yestDay ? '/static/image/top.png' : '/static/image/down.png'"
+            class="w-1em h-1em"
+          />
           <span>{{ today }}</span>
         </view>
       </view>

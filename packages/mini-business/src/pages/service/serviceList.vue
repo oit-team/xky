@@ -14,7 +14,7 @@ export default {
       searchValue: '',
       formData: {
         pageNum: 1,
-        pageSize: 1,
+        pageSize: 20,
       },
     }
   },
@@ -97,7 +97,10 @@ export default {
 <template>
   <container classes="flex flex-col items-center bg-gray-100">
     <van-tabs class="w-full">
-      <van-tab title="服务">
+      <van-tab title="内容信息">
+        <product />
+      </van-tab>
+      <van-tab title="服务信息">
         <van-search
           class="w-full"
           shape="round"
@@ -161,9 +164,6 @@ export default {
           </view>
           <van-empty v-else description="暂未添加服务" />
         </scroll-view>
-      </van-tab>
-      <van-tab title="对象">
-        <product />
       </van-tab>
     </van-tabs>
   </container>
