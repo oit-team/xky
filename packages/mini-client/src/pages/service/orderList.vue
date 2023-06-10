@@ -89,7 +89,7 @@ export default {
 
     goToDetailPage(itemId) {
       uni.navigateTo({
-        url: `/pages/serviceOrder/orderDetail?id=${itemId}`,
+        url: `/pages/service/orderDetail?id=${itemId}`,
       })
     },
 

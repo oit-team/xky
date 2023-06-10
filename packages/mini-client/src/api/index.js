@@ -63,7 +63,6 @@ export function post(url, data = {}, config = {}) {
       chcode: 'ef19843298ae8f2134f',
     },
     con: data,
-    responseType: config.responseType || 'text',
   }
 
   return axiosInstance

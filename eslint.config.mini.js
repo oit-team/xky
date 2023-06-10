@@ -27,5 +27,7 @@ module.exports = {
     'vue/custom-event-name-casing': 'warn',
     'vue/no-deprecated-v-on-native-modifier': 'warn',
     '@typescript-eslint/no-this-alias': 'warn',
+    'no-debugger': 'warn',
+    'no-restricted-syntax': 'warn',
   },
 }

@@ -91,6 +91,12 @@
       }
     },
     {
+      "path": "pages/service/orderDetail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
       "path": "pages/card/cardList",
       "style": {
         "navigationBarTitleText": ""
