@@ -28,17 +28,20 @@ export default {
           class="mx-3 rounded-md bg-neutral-100 overflow-hidden"
         />
         <!-- :src="convertImageSize(item.headPortrait, 's')" -->
-        <view class="">
+        <view class="flex flex-col gap-2">
           <view class="font-extrabold">
             {{ item.shopName }}
           </view>
-          <view class="text-xs text-gray-500 my-2">
+          <view class="text-xs text-gray-500">
             地址：{{ item.address }}
           </view>
           <view class="text-xs text-gray-500 ">
             券数：<text class="text-orange-500">
               {{ item.lotteryTicketNum }}
             </text>
+          </view>
+          <view class="text-xs text-gray-500">
+            距离：{{ item.distance }}米
           </view>
         </view>
       </view>

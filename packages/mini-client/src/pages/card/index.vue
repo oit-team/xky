@@ -2,6 +2,7 @@
 import LuckItem from './components/luckItem'
 import { getLotteryTicketShop } from '@/api/luck'
 import { convertImageSize } from '@/utils/helper'
+import { getFuzzyLocation } from '@/utils/actions'
 import { hasToken } from '@/utils/token'
 import NotLogged from '@/components/business/notLogged/notLogged'
 
@@ -48,9 +49,13 @@ export default {
   },
   methods: {
     convertImageSize,
+    getFuzzyLocation,
     async getLotteryTicketShop() {
       this.formData.weChatId = this.$store.state.userInfo.id
+      const { longitude, latitude } = await this.getFuzzyLocation()
       const res = await getLotteryTicketShop({
+        lng: longitude,
+        lat: latitude,
         ...this.formData,
       })
 
@@ -60,8 +65,11 @@ export default {
       uni.stopPullDownRefresh()
     },
     async reload() {
+      const { longitude, latitude } = await this.getFuzzyLocation()
       const res = await this.$loading(
         getLotteryTicketShop({
+          lng: longitude,
+          lat: latitude,
           ...this.formData,
         }),
       )
@@ -86,7 +94,7 @@ export default {
 <template>
   <container classes="flex flex-col h-full bg-neutral-100">
     <view v-if="!logged" class="flex-1 w-full">
-      <not-logged class="w-full h-full" @login="getLotteryTicketShop()" />
+      <not-logged class="w-full h-full" />
     </view>
     <view v-else class="w-full h-full">
       <view v-if="showEmpty" class="flex flex-col items-center">

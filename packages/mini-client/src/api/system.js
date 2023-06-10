@@ -5,7 +5,10 @@ export function getIndustryAll() {
 }
 
 export function getDictItemList(params) {
-  return post('/system/dictInfo/getDictItemList', params)
+  return post('/system/dictInfo/getDictItemList', {
+    ...params,
+    code: 1,
+  })
 }
 
 export function getShopById(params) {
