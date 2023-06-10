@@ -2,6 +2,8 @@
 export default {
   data() {
     return {
+      today: 0,
+      yestDay: 0,
       chartData: {},
       opts: {
         padding: [15, 10, 0, 15],
@@ -19,12 +21,11 @@ export default {
       },
     }
   },
-  async mounted() {
-    await this.$store.state.userPromise && this.getServerData()
-  },
   methods: {
-    async getServerData() {
+    async loadData() {
       const res = await this.$post('/liveBroadcast/report/getPeopleTraffic')
+      this.today = res.body.today
+      this.yestDay = res.body.yestDay
       this.chartData = {
         categories: res.body.xList,
         series: [
@@ -40,7 +41,26 @@ export default {
 </script>
 
 <template>
-  <view class="">
+  <view>
+    <view class="w-full grid grid-cols-2 gap-3 py-2">
+      <view class="bg-[#f2f2f2] text-center py-2">
+        <view>
+          今日流量
+        </view>
+        <view class="color-[#28b3eb] font-600 mt-2 flex justify-center items-center">
+          <image :src="today >= yestDay ? '/static/image/top.png' : '/static/image/down.png'" class="w-1em h-1em" />
+          <span>{{ today }}</span>
+        </view>
+      </view>
+      <view class="bg-[#f2f2f2] text-center py-2">
+        <view>
+          昨日流量
+        </view>
+        <view class="color-[#28b3eb] font-600 mt-2">
+          {{ yestDay }}
+        </view>
+      </view>
+    </view>
     <qiun-data-charts
       type="line"
       :opts="opts"
@@ -48,11 +68,3 @@ export default {
     />
   </view>
 </template>
-
-<style scoped>
-  /* 请根据实际需求修改父元素尺寸，组件自动识别宽高 */
-  .charts-box {
-    width: 100%;
-    height: 300px;
-  }
-</style>

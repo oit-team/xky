@@ -3,6 +3,9 @@ import { getServiceOrderList } from '@/api/service'
 export default {
   components: {
   },
+  props: {
+    tab: String,
+  },
   data() {
     return {
       contentHeight: '',
@@ -19,6 +22,14 @@ export default {
       notReload: true,
     }
   },
+  computed: {
+    logged() {
+      return this.$store.getters.logged
+    },
+  },
+  created() {
+    this.activeTab = +(this.tab || 0)
+  },
   async onShow() {
     if (this.logged) {
       const { windowHeight } = uni.getWindowInfo()
@@ -27,11 +38,6 @@ export default {
       await this.$store.state.userPromise
       this.getData()
     }
-  },
-  computed: {
-    logged() {
-      return this.$store.getters.logged
-    },
   },
   methods: {
     async getData() {

@@ -14,7 +14,8 @@ export default {
     service: [
       {
         key: 'incompleteCount',
-        title: '未完成',
+        title: '待核销',
+        to: '/pages/serviceOrder/orderList?tab=2',
       },
       {
         key: 'todayReservation',
@@ -56,6 +57,8 @@ export default {
 
     this.getLotteryInteraction()
     this.getAppointmentReport()
+    this.$refs.flowMonitoring.loadData()
+    this.$refs.trendInterest.loadData()
   },
   methods: {
     async getLotteryInteraction() {
@@ -74,6 +77,16 @@ export default {
       })
     },
     toOrder() {
+      uni.navigateTo({
+        url: '/pages/serviceOrder/orderList',
+      })
+    },
+    clickServiceItem(item) {
+      if (item.to) {
+        uni.navigateTo({
+          url: item.to,
+        })
+      }
       uni.navigateTo({
         url: '/pages/serviceOrder/orderList',
       })
@@ -97,19 +110,19 @@ export default {
         </template>
         <template #content>
           <view class="w-full grid grid-cols-2 gap-3 pt-2">
-            <view v-for="item in service" :key="item.key" class="bg-[#f2f2f2] text-center py-2">
+            <view v-for="item in service" :key="item.key" class="bg-[#f2f2f2] text-center py-2" @click="clickServiceItem(item)">
               <view>
                 {{ item.title }}
               </view>
               <view class="text_blue flex justify-center mt-2">
-                <template v-if="item.key === 'todayReservation'">
-                  <image v-if="serviceData.momDay === 2" :src="require('@/static/image/top.png')" class="w-20px h-16px" />
-                  <image v-if="serviceData.momDay === 0" :src="require('@/static/image/done.png')" class="w-20px h-16px" />
-                </template>
-                <template v-if="item.key === 'theMonth'">
-                  <image v-if="serviceData.momMonth === 2" :src="require('@/static/image/top.png')" class="w-20px h-16px" />
-                  <image v-if="serviceData.momMonth === 0" :src="require('@/static/image/done.png')" class="w-20px h-16px" />
-                </template>
+                <view v-if="item.key === 'todayReservation'">
+                  <image v-if="serviceData.momDay === 2" :src="require('@/static/image/top.png')" class="w-20px h-20px" />
+                  <image v-if="serviceData.momDay === 0" :src="require('@/static/image/down.png')" class="w-20px h-20px" />
+                </view>
+                <view v-if="item.key === 'theMonth'">
+                  <image v-if="serviceData.momMonth === 2" :src="require('@/static/image/top.png')" class="w-20px h-20px" />
+                  <image v-if="serviceData.momMonth === 0" :src="require('@/static/image/down.png')" class="w-20px h-20px" />
+                </view>
                 <view class="font-600">
                   {{ serviceData[item.key] || 0 }}
                 </view>
@@ -149,7 +162,7 @@ export default {
         </template>
         <template #content>
           <div class="pt-2">
-            <flow-monitoring />
+            <flow-monitoring ref="flowMonitoring" />
           </div>
         </template>
       </data-card>
@@ -166,7 +179,7 @@ export default {
         </template>
         <template #content>
           <div class="pt-2">
-            <trend-interest />
+            <trend-interest ref="trendInterest" />
           </div>
         </template>
       </data-card>
