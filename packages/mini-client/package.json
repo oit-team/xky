@@ -125,6 +125,9 @@
     "scripts": {}
   },
   "eslintConfig": {
-    "extends": "../../eslint.config.mini.js"
+    "extends": "../../eslint.config.mini.js",
+    "ignorePatterns": [
+      "**/src/wxcomponents/**"
+    ]
   }
 }

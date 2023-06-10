@@ -263,6 +263,7 @@
     }]
   },
   "easycom": {
-    "^vc-(.*)": "@/components/basic/vc-$1.vue"
+    "^vc-(.*)": "@/components/basic/vc-$1.vue",
+    "qiun-data-charts": "@/components/qiun-data-charts/qiun-data-charts.vue"
   }
 }

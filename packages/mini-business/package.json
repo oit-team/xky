@@ -72,6 +72,7 @@
     "@dcloudio/uni-quickapp-webview": "2.0.1-35320220729001",
     "@dcloudio/uni-stacktracey": "2.0.1-35320220729001",
     "@dcloudio/uni-stat": "2.0.1-35320220729001",
+    "@qiun/ucharts": "2.5.0-20230101",
     "@vant/weapp": "^1.10.4",
     "@vue/shared": "^3.0.0",
     "core-js": "^3.6.5",
@@ -132,6 +133,11 @@
     "scripts": {}
   },
   "eslintConfig": {
-    "extends": "../../eslint.config.mini.js"
+    "extends": "../../eslint.config.mini.js",
+    "ignorePatterns": [
+      "**/src/wxcomponents/**",
+      "**/src/components/qiun-*/**",
+      "**/src/components/u-charts/**.js"
+    ]
   }
 }
