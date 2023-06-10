@@ -89,8 +89,11 @@ export default {
       <not-logged class="w-full h-full" @login="getLotteryTicketShop()" />
     </view>
     <view v-else class="w-full h-full">
-      <view v-if="showEmpty">
+      <view v-if="showEmpty" class="flex flex-col items-center">
         <van-empty description="暂无数据" />
+        <van-button @click="uni.switchTab({ url: '/pages/nearby/nearby' })">
+          附近商家
+        </van-button>
       </view>
       <view v-else class="flex flex-col p-2 box-border w-full">
         <luck-item :list="winList" @show="show()" />
