@@ -151,7 +151,7 @@
       "pagePath": "pages/card/index",
       "iconPath": "static/image/luck.png",
       "selectedIconPath": "static/image/luck-b.png",
-      "text": "卡包"
+      "text": "券包"
     }, {
       "pagePath": "pages/my/my",
       "iconPath": "static/image/my.png",

@@ -81,7 +81,7 @@ export default {
       <view class="px-1 w-full flex-1 py-2 box-border">
         <van-cell-group inset>
           <van-cell title="我的订单" is-link @click="toOrder()" />
-          <van-cell title="我的卡包" is-link @click="toCard()" />
+          <!-- <van-cell title="我的券包" is-link @click="toCard()" /> -->
           <van-cell title="扫一扫" is-link @click="scan()" />
           <van-cell title="隐私与协议" is-link @click="uni.navigateTo({ url: '/pages/my/agreement' })" />
           <!-- <van-cell title="联系我们" is-link @click="call()" /> -->
