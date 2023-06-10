@@ -254,12 +254,12 @@ export default {
           </view>
           <scroll-btm :can-reload="canReload" />
         </view>
+      </view>
+    </view>
 
-        <view class="fixed bottom-4 right-4">
-          <view class="bg-[#1296db] w-8 h-8 backTop rounded-1/2 flex place-content-center" @click="getLocation()">
-            <van-icon name="aim" color="#fff" />
-          </view>
-        </view>
+    <view class="fixed bottom-4 right-4">
+      <view class="bg-[#1296db] w-8 h-8 backTop rounded-1/2 flex place-content-center" @click="getLocation()">
+        <van-icon name="aim" color="#fff" />
       </view>
     </view>
 

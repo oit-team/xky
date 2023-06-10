@@ -21,7 +21,7 @@ export default {
   methods: {
     convertImageSize,
     login() {
-      this.userInfo = this.$store.state.userInfo
+      // this.userInfo = this.$store.state.userInfo
     },
     call() {
       uni.makePhoneCall({
@@ -50,9 +50,9 @@ export default {
       })
     },
     toOrder() {
-      // uni.navigateTo({
-      //   url: '/pages/my/info',
-      // })
+      uni.navigateTo({
+        url: '/pages/service/orderList',
+      })
     },
     toCard() {
       uni.navigateTo({
@@ -84,7 +84,7 @@ export default {
           <van-cell title="我的卡包" is-link @click="toCard()" />
           <van-cell title="扫一扫" is-link @click="scan()" />
           <van-cell title="隐私与协议" is-link @click="uni.navigateTo({ url: '/pages/my/agreement' })" />
-          <van-cell title="联系我们" is-link @click="call()" />
+          <!-- <van-cell title="联系我们" is-link @click="call()" /> -->
         </van-cell-group>
       </view>
     </view>

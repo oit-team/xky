@@ -11,3 +11,12 @@ export function getDictItemList(params) {
 export function getShopById(params) {
   return post('/system/shop/getShopById', params)
 }
+
+/**
+ * 获取订单列表
+ * @param {*} params
+ * @returns
+ */
+export function getServiceOrderListForWeChatC(params) {
+  return post('/system/serviceOrder/getServiceOrderListForWeChatC', params)
+}

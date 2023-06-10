@@ -22,6 +22,15 @@ export function getServiceOrderDetail(params) {
   return post('/system/serviceOrder/getServiceOrderDetail', params)
 }
 
+/**
+ * 添加活动订单
+ * @param {*} params
+ * @returns
+ */
+export function addServiceOrder(params) {
+  return post('/system/serviceOrder/addServiceOrder', params)
+}
+
 // 活动
 
 /**

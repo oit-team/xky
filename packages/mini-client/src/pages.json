@@ -1,6 +1,12 @@
 {
   "pages": [
     {
+      "path": "pages/my/my",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
       "path": "pages/nearby/nearby",
       "style": {
         "navigationBarTitleText": "",
@@ -53,12 +59,6 @@
       }
     },
     {
-      "path": "pages/my/my",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
       "path": "pages/template/education/detail"
     },
     {
@@ -80,6 +80,12 @@
     },
     {
       "path": "pages/my/info",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/service/orderList",
       "style": {
         "navigationBarTitleText": ""
       }
@@ -117,7 +123,7 @@
       "van-nav-bar": "/wxcomponents/vant/nav-bar/index",
       "van-swipe-cell": "/wxcomponents/vant/swipe-cell/index",
       "van-dialog": "/wxcomponents/vant/dialog/index",
-      "van-datetime-picker": "/wxcomponents/vant/datetime-picker/index"
+      "van-calendar": "/wxcomponents/vant/calendar/index"
     }
   },
   "tabBar": {

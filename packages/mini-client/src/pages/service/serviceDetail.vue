@@ -1,5 +1,6 @@
 <script>
-import { getServiceInfoDetail } from '@/api/shop'
+import { addServiceOrder, getServiceInfoDetail } from '@/api/shop'
+import { wxPayment } from '@/utils/helper'
 export default {
   components: {
   },
@@ -8,6 +9,13 @@ export default {
       serviceInfo: {},
       id: '',
       show: false,
+      minDate: new Date().getTime(),
+      maxDate: new Date().getTime() + 30 * 24 * 3600 * 1000,
+      currentDate: new Date().getTime(),
+      showData: false,
+      date: '',
+      phone: '',
+      remarks: '',
     }
   },
   onLoad(params) {
@@ -17,8 +25,12 @@ export default {
     this.getServiceInfoDetail()
   },
   computed: {
+    userName() {
+      return this.$store.state.userInfo.wechatName
+    },
   },
   methods: {
+    wxPayment,
     async getServiceInfoDetail() {
       this.$toast.loading({
         message: '加载中...',
@@ -32,6 +44,43 @@ export default {
     },
     upPopup() {
       this.show = true
+    },
+    onConfirm(e) {
+      this.date = this.formatDate(e.detail)
+      this.showData = false
+    },
+    formatDate(date) {
+      date = new Date(date)
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    },
+    async submit() {
+      if (this.phone === '')
+        return this.$toast.fail('请填写手机号')
+      if (this.date === '')
+        return this.$toast.fail('请选择到店时间')
+
+      await this.$dialog.confirm({ title: '提示', message: '确定下单吗？', zIndex: 101 })
+
+      this.show = false
+      await addServiceOrder({
+        serviceId: this.serviceInfo.id,
+        userName: this.$store.state.userInfo.weChatName,
+        telephone: this.phone,
+        remarks: this.remarks,
+        appointmentTime: this.date,
+      })
+
+      uni.navigateBack()
+      // await wxPayment({
+      //   nonceStr: res.body.nonceStr,
+      //   prepayid: res.body.prepayId,
+      //   timeStamp: res.body.timeStamp,
+      //   paySign: res.body.sign,
+      // })
+      //   .catch((err) => {
+      //     uni.navigateTo(`/pages/order-detail/index?orderNo=${res.body.orderNo}`)
+      //     throw err
+      //   })
     },
   },
 }
@@ -138,12 +187,12 @@ export default {
           <span class="text-xs">￥</span>{{ serviceInfo.price }}
         </view>
         <view class="flex items-center">
-          <view class="flex flex-col items-center mx-2">
+          <!-- <view class="flex flex-col items-center mx-2">
             <van-icon name="chat-o" size="16" />
             <view class="text-xs text-[#888]">
               咨询
             </view>
-          </view>
+          </view> -->
           <van-button type="info" color="#f9591d" round size="small" @click="upPopup">
             立即预约
           </van-button>
@@ -159,8 +208,63 @@ export default {
       round
       @close="show = false"
     >
-      555
+      <view class="flex flex-col w-full p-2 box-border">
+        <view class="w-full text-center my-2">
+          {{ serviceInfo.name }}
+        </view>
+        <van-cell-group>
+          <van-field
+            label="到店时间"
+            :value="date"
+            placeholder="请选择到店时间"
+            readonly
+            required
+            @click-input="showData = true"
+          />
+          <van-field
+            label="手机号"
+            placeholder="请填写手机号"
+            :value="phone"
+            type="number"
+            required
+            @change="phone = $event.detail"
+          />
+          <van-field
+            label="备注"
+            placeholder="请填写备注"
+            :value="remarks"
+            type="textarea"
+            @change="remarks = $event.detail"
+          />
+        </van-cell-group>
+
+        <view class="flex justify-between items-center fixed bottom-0 left-0 w-full bg-light-300 p-2 box-border">
+          <view class="text-red-500 text-base font-600">
+            <span class="text-xs">￥</span>{{ serviceInfo.price }}
+          </view>
+          <van-button
+            type="info"
+            color="#f9591d"
+            size="small"
+            block
+            round
+            @click="submit"
+          >
+            立即支付
+          </van-button>
+        </view>
+      </view>
     </van-popup>
+
+    <van-calendar
+      :show="showData"
+      :min-date="minDate"
+      :max-date="maxDate"
+      color="#6FA7FF"
+      @confirm="onConfirm"
+      @cancel="showData = false"
+      @close="showData = false"
+    />
   </container>
 </template>
 

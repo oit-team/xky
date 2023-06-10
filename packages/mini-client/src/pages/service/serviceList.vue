@@ -111,7 +111,7 @@ export default {
         <view v-for="(item, index) in serviceList" :key="index" class="p-2 bg-white rounded-md flex items-center mb-2" @click="goToDetailPage(item.id)">
           <van-image class="mr-2" width="100" height="100" radius="5" :src="item.resourceUrl" />
           <view class="flex-1 grid gap-2 flex flex-col h-100px overflow-hidden">
-            <p class="truncate text-base font-bold">
+            <p class="truncate text-base font-600">
               {{ item.name }}
             </p>
             <view class="text-sm truncate flex">
