@@ -1,15 +1,17 @@
 <script>
+import ShopItem from './components/shopItem.vue'
 import { getNearbyMerchants } from '@/api/nearby'
 import { convertImageSize } from '@/utils/helper'
 import notLogged from '@/components/business/notLogged/notLogged'
 import { hasToken } from '@/utils/token'
 import { getDictItemList } from '@/api/system'
-import scrollBtm from '@/components/business/ScrollBtm/ScrollBtm'
+import ScrollBtm from '@/components/business/ScrollBtm/ScrollBtm'
 
 export default {
   components: {
     NotLogged: notLogged,
-    ScrollBtm: scrollBtm,
+    ScrollBtm,
+    ShopItem,
   },
   data() {
     return {
@@ -66,8 +68,8 @@ export default {
       return
 
     await this.$store.state.userPromise
-    this.getDictItemList()
-    this.getLocation()
+    await this.getDictItemList()
+    await this.getLocation()
   },
   async onPullDownRefresh() {
     this.formData.pageNum = 1
@@ -75,6 +77,8 @@ export default {
     uni.stopPullDownRefresh()
   },
   async onReachBottom() {
+    if (!this.canReload)
+      return
     this.formData.pageNum++
     await this.reload()
   },
@@ -100,13 +104,11 @@ export default {
         userId: this.$store.state.userInfo.id,
         lng: this.y,
         lat: this.x,
-        // lng: 121.53,
-        // lat: 31.20,
         ...this.formData,
       }).finally(() => this.$toast.clear())
       this.enterpriseList = res.body.nearbyMerchants
-      this.showEmpty = res.body.nearbyMerchants?.length === 0
-      this.canReload = res.body.nearbyMerchants.length = this.formData.pageSize
+      this.showEmpty = res.body.nearbyMerchants.length === 0
+      this.canReload = res.body.nearbyMerchants.length === this.formData.pageSize
     },
     async reload() {
       this.$toast.loading({
@@ -121,7 +123,7 @@ export default {
         ...this.formData,
       }).finally(() => this.$toast.clear())
       this.enterpriseList = [...this.enterpriseList, ...res.body.nearbyMerchants]
-      this.canReload = res.body.nearbyMerchants.length = this.formData.pageSize
+      this.canReload = res.body.nearbyMerchants.length === this.formData.pageSize
     },
     toDetails(item) {
       uni.navigateTo({
@@ -205,7 +207,8 @@ export default {
       })
     },
     onChange(e) {
-      this.formData.industryId = this.active
+      this.active = e.detail.name
+      this.formData.industryId = e.detail.name
       this.getData()
     },
     filterForm() {
@@ -218,6 +221,9 @@ export default {
       this.showPopup = false
       this.getData()
     },
+    onSearch(e) {
+      this.formData.shopName = e.detail
+    },
   },
 }
 </script>
@@ -227,19 +233,12 @@ export default {
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
       <not-logged @login="getLocation()" />
     </view>
-    <view v-else class="w-full h-full flex flex-col">
-      <!-- <view class="w-full">
-          <van-search
-            :value="searchValue"
-            placeholder="请输入搜索关键词"
-            @search="onSearch"
-          />
-        </view> -->
+    <view v-else class="w-full flex flex-col flex-1">
       <view class="text-xs w-full">
-        <van-tabs :active="active" :swipe-threshold="4" color="#6FA7FF" @change="onChange()">
-          <van-tab v-for="(item, index) in dictItemList" :key="item.id" :title="item.name" :name="index" />
+        <van-tabs :active="active" :swipe-threshold="4" color="#6FA7FF" @change="onChange">
+          <van-tab v-for="item in dictItemList" :key="item.id" :title="item.name" :name="item.id" />
           <template #nav-right>
-            <view class="w-10 bg-[#e8e8e8] flex justify-center items-centert" @click="filterForm()">
+            <view class="w-10 bg-[#f7f8fa] flex justify-center items-centert" @click="filterForm()">
               <van-icon name="filter-o" size="16" />
             </view>
           </template>
@@ -249,37 +248,12 @@ export default {
         <van-empty description="暂无数据" />
       </view>
       <view v-else class="w-full h-full">
-        <view class="flex flex-1 flex-col rounded my-3 mx-2 box-border bg-white overflow-hidden">
-          <view v-for="(item, index) in enterpriseList" :key="index" class="w-full p-2 box-border" @click="toDetails(item)">
-            <view class="flex items-center">
-              <van-image
-                width="70"
-                height="70"
-                fit="contain"
-                class="mr-2"
-                :src="convertImageSize(item.shopLogo, 's')"
-              />
-              <view class="h-full w-full overflow-hidden">
-                <view class="font-bold truncate w-2/3">
-                  {{ item.brandName }}({{ item.shopName }})
-                </view>
-                <view class="text-[#666] text-xs leading-loose">
-                  <view class="truncate w-2/3">
-                    {{ item.address }}
-                  </view>
-                  <view class="flex justify-between">
-                    <view>抽奖次数：{{ item.countNum || '无' }}</view>
-                    <view>
-                      {{ `离您: < ${item.shopDistance} km` }}
-                    </view>
-                  </view>
-                </view>
-              </view>
-            </view>
-            <van-divider v-if="enterpriseList.length - 1 > index" />
+        <view class="flex h-full flex-col p-2 box-border">
+          <view v-for="(item, index) in enterpriseList" :key="index" class="w-full p-2 mb-2 box-border rounded bg-white" @click="toDetails(item)">
+            <shop-item :item="item" />
           </view>
+          <scroll-btm :can-reload="canReload" />
         </view>
-        <scroll-btm :can-reload="canReload" />
       </view>
     </view>
 
@@ -297,21 +271,30 @@ export default {
       @close="showPopup = false"
     >
       <view class="w-full p-2 box-border">
+        <view class="w-full">
+          <van-search
+            :value="shopName"
+            placeholder="请输入搜索关键词"
+            @search="onSearch"
+          />
+        </view>
+
         <view class="flex justify-around w-full">
           <view
             v-for="item in positionList"
             :key="item.num"
-            class="bg-[#f8f8f8] text-xs p-2 box-border"
+            class="bg-[#f8f8f8] text-xs p-2 box-border rounded"
             :class="item.num === formData.endDistance ? 'bg-[#5faee3] text-[##7ea0fd]' : ''"
             @click="changePosition(item.num)"
           >
             {{ item.title }}
           </view>
         </view>
+
         <view class="text-center mt-2" @click="submit()">
-          <van-botton type="primary">
+          <van-button color="#6FA7FF" block>
             查询
-          </van-botton>
+          </van-button>
         </view>
       </view>
     </van-popup>

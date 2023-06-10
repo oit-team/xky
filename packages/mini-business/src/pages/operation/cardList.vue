@@ -120,7 +120,6 @@ export default {
     },
     // 点击确认按钮
     onsubmit() {
-      console.log(this.selectCards)
       if (JSON.stringify(this.selectCards) === '{}') { this.$toast('您还未选择奖券') }
 
       else {

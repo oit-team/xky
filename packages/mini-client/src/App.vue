@@ -19,6 +19,10 @@ export default {
 </script>
 
 <style>
+page{
+  --tabs-bottom-bar-color: #6FA7FF;
+}
+
 /*每个页面公共css */
 ::v-deep van-image{
   display: block;

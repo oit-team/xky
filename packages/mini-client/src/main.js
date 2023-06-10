@@ -4,6 +4,7 @@ import store from '@/store/index'
 
 import vantMixin from '@/mixins/vant'
 import { promiseLoading } from '@/utils/helper'
+import { post } from '@/api/index'
 
 // vant组件
 import Toast from '@/wxcomponents/vant/toast/toast'
@@ -18,6 +19,7 @@ Vue.component('container', Container)
 Vue.mixin(vantMixin)
 
 Vue.prototype.uni = uni
+Vue.prototype.$post = post
 Vue.prototype.$toast = Toast
 Vue.prototype.$dialog = Dialog
 Vue.prototype.$loading = promiseLoading

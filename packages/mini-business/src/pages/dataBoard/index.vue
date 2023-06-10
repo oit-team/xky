@@ -98,14 +98,14 @@ export default {
                 {{ item.title }}
               </view>
               <view class="text_blue flex justify-center mt-2">
-                <view v-if="item.key === 'todayReservation'">
-                  <image v-if="serviceData.momDay === 2" :src="require('@/static/image/top.png')" class="w-20px h-20px" />
-                  <image v-if="serviceData.momDay === 0" :src="require('@/static/image/done.png')" class="w-20px h-20px" />
-                </view>
-                <view v-if="item.key === 'theMonth'">
-                  <image v-if="serviceData.momMonth === 2" :src="require('@/static/image/top.png')" class="w-20px h-20px" />
-                  <image v-if="serviceData.momMonth === 0" :src="require('@/static/image/done.png')" class="w-20px h-20px" />
-                </view>
+                <template v-if="item.key === 'todayReservation'">
+                  <image v-if="serviceData.momDay === 2" :src="require('@/static/image/top.png')" class="w-20px h-16px" />
+                  <image v-if="serviceData.momDay === 0" :src="require('@/static/image/done.png')" class="w-20px h-16px" />
+                </template>
+                <template v-if="item.key === 'theMonth'">
+                  <image v-if="serviceData.momMonth === 2" :src="require('@/static/image/top.png')" class="w-20px h-16px" />
+                  <image v-if="serviceData.momMonth === 0" :src="require('@/static/image/done.png')" class="w-20px h-16px" />
+                </template>
                 <view class="font-600">
                   {{ serviceData[item.key] || 0 }}
                 </view>
