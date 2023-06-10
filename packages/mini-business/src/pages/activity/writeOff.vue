@@ -124,7 +124,7 @@ export default {
           </view>
         </view>
 
-        <view v-if="noReload" class="text-center">
+        <view v-if="noReload" class="text-center text-xs text-[#888] mt-2">
           没有更多了
         </view>
       </view>
