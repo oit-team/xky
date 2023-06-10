@@ -73,7 +73,7 @@ export default {
       const res = await api.getProducts(this.formData).finally(() => this.$toast.clear())
       this.products = res.body.resultList
       this.canReload = res.body.count > 20
-      this.showEmpty = res.body.count === 0
+      // this.showEmpty = res.body.count === 0
     },
     async reload() {
       this.$toast.loading({
@@ -97,7 +97,7 @@ export default {
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
       <not-logged class="w-full h-full" @login="getDictItemList()" />
     </view>
-    <view v-if="logged" class="content w-full box-border">
+    <view v-if="logged" class="content h-full w-full box-border">
       <!-- 顶部行业 -->
       <!-- <view class="w-auto h-300px flex flex-col gap-2 gap-y-1 justify-between flex-wrap p-2 box-border bg-white rounded overflow-hidden overflow-x-auto">
         <view v-for="item in industryAll" :key="item.id" class="rounded text-sm text-center">
@@ -181,7 +181,7 @@ export default {
       </view> -->
 
       <view class="mt-2">
-        <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
+        <view v-if="showEmpty" class="w-full">
           <van-empty />
         </view>
         <view v-else class="p-2">
