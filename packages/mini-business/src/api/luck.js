@@ -100,7 +100,7 @@ export function getActivityById(params) {
 }
 
 /**
- * 获取活动详情
+ *  参与活动
  * @param {*} params
  * @returns
  */
