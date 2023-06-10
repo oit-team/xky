@@ -284,7 +284,7 @@ export default {
             v-for="item in positionList"
             :key="item.num"
             class="bg-[#f8f8f8] text-xs p-2 box-border rounded"
-            :class="item.num === formData.endDistance ? 'bg-[#5faee3] text-[##7ea0fd]' : ''"
+            :class="[item.num === formData.endDistance ? 'bg-[#5faee3] text-[##7ea0fd]' : '']"
             @click="changePosition(item.num)"
           >
             {{ item.title }}
