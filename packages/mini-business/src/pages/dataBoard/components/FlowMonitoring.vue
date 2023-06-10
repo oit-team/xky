@@ -8,6 +8,9 @@ export default {
         enableScroll: false,
         xAxis: {
           disableGrid: true,
+          rotateLabel: true,
+          rotateAngle: 35,
+          marginTop: 8,
         },
         yAxis: {
           gridType: 'dash',

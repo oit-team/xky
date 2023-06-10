@@ -1,10 +1,14 @@
 <script>
 import dataCard from './components/card'
+import FlowMonitoring from './components/FlowMonitoring.vue'
+import TrendInterest from './components/TrendInterest.vue'
 import * as api from '@/api/data.js'
 
 export default {
   components: {
     DataCard: dataCard,
+    FlowMonitoring,
+    TrendInterest,
   },
   data: () => ({
     service: [
@@ -139,16 +143,33 @@ export default {
         </template>
       </data-card>
 
-      <!-- <data-card>
+      <data-card>
         <template #left-title>
           流量监测<span class="text-xs text-[#333]">(近7日)</span>
         </template>
         <template #content>
-          <view class="w-full grid grid-cols-2 gap-3 pt-2">
-            5555
+          <div class="pt-2">
+            <flow-monitoring />
+          </div>
+        </template>
+      </data-card>
+
+      <data-card>
+        <template #left-title>
+          用户感兴趣趋势<span class="text-xs text-[#333]">(近7日)</span>
+        </template>
+        <template #right-title>
+          <view class="text-[#888]" @click="uni.navigateTo({ url: '/pages/my/largeList' })">
+            查看更多
+            <van-icon name="arrow" size="12" />
           </view>
         </template>
-      </data-card> -->
+        <template #content>
+          <div class="pt-2">
+            <trend-interest />
+          </div>
+        </template>
+      </data-card>
     </view>
   </container>
 </template>
