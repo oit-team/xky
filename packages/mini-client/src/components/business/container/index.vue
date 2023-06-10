@@ -73,6 +73,8 @@ export default {
     <van-toast id="van-toast" />
     <van-dialog id="van-dialog" />
 
+    <!-- <div :class="[{ 'container-flex': flex }, classes]" :style="{ minHeight }">
+    </div> -->
     <slot />
   </view>
 </template>

@@ -1,14 +1,33 @@
 <script>
-import * as api from '@/api/system'
+import Service from '../service/serviceList.vue'
+import Operation from '../operation/operation.vue'
+import ShopItem from './components/shopItem.vue'
+import Product from './../product/list.vue'
+import * as api from '@/api/shop'
+import { getShopById } from '@/api/system'
 
 export default {
+  components: {
+    Service,
+    Operation,
+    ShopItem,
+    Product,
+  },
   data() {
     return {
       shopId: '',
       shopInfo: {},
+      goodsForm: {
+        pageSize: 20,
+        pageNum: 1,
+      },
+      goodsList: [],
     }
   },
   computed: {
+    // brandId() {
+    //   return this.shopInfo?.brandId
+    // },
   },
   watch: {
   },
@@ -21,31 +40,36 @@ export default {
   },
   methods: {
     async getShopById() {
-      const res = await api.getShopById({
+      const res = await getShopById({
         shopId: this.shopId,
       })
-      this.shopInfo = res.body
+      this.shopInfo = res.body.shopById
     },
   },
 }
 </script>
 
 <template>
-  <container classes="flex flex-col text-gray-500 bg-neutral-100 text-sm p-2 box-border">
-    <view class="w-full">
-      <img
-        width="300"
-        height="150"
-        class="w-full block rounded-md"
-        src="https://fastly.picsum.photos/id/83/400/300.jpg?hmac=dS4AO2SFni3pjmqaCDFDMjp2D3_khiC870j9F6OSauU"
-        alt=""
-      >
-    </view>
-    <view class="w-full flex-1 bg-red-100 py-3 px-2 box-border">
-      <view class="bg-white rounded-md h-3em flex items-center px-2 box-border">
-        <view>
-          湾举行
-        </view>
+  <container classes="flex flex-col flex-1 bg-neutral-100 text-sm p-2 box-border">
+    <view class="w-full h-full flex-1 flex flex-col box-border">
+      <view class="bg-white rounded-md p-2 box-border">
+        <shop-item :item="shopInfo" :show="false" />
+      </view>
+
+      <view class="rounded-md py-2 mt-2 flex-1 flex flex-col box-border">
+        <van-tabs class="flex-1">
+          <van-tab title="商品">
+            <view class="mt-2">
+              <product :brand-id="shopInfo.brandId" />
+            </view>
+          </van-tab>
+          <van-tab title="服务">
+            <service :shop-id="shopInfo.shopId" />
+          </van-tab>
+          <van-tab title="活动">
+            <operation :shop-id="shopInfo.shopId" />
+          </van-tab>
+        </van-tabs>
       </view>
     </view>
   </container>
