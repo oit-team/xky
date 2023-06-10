@@ -146,7 +146,7 @@ export default {
           :key="index"
           class="rounded-md relative bg-white"
         >
-          <view class="!absolute -right-1.5 -top-1.5 !text-xs w-18px h-18px rounded-1/2 text-center z-10" :class="!checkSelected(item) ? 'bg-[#f43f5e]' : 'bg-black'">
+          <view class="!absolute -right-1.5 -top-1.5 !text-xs w-18px h-18px rounded-1/2 text-center z-10" :class="[!checkSelected(item) ? 'bg-[#f43f5e]' : 'bg-black']">
             <van-icon
               v-if="!checkSelected(item)"
               name="plus"

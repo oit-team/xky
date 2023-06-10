@@ -171,5 +171,11 @@ export default {
 </template>
 
 <style scoped>
+::v-deep .van-image__img {
+  border-radius: 8px;
+}
 
+::v-deep .van-image {
+  display: block;
+}
 </style>

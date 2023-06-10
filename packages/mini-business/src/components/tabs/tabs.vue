@@ -23,13 +23,13 @@ export default {
       v-for="(item, index) in list"
       :key="index"
       class=" p-1 mx-1 rounded-full"
-      :class="tabIndex === index ? 'bg-[#CBE0FF]' : 'bg-white'"
+      :class="[tabIndex === index ? 'bg-[#CBE0FF]' : 'bg-white']"
       @click="clickTab(index)"
     >
       <view class="flex items-center justify-start text-sm truncate px-1">
         <view
           class="devStateCircle mx-1 inline-block"
-          :class="item.devState === '0' ? 'devOffLine' : 'devOnLine'"
+          :class="[item.devState === '0' ? 'devOffLine' : 'devOnLine']"
         />
         {{ item.devSerialNum }}
       </view>

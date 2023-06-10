@@ -223,7 +223,7 @@ export default {
 }
 
 ::v-deep .van-image {
-  display: block
+  display: block;
 }
 
 ::v-deep .van-button{
