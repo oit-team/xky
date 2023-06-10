@@ -52,6 +52,7 @@ export default {
       <view class="flex flex-col items-center justify-center my-1">
         <img
           :src="imgUrl"
+          class="w-250px h-250px"
         >
         <view class="w-full text-center text-gray-500/50 text-sm">
           请出示以上二维码给商家工作人员
@@ -60,10 +61,3 @@ export default {
     </view>
   </container>
 </template>
-
-<style scoped>
-img{
-    width: 200px;
-    height: 200px;
-}
-</style>
