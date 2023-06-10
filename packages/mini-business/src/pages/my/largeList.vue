@@ -38,8 +38,8 @@ export default {
     },
   },
   onLoad() {
-    this.iStatusBarHeight = uni.getMenuButtonBoundingClientRect().top
-    this.topHeight = uni.getMenuButtonBoundingClientRect().height
+    // this.iStatusBarHeight = uni.getMenuButtonBoundingClientRect().top
+    // this.topHeight = uni.getMenuButtonBoundingClientRect().height
   },
   onShow() {
     this.$nextTick(() => {
