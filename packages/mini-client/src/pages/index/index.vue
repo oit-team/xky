@@ -57,6 +57,7 @@ export default {
     async getDictItemList() {
       const res = await getDictItemList({
         dictCode: 'INDUSTRY_CATEGORY',
+        code: 1,
       })
       this.industryAll = res.body.resultList
       this.industryAll.forEach((item) => {

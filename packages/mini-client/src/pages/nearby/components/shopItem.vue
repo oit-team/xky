@@ -33,7 +33,7 @@ export default {
         <view class="flex justify-between">
           <view><span class="text-[#666]">联系电话：</span>{{ item.telephone || '暂无' }}</view>
           <view v-if="show" class="text-[#666]">
-            {{ `离您: < ${item.shopDistance || 0} km` }}
+            {{ `离您: < ${item.distance || 0} km` }}
           </view>
         </view>
       </view>

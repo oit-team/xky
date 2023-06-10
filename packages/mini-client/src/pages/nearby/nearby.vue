@@ -145,8 +145,8 @@ export default {
                 wx.getFuzzyLocation({
                   type: 'wgs84',
                   success: (res) => {
-                    this.y = res.longitude.toFixed(2)
-                    this.x = res.latitude.toFixed(2)
+                    this.y = res.longitude
+                    this.x = res.latitude
                     this.getData()
                   },
                   fail: () => {
@@ -192,8 +192,8 @@ export default {
               wx.getFuzzyLocation({
                 type: 'wgs84',
                 success: (res) => {
-                  this.y = res.longitude.toFixed(2)
-                  this.x = res.latitude.toFixed(2)
+                  this.y = res.longitude
+                  this.x = res.latitude
                   this.getData()
                 },
                 fail: () => {

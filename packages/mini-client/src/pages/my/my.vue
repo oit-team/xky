@@ -36,7 +36,7 @@ export default {
           const data = res.result
           const url = encodeURIComponent(data)
           uni.navigateTo({
-            url: `/pages/index/confirm?q=${url}`,
+            url: `/pages/card/confirm?q=${url}`,
           })
         },
         fail(err) {
