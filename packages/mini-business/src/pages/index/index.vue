@@ -43,6 +43,7 @@ export default {
       // formatterStartTime: '',
       // formatterEndTime: '',
       show: false,
+      // showMore: true,
     }
   },
 
@@ -52,6 +53,9 @@ export default {
     },
     logged() {
       return this.$store.getters.logged
+    },
+    showMore() {
+      return !this.showPicker
     },
   },
   watch: {
@@ -247,7 +251,6 @@ export default {
         round
         plain
         size="small"
-        @click="showPicker = true"
       >
         切换模式
       </van-button>
@@ -255,13 +258,13 @@ export default {
     <view class="w-full">
       <view v-if="logged" class="flex flex-col w-full flex-1">
         <view class="w-full py-2 flex items-center">
-          <view
+          <!-- <view
             class="flex text-sm bg-[#3490dc] text-white px-2 py-1 rounded-full mx-1 truncate"
             @click="getDevState(true)"
           >
             <van-icon name="aim" />
             <span class="ml-1">探测</span>
-          </view>
+          </view> -->
           <tabs :list="devList" class="w-full flex-1 overflow-hidden overflow-x-auto mr-1" @select-tab="selectTab()" />
         </view>
 
@@ -341,15 +344,15 @@ export default {
       </view>
     </view>
 
-    <view class="fixed bottom-4 right-4 p-2 rounded-full bg-[#f5dc55] z-101 leading-4 text-center shadow">
+    <view v-show="showMore" class="fixed bottom-4 right-4 p-2 rounded-full bg-gray-100 z-101 leading-4 text-center shadow">
       <view class="">
         <van-transition :show="show" custom-class="block" name="fade-up">
-          <view class="grid gird-cols-1 gap-y-2 my-2">
-            <van-icon name="phone" />
-            <van-icon name="exchange" />
+          <view class="grid gird-cols-1 gap-2 mb-2">
+            <van-icon name="exchange" color="#6FA7FF" size="20px" @click="showPicker = true" />
+            <van-icon name="replay" color="#6FA7FF" size="20px" @click="getDevState(true)" />
           </view>
         </van-transition>
-        <van-icon :name="show ? 'arrow-up' : 'arrow-down'" @click="show = !show" />
+        <van-icon :name="show ? 'arrow-up' : 'arrow-down'" color="#6FA7FF" size="20px" @click="show = !show" />
       </view>
     </view>
 
