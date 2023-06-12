@@ -44,6 +44,9 @@ export default {
   async onShow() {
     await this.$store.state.userPromise
 
+    uni.setNavigationBarTitle({
+      title: this.$store.state.userInfo.shopName,
+    })
     this.getData()
   },
   async onPullDownRefresh() {
