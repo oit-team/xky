@@ -51,7 +51,7 @@ export default new Vuex.Store({
         ctx.commit('setUserInfo', res.body)
       }
       catch (err) {
-        uni.navigateTo({
+        uni.reLaunch({
           url: '/pages/login/login',
         })
       }

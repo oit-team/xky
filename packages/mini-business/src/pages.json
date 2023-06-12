@@ -1,25 +1,40 @@
 {
   "pages": [
     {
-      "path": "pages/dataBoard/index"
+      "path": "pages/dataBoard/index",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
     {
       "path": "pages/index/index",
       "style": {
-        "navigationStyle": "custom"
+        "navigationBarTitleText": ""
       }
     },
     {
-      "path": "pages/template/education/detail"
+      "path": "pages/template/education/detail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
     {
-      "path": "pages/template/clothing/detail"
+      "path": "pages/template/clothing/detail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
     {
-      "path": "pages/template/jewelry/detail"
+      "path": "pages/template/jewelry/detail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
     {
-      "path": "pages/template/catering/detail"
+      "path": "pages/template/catering/detail",
+      "style": {
+        "navigationBarTitleText": ""
+      }
     },
     {
       "path": "pages/activity/activity",
@@ -122,7 +137,7 @@
     {
       "path": "pages/service/serviceDetail",
       "style": {
-        "navigationBarTitleText": ""
+        "navigationBarTitleText": "服务详情"
       }
     },
     {
@@ -136,7 +151,7 @@
     {
       "path": "pages/serviceOrder/orderDetail",
       "style": {
-        "navigationBarTitleText": ""
+        "navigationBarTitleText": "订单详情"
       }
     },
     {
@@ -227,6 +242,7 @@
       "van-skeleton": "/wxcomponents/vant/skeleton/index",
       "van-stepper": "/wxcomponents/vant/stepper/index",
       "van-tag": "/wxcomponents/vant/tag/index",
+      "van-transition": "/wxcomponents/vant/transition/index",
       "van-rate": "/wxcomponents/vant/rate/index"
     }
   },

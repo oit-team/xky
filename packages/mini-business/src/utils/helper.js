@@ -112,3 +112,16 @@ export function isVideo(url) {
 export function getVideoFrame(src) {
   return src && src.replace(/(.*)\..*/, '$1_s.jpg')
 }
+
+export function previewImg(urls, config) {
+  uni.previewImage({
+    ...config,
+    urls,
+    longPressActions: {
+      itemList: ['发送给朋友', '保存图片', '收藏'],
+      fail(err) {
+        Toast.fail(err.errMsg)
+      },
+    },
+  })
+}

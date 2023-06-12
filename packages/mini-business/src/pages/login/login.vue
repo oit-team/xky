@@ -14,7 +14,7 @@ export default {
   onLoad() {
   },
   onShow() {
-    // uni.hideHomeButton()
+    uni.hideHomeButton()
   },
   methods: {
     async login() {

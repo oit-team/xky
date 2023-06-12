@@ -103,9 +103,14 @@ export default {
         </view>
       </view>
 
-      <view class="w-full px-4 box-border">
+      <view class="w-full box-border">
         <view class="w-full">
-          <van-button round type="info" class="w-full" block @click="back()">
+          <van-button
+            block
+            round
+            custom-style="{background-color: #f2f2f2; color: black;}"
+            @click="back()"
+          >
             点击返回({{ countDown }}秒后自动返回)
           </van-button>
         </view>

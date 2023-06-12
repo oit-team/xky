@@ -23,6 +23,10 @@ export default {
     this.contentHeight = windowHeight - 54
 
     await this.$store.state.userPromise
+
+    uni.setNavigationBarTitle({
+      title: this.$store.state.userInfo.shopName,
+    })
     this.getServiceInfo()
   },
   computed: {
@@ -96,7 +100,7 @@ export default {
 
 <template>
   <container classes="flex flex-col items-center bg-gray-100">
-    <van-tabs class="w-full">
+    <van-tabs sticky class="w-full">
       <van-tab title="内容信息">
         <product />
       </van-tab>

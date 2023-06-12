@@ -10,7 +10,12 @@ export default {
       showPicker: false,
     }
   },
-  onShow() {
+  async onShow() {
+    await this.$store.state.userPromise
+
+    uni.setNavigationBarTitle({
+      title: this.$store.state.userInfo.shopName,
+    })
   },
   computed: {
     logged() {

@@ -1,8 +1,9 @@
 <script>
+import { hasToken } from '../../utils/token'
 import dataCard from './components/card'
 import FlowMonitoring from './components/FlowMonitoring.vue'
 import TrendInterest from './components/TrendInterest.vue'
-import * as api from '@/api/data.js'
+import { getAppointmentReport, getLotteryInteraction } from '@/api/data.js'
 
 export default {
   components: {
@@ -52,22 +53,31 @@ export default {
     serviceData: {},
     flowData: {},
   }),
+  computed: {
+    logged() {
+      return this.$store.getters.logged
+    },
+  },
   async onShow() {
     await this.$store.state.userPromise
 
-    this.getLotteryInteraction()
-    this.getAppointmentReport()
+    uni.setNavigationBarTitle({
+      title: this.$store.state.userInfo.shopName,
+    })
+
+    this.getLottery()
+    this.getAppointment()
     this.$refs.flowMonitoring.loadData()
     this.$refs.trendInterest.loadData()
   },
   methods: {
-    async getLotteryInteraction() {
-      const { body } = await api.getLotteryInteraction()
+    async getLottery() {
+      const { body } = await getLotteryInteraction()
 
       this.luckData = body
     },
-    async getAppointmentReport() {
-      const { body } = await api.getAppointmentReport()
+    async getAppointment() {
+      const { body } = await getAppointmentReport()
 
       this.serviceData = body.result
     },

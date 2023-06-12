@@ -42,6 +42,8 @@ export default {
       times: {},
       // formatterStartTime: '',
       // formatterEndTime: '',
+      show: false,
+      // showMore: true,
     }
   },
 
@@ -51,6 +53,9 @@ export default {
     },
     logged() {
       return this.$store.getters.logged
+    },
+    showMore() {
+      return !this.showPicker
     },
   },
   watch: {
@@ -67,11 +72,16 @@ export default {
   },
 
   onLoad() {
-    this.iStatusBarHeight = uni.getMenuButtonBoundingClientRect().top
-    this.topHeight = uni.getMenuButtonBoundingClientRect().height
+    // this.iStatusBarHeight = uni.getMenuButtonBoundingClientRect().top
+    // this.topHeight = uni.getMenuButtonBoundingClientRect().height
   },
   async onShow() {
     await this.$store.state.userPromise
+
+    uni.setNavigationBarTitle({
+      title: this.$store.state.userInfo.shopName,
+    })
+
     this.showSwitch = hasToken()
     if (hasToken()) {
       await this.getDevState()
@@ -230,7 +240,7 @@ export default {
 <template>
   <container classes="flex flex-col items-center bg-gray-100">
     <!--    bg-[#6FA7FF] -->
-    <view class="navHeight w-full" :style="{ height: `${iStatusBarHeight}px` }" />
+    <!-- <view class="navHeight w-full" :style="{ height: `${iStatusBarHeight}px` }" />
     <view class="w-full flex justify-start flex py-1 items-center" :style="{ height: `${topHeight}px` }">
       <van-button
         v-if="showSwitch"
@@ -241,101 +251,111 @@ export default {
         round
         plain
         size="small"
-        @click="showPicker = true"
       >
         切换模式
       </van-button>
-    </view>
-    <view v-if="logged" class="flex flex-col w-full flex-1">
-      <view class="w-full py-2 flex items-center">
-        <view
-          class="flex text-sm bg-[#3490dc] text-white px-2 py-1 rounded-full mx-1 truncate"
-          @click="getDevState(true)"
-        >
-          <van-icon name="aim" />
-          <span class="ml-1">探测</span>
+    </view> -->
+    <view class="w-full">
+      <view v-if="logged" class="flex flex-col w-full flex-1">
+        <view class="w-full py-2 flex items-center">
+          <!-- <view
+            class="flex text-sm bg-[#3490dc] text-white px-2 py-1 rounded-full mx-1 truncate"
+            @click="getDevState(true)"
+          >
+            <van-icon name="aim" />
+            <span class="ml-1">探测</span>
+          </view> -->
+          <tabs :list="devList" class="w-full flex-1 overflow-hidden overflow-x-auto mr-1" @select-tab="selectTab()" />
         </view>
-        <tabs :list="devList" class="w-full flex-1 overflow-hidden overflow-x-auto mr-1" @select-tab="selectTab()" />
+
+        <config
+          ref="config"
+          arrow
+          :goods="goodsList"
+          class="config w-full flex-1 flex flex-col"
+          :dev-state="devInfo.devState"
+          :brand-type="devInfo.brandType"
+          @addAdvertsTemp="addAdvertsTemp()"
+          @getRollbackAdverts="getRollbackAdverts()"
+        >
+          <template #top-actions>
+            <view class="w-full flex justify-around">
+              <van-button
+                size="small"
+                type="info"
+                color="#6FA7FF"
+                round
+                @click="addAdvertsTemp()"
+              >
+                保存草稿{{ hasDraft ? '(1)' : '' }}
+              </van-button>
+              <van-button
+                v-if="hasDraft"
+                type="info"
+                size="small"
+                color="#6FA7FF"
+                round
+                plain
+                @click="getRollbackAdverts()"
+              >
+                回退
+              </van-button>
+            </view>
+          </template>
+
+          <template #after>
+            <view class="h-full overflow-auto">
+              <van-cell-group inset>
+                <van-cell title="发布时间" :value="devInfo.releaseTime" />
+                <van-cell title="探测时间" :value="devInfo.detecTime" />
+              </van-cell-group>
+            </view>
+          </template>
+          <template #actions>
+            <view class="flex gap-3 px-3">
+              <van-button
+                class="!h-10 w-full"
+                type="info"
+                block
+                color="#6FA7FF"
+                round
+                plain
+                @click="selectTemplate()"
+              >
+                {{ modulesTitle ? `模板(${modulesTitle})` : '选择模板' }}
+              </van-button>
+              <van-button
+                round
+                block
+                color="#6FA7FF"
+                type="info"
+                class="!h-10 w-full"
+                @click="addAppPublishDeviceAds()"
+              >
+                发布
+              </van-button>
+            </view>
+          </template>
+        </config>
       </view>
 
-      <config
-        ref="config"
-        arrow
-        :goods="goodsList"
-        class="config w-full flex-1 flex flex-col"
-        :dev-state="devInfo.devState"
-        :brand-type="devInfo.brandType"
-        @addAdvertsTemp="addAdvertsTemp()"
-        @getRollbackAdverts="getRollbackAdverts()"
-      >
-        <template #top-actions>
-          <view class="w-full flex justify-around">
-            <van-button
-              size="small"
-              type="info"
-              color="#6FA7FF"
-              round
-              @click="addAdvertsTemp()"
-            >
-              保存草稿{{ hasDraft ? '(1)' : '' }}
-            </van-button>
-            <van-button
-              v-if="hasDraft"
-              type="info"
-              size="small"
-              color="#6FA7FF"
-              round
-              plain
-              @click="getRollbackAdverts()"
-            >
-              回退
-            </van-button>
-          </view>
-        </template>
-
-        <template #after>
-          <view class="h-full overflow-auto">
-            <van-cell-group inset>
-              <van-cell title="发布时间" :value="devInfo.releaseTime" />
-              <van-cell title="探测时间" :value="devInfo.detecTime" />
-            </van-cell-group>
-          </view>
-        </template>
-        <template #actions>
-          <view class="flex gap-3 px-3">
-            <van-button
-              class="!h-10 w-full"
-              type="info"
-              block
-              color="#6FA7FF"
-              round
-              plain
-              @click="selectTemplate()"
-            >
-              {{ modulesTitle ? `模板(${modulesTitle})` : '选择模板' }}
-            </van-button>
-            <van-button
-              round
-              block
-              color="#6FA7FF"
-              type="info"
-              class="!h-10 w-full"
-              @click="addAppPublishDeviceAds()"
-            >
-              发布
-            </van-button>
-          </view>
-        </template>
-      </config>
+      <view v-if="!logged" class="flex-1 rounded-xl w-full">
+        <not-logged />
+      </view>
     </view>
 
-    <view v-if="!logged" class="flex-1 rounded-xl w-full">
-      <not-logged />
+    <view v-show="showMore" class="fixed bottom-4 right-4 p-2 rounded-full bg-gray-100 z-101 leading-4 text-center shadow">
+      <view class="">
+        <van-transition :show="show" custom-class="block" name="fade-up">
+          <view class="grid gird-cols-1 gap-2 mb-2">
+            <van-icon name="exchange" color="#6FA7FF" size="20px" @click="showPicker = true" />
+            <van-icon name="replay" color="#6FA7FF" size="20px" @click="getDevState(true)" />
+          </view>
+        </van-transition>
+        <van-icon :name="show ? 'arrow-up' : 'arrow-down'" color="#6FA7FF" size="20px" @click="show = !show" />
+      </view>
     </view>
 
-    <!--    <view v-if="logged && devList.length === 0" class="flex flex-col items-center"> -->
-    <!--      <van-empty description="暂无数据" /> -->
-    <!--    </view> -->
     <van-popup
       :show="showPicker"
       position="bottom"
@@ -379,11 +399,11 @@ export default {
 }
 
 ::v-deep .van-tabs__wrap {
-  border-bottom: 3px solid rgb(25, 137, 250) !important;
+  border-bottom: 3px solid #6FA7FF !important;
 }
 
 ::v-deep .van-tab--active {
-  color: rgb(25, 137, 250) !important;
+  color: #6FA7FF !important;
 }
 
 ::v-deep .van-image {

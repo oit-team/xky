@@ -145,8 +145,8 @@ export default {
                 wx.getFuzzyLocation({
                   type: 'wgs84',
                   success: (res) => {
-                    this.y = res.longitude.toFixed(2)
-                    this.x = res.latitude.toFixed(2)
+                    this.y = res.longitude
+                    this.x = res.latitude
                     this.getData()
                   },
                   fail: () => {
@@ -192,8 +192,8 @@ export default {
               wx.getFuzzyLocation({
                 type: 'wgs84',
                 success: (res) => {
-                  this.y = res.longitude.toFixed(2)
-                  this.x = res.latitude.toFixed(2)
+                  this.y = res.longitude
+                  this.x = res.latitude
                   this.getData()
                 },
                 fail: () => {
@@ -266,7 +266,6 @@ export default {
     <van-popup
       :show="showPopup"
       position="top"
-      custom-style="height: 40%"
       round
       @close="showPopup = false"
     >
@@ -279,12 +278,12 @@ export default {
           />
         </view>
 
-        <view class="flex justify-around w-full">
+        <view class="flex justify-around w-full my-2">
           <view
             v-for="item in positionList"
             :key="item.num"
             class="bg-[#f8f8f8] text-xs p-2 box-border rounded"
-            :class="[item.num === formData.endDistance ? 'bg-[#5faee3] text-[##7ea0fd]' : '']"
+            :class="[item.num === formData.endDistance ? 'bg-[#6FA7FF] text-[#fff]' : '']"
             @click="changePosition(item.num)"
           >
             {{ item.title }}

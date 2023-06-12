@@ -3,7 +3,8 @@ export default {
     productId: String,
   },
   data: () => ({
-    data: {},
+    data: {
+    },
   }),
   mounted() {
     this.getDetailData()

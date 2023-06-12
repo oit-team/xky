@@ -1,8 +1,10 @@
 <script>
 import product from '../mixins/product'
+import { previewImg } from '@/utils/helper'
 
 export default {
   mixins: [product],
+  methods: { previewImg },
 }
 </script>
 
@@ -17,7 +19,7 @@ export default {
         <video class="w-full h-full" :src="file" :enable-progress-gesture="false" />
       </swiper-item>
       <swiper-item v-for="file of data.imgList" :key="file">
-        <image class="w-full h-full" mode="aspectFit" :src="file" />
+        <image class="w-full h-full" mode="aspectFit" :src="file" @click="previewImg(data.imgList)" />
       </swiper-item>
     </swiper>
 
