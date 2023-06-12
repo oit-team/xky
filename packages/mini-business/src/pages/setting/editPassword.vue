@@ -57,7 +57,7 @@ export default {
         />
       </van-cell-group>
       <view class="mt-2">
-        <van-button type="primary" block @click="submit">
+        <van-button color="#6FA7FF" block @click="submit">
           提交
         </van-button>
       </view>

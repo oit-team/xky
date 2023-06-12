@@ -5,8 +5,8 @@ import { post } from './index'
  * @param {*} params
  * @returns
  */
-export function getAppointmentReport(params) {
-  return post('/liveBroadcast/home/getAppointmentReport', params)
+export function getAppointmentReport() {
+  return post('/liveBroadcast/home/getAppointmentReport')
 }
 
 /**
@@ -14,6 +14,6 @@ export function getAppointmentReport(params) {
  * @param {*} params
  * @returns
  */
-export function getLotteryInteraction(params) {
-  return post('/liveBroadcast/home/getLotteryInteraction', params)
+export function getLotteryInteraction() {
+  return post('/liveBroadcast/home/getLotteryInteraction')
 }
