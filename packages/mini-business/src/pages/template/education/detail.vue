@@ -1,10 +1,11 @@
 <script>
 import product from '../mixins/product'
-import { getVideoFrame, isVideo } from '@/utils/helper'
+import { getVideoFrame, isVideo, previewImg } from '@/utils/helper'
 
 export default {
   mixins: [product],
   methods: {
+    previewImg,
     isVideo,
     getVideoFrame,
     getImageUrl(item) {
@@ -32,7 +33,7 @@ export default {
         indicator-dots
       >
         <swiper-item v-for="img of data.imgList" :key="img">
-          <image :src="img" class="w-full h-full" mode="aspectFit" />
+          <image :src="img" class="w-full h-full" mode="aspectFit" @click="previewImg(data.imgList)" />
         </swiper-item>
       </swiper>
     </div>
@@ -88,7 +89,7 @@ export default {
             <vc-waterfall :data="data.detailsImgList" gap="12px">
               <template #default="{ item }">
                 <div class="bg-gray-50 rounded-lg overflow-hidden flex">
-                  <image :src="item" class="w-full" mode="widthFix" />
+                  <image :src="item" class="w-full" mode="widthFix" @click="previewImg(data.detailsImgList)" />
                 </div>
               </template>
             </vc-waterfall>
@@ -99,7 +100,7 @@ export default {
             <vc-waterfall :data="transformImageList(data.videoList)" item-key="url" gap="12px">
               <template #default="{ item }">
                 <div class="bg-gray-50 rounded-lg overflow-hidden flex">
-                  <image :src="item.image" class="w-full" mode="widthFix" />
+                  <image :src="item.img" mode="widthFix" class="w-full" />
                 </div>
               </template>
             </vc-waterfall>
