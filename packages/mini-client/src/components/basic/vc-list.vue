@@ -70,8 +70,9 @@ export default {
         done: () => {
           this.refreshStatus = REFRESH_STATUS.DONE
         },
-        fail: () => {
+        fail: (err) => {
           this.refreshStatus = REFRESH_STATUS.ERROR
+          return Promise.reject(err)
         },
       })
     },
@@ -86,8 +87,9 @@ export default {
         done: () => {
           this.status = STATUS.DONE
         },
-        fail: () => {
+        fail: (err) => {
           this.status = STATUS.ERROR
+          return Promise.reject(err)
         },
       })
     },
@@ -135,5 +137,6 @@ export default {
 <style>
 .vc-list {
   height: 100%;
+  flex: 1;
 }
 </style>

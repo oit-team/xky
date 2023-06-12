@@ -302,6 +302,9 @@ importers:
       luch-request:
         specifier: ^3.0.7
         version: 3.0.7
+      mini-common:
+        specifier: file:..\mini-common
+        version: file:packages/mini-common
       regenerator-runtime:
         specifier: ^0.12.1
         version: 0.12.1
@@ -16124,3 +16127,9 @@ packages:
       normalize-path: 1.0.0
       strip-indent: 2.0.0
     dev: true
+
+  file:packages/mini-common:
+    resolution: {directory: packages/mini-common, type: directory}
+    name: mini-common
+    version: 0.1.0
+    dev: false

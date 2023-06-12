@@ -1,18 +1,12 @@
 <script>
-import shopItem from './components/shopItem.vue'
-import goodsItem from './components/goodsItem.vue'
 import { hasToken } from '@/utils/token'
 import { getDictItemList } from '@/api/system'
 import * as api from '@/api/goods'
 import NotLogged from '@/components/business/notLogged/notLogged'
-import scrollBtm from '@/components/business/ScrollBtm/ScrollBtm'
 
 export default {
   components: {
     NotLogged,
-    ScrollBtm: scrollBtm,
-    // ShopItem: shopItem,
-    GoodsItem: goodsItem,
   },
   data() {
     return {
@@ -21,11 +15,6 @@ export default {
       industryAll: [], // 行业列表
       services: [], // 服务列表
       products: [], // 商品列表
-      formData: {
-        pageSize: 20,
-        pageNum: 1,
-      },
-      canReload: false,
       showEmpty: true,
       current: 0,
     }
@@ -35,25 +24,24 @@ export default {
       return this.$store.getters.logged
     },
   },
-  async onShow() {
+  watch: {
+    active() {
+      this.$refs.list.reset().load()
+    },
+  },
+  async mounted() {
     if (!hasToken())
       return
 
     await this.$store.state.userPromise
     this.getDictItemList()
   },
-  async onPullDownRefresh() {
-    this.formData.pageNum = 1
-    await this.getProducts()
-    uni.stopPullDownRefresh()
-  },
-  async onReachBottom() {
-    if (!this.canReload)
-      return
-    this.formData.pageNum++
-    await this.reload()
-  },
   methods: {
+    loadData({ page, next, done, fail }) {
+      this.getProducts(page)
+        .then(isDone => isDone ? done() : next())
+        .catch(fail)
+    },
     async getDictItemList() {
       const res = await getDictItemList({
         dictCode: 'INDUSTRY_CATEGORY',
@@ -63,135 +51,74 @@ export default {
       this.industryAll.forEach((item) => {
         item.url = 'https://picsum.photos/200/200'
       })
-      this.getProducts()
+      this.active = this.industryAll?.[0]?.id
     },
-    async getProducts() {
-      this.$toast.loading({
-        duration: 60000,
-        forbidClick: true,
-        message: '加载中...',
+    async getProducts(pageNum = 1) {
+      if (pageNum === 1)
+        this.products = []
+      const res = await this.$post('/goods/product/getProductAllForC', {
+        pageNum,
+        pageSize: 20,
+        industryCategory: this.active,
       })
-      const res = await api.getProducts(this.formData).finally(() => this.$toast.clear())
-      this.products = res.body.resultList
-      this.canReload = res.body.count > 20
-      // this.showEmpty = res.body.count === 0
-    },
-    async reload() {
-      this.$toast.loading({
-        duration: 60000,
-        forbidClick: true,
-        message: '加载中...',
-      })
-      const res = await api.getProducts(this.formData).finally(() => this.$toast.clear())
-      this.products = [...this.products, ...res.body.resultList]
-      this.canReload = res.body.count > this.products.length
+      this.showEmpty = res.body.count === 0
+      this.products = pageNum === 1 ? res.body.resultList : [...this.products, ...res.body.resultList]
+
+      return res.body.count <= this.products.length
     },
     change(e) {
       this.current = e.detail.current
+    },
+    toProductPage(item) {
+      const routeMap = {
+        clothing: '/pages/template/clothing/detail',
+        catering: '/pages/template/catering/detail',
+        jewellery: '/pages/template/jewelry/detail',
+        education: '/pages/template/education/detail',
+      }
+      const path = routeMap[item.industryType]
+      if (!path)
+        return console.warn('未匹配到商品详情页')
+
+      uni.navigateTo({
+        url: `${path}?productId=${item.productId}&brandId=${item.brandId}`,
+      })
     },
   },
 }
 </script>
 
 <template>
-  <container classes="bg-neutral-100 flex flex-col h-full">
+  <container classes="bg-neutral-100 h-screen" flex>
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
       <not-logged class="w-full h-full" @login="getDictItemList()" />
     </view>
-    <view v-if="logged" class="content h-full w-full box-border">
-      <!-- 顶部行业 -->
-      <!-- <view class="w-auto h-300px flex flex-col gap-2 gap-y-1 justify-between flex-wrap p-2 box-border bg-white rounded overflow-hidden overflow-x-auto">
-        <view v-for="item in industryAll" :key="item.id" class="rounded text-sm text-center">
-          <view class="w-100px text-center">
-            <image
-              class="w-15 h-15 rounded"
-              :src="item.url"
-            />
-            <view class="w-full truncate">
-              {{ item.name }}
-            </view>
-          </view>
-        </view>
-      </view> -->
-      <van-tabs :active="active" color="#6FA7FF">
-        <van-tab v-for="item in industryAll" :key="item.id" :title="item.name" />
+    <view v-if="logged" class="content flex-1 box-border flex flex-col overflow-hidden pb-50px">
+      <van-tabs :active="active" color="#6FA7FF" @change="active = $event.detail.name">
+        <van-tab v-for="item in industryAll" :key="item.id" :title="item.name" :name="item.id" />
       </van-tabs>
 
-      <!-- <view>
-        <swiper
-          indicator-dots
-          :current="current"
-          @change="change"
-        >
-          <swiper-item>
-            <view>
-              <view v-for="item in industryAll" :key="item.id" class="rounded text-sm text-center">
-                <view class="w-100px text-center">
-                  <image
-                    class="w-15 h-15 rounded"
-                    :src="item.url"
-                  />
-                  <view class="w-full truncate">
-                    {{ item.name }}
-                  </view>
-                </view>
-              </view>
-            </view>
-          </swiper-item>
-          <swiper-item>Slide 2</swiper-item>
-          <swiper-item>Slide 3</swiper-item>
-        </swiper>
-      </view> -->
-      <!-- 商品 / 店铺 / 服务 -->
-      <!-- <view class="mt-2">
-        <van-tabs :active="active">
-          <van-tab title="商品">
-            <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
-              <van-empty />
-            </view>
-            <view v-else>
-              <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
-                <goods-item v-for="item in products" :key="item.productId" :item="item" />
-              </view>
-              <scroll-btm :can-reload="canReload" />
-            </view>
-          </van-tab>
-          <van-tab title="店铺">
-            <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
-              <van-empty />
-            </view>
-            <view v-else>
-              <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
-                <shop-item v-for="item in products" :key="item.productId" :item="item" />
-              </view>
-              <scroll-btm :can-reload="canReload" />
-            </view>
-          </van-tab>
-          <van-tab title="服务">
-            <view v-if="showEmpty" class="w-full flex justify-center bg-white rounded">
-              <van-empty />
-            </view>
-            <view v-else>
-              <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
-                <shop-item v-for="item in products" :key="item.productId" :item="item" />
-              </view>
-              <scroll-btm :can-reload="canReload" />
-            </view>
-          </van-tab>
-        </van-tabs>
-      </view> -->
-
-      <view class="mt-2">
-        <view v-if="showEmpty" class="w-full">
-          <van-empty />
-        </view>
-        <view v-else class="p-2">
-          <view class="p-2 box-border bg-white rounded grid grid-cols-2 gap-2">
-            <goods-item v-for="item in products" :key="item.productId" :item="item" />
-          </view>
-          <scroll-btm :can-reload="canReload" />
-        </view>
-      </view>
+      <vc-list
+        ref="list"
+        pull-refresh
+        load-more
+        :immediate="false"
+        @load="loadData"
+        @refresh="loadData"
+      >
+        <div class="p-3">
+          <vc-waterfall :data="products" :columns="2" gap="12px" item-key="productId">
+            <template #default="{ item }">
+              <div class="bg-white rounded-lg overflow-hidden" @click="toProductPage(item)">
+                <image :src="item.productUrl" class="w-full" mode="widthFix" />
+                <div class="line-clamp-2 text-sm m-2">
+                  {{ item.productName }}
+                </div>
+              </div>
+            </template>
+          </vc-waterfall>
+        </div>
+      </vc-list>
     </view>
   </container>
 </template>

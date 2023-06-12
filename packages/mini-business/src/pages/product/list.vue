@@ -87,16 +87,6 @@ export default {
             </template>
           </vc-waterfall>
         </div>
-        <!-- <div class="grid grid-cols-2 gap-2 p-2">
-          <div v-for="item of list" :key="item.productId" class="bg-white rounded-lg overflow-hidden">
-            <div class="aspect-4/3 flex">
-              <image :src="item.productUrl" class="h-full w-full" mode="aspectFit" />
-            </div>
-            <div class="line-clamp-2 text-sm m-2">
-              {{ item.productName }}
-            </div>
-          </div>
-        </div> -->
       </vc-list>
     </div>
   </view>

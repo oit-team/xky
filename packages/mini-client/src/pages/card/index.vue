@@ -114,8 +114,12 @@ export default {
       <not-logged class="w-full h-full" />
     </view>
     <view v-else class="w-full h-full">
-      <view v-if="showEmpty" class="flex flex-col items-center pb-3">
-        <van-empty description="您还未参与抽奖，点击下方商家参与抽奖吧" />
+      <view v-if="!showEmpty" class="flex flex-col items-center pb-3">
+        <van-empty>
+          <template #description>
+            <span>您还未参与抽奖</span>
+          </template>
+        </van-empty>
         <van-divider content-position="center">
           附近商家
         </van-divider>

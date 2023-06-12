@@ -17,9 +17,7 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": true,
-        "onReachBottomDistance": 10
+        "navigationBarTitleText": ""
       }
     },
     {
