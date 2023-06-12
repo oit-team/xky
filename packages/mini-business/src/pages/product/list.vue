@@ -57,7 +57,7 @@ export default {
 </script>
 
 <template>
-  <container classes="bg-gray-100 h-screen overflow-hidden" flex>
+  <view classes="bg-gray-100 h-screen overflow-hidden" flex>
     <div>
       <van-search
         :value="searchValue"
@@ -99,5 +99,5 @@ export default {
         </div> -->
       </vc-list>
     </div>
-  </container>
+  </view>
 </template>
