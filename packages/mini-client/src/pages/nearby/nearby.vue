@@ -34,7 +34,7 @@ export default {
       canReload: true,
       active2: 0,
       positionList: [{
-        num: 2,
+        num: 10,
         title: '默认',
       },
       {

@@ -69,19 +69,18 @@ export default {
 </script>
 
 <template>
-  <view class="container" :class="[{ 'container-flex': flex }, classes]" :style="[{ minHeight }]">
+  <view class="container">
     <van-toast id="van-toast" />
     <van-dialog id="van-dialog" />
 
-    <!-- <div :class="[{ 'container-flex': flex }, classes]" :style="{ minHeight }">
-    </div> -->
-    <slot />
+    <div :class="[{ 'container-flex': flex }, classes]" :style="{ minHeight }">
+      <slot />
+    </div>
   </view>
 </template>
 
 <style>
 .container {
-  min-height: 100vh;
   box-sizing: border-box;
 }
 

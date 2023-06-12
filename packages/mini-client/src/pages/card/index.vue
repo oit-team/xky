@@ -109,12 +109,12 @@ export default {
 </script>
 
 <template>
-  <container classes="flex flex-col h-full bg-neutral-100">
+  <container classes="flex flex-col h-screen bg-neutral-100">
     <view v-if="!logged" class="flex-1 w-full">
       <not-logged class="w-full h-full" />
     </view>
-    <view v-else class="w-full h-full">
-      <view v-if="!showEmpty" class="flex flex-col items-center pb-3">
+    <view v-else class="w-full h-screen">
+      <view v-if="showEmpty" class="flex flex-col items-center pb-3">
         <van-empty>
           <template #description>
             <span>您还未参与抽奖</span>
