@@ -1,11 +1,11 @@
 <script>
-import ShopItem from './components/shopItem.vue'
 import { getNearbyMerchants } from '@/api/nearby'
 import { convertImageSize } from '@/utils/helper'
 import notLogged from '@/components/business/notLogged/notLogged'
 import { hasToken } from '@/utils/token'
 import { getDictItemList } from '@/api/system'
 import ScrollBtm from '@/components/business/ScrollBtm/ScrollBtm'
+import ShopItem from '@/components/business/ShopItem/ShopItem'
 
 export default {
   components: {
@@ -249,7 +249,7 @@ export default {
       </view>
       <view v-else class="w-full h-full">
         <view class="flex h-full flex-col p-2 box-border">
-          <view v-for="(item, index) in enterpriseList" :key="index" class="w-full p-2 mb-2 box-border rounded bg-white" @click="toDetails(item)">
+          <view v-for="(item, index) in enterpriseList" :key="index" class="w-full mb-2" @click="toDetails(item)">
             <shop-item :item="item" />
           </view>
           <scroll-btm :can-reload="canReload" />

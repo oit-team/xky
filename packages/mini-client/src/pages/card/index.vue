@@ -5,11 +5,14 @@ import { convertImageSize } from '@/utils/helper'
 import { getFuzzyLocation } from '@/utils/actions'
 import { hasToken } from '@/utils/token'
 import NotLogged from '@/components/business/notLogged/notLogged'
+import ShopItem from '@/components/business/ShopItem/ShopItem'
+import { getNearbyMerchants } from '@/api/nearby'
 
 export default {
   components: {
     LuckItem,
     NotLogged,
+    ShopItem,
   },
   data() {
     return {
@@ -23,6 +26,7 @@ export default {
         weChatId: '',
       },
       showItem: {},
+      shopList: [],
     }
   },
   computed: {
@@ -37,6 +41,7 @@ export default {
       return
     await this.$store.state.userPromise
     this.getLotteryTicketShop()
+    this.getNearbyMerchants()
   },
   async onPullDownRefresh() {
     this.formData.pageNum = 1
@@ -81,6 +86,18 @@ export default {
 
       this.$toast.clear()
     },
+    async getNearbyMerchants() {
+      const { longitude, latitude } = await this.getFuzzyLocation()
+      const res = await getNearbyMerchants({
+        lng: longitude,
+        lat: latitude,
+        pageNum: 1,
+        pageSize: 3,
+        userId: this.$store.state.userInfo.id,
+      })
+
+      this.shopList = res.body.nearbyMerchants
+    },
     show(item) {
       uni.navigateTo({
         url: `/pages/card/cardList?id=${item.shopId}`,
@@ -97,10 +114,16 @@ export default {
       <not-logged class="w-full h-full" />
     </view>
     <view v-else class="w-full h-full">
-      <view v-if="showEmpty" class="flex flex-col items-center">
-        <van-empty description="暂无数据" />
-        <van-button @click="uni.switchTab({ url: '/pages/nearby/nearby' })">
+      <view v-if="showEmpty" class="flex flex-col items-center pb-3">
+        <van-empty description="您还未参与抽奖，点击下方商家参与抽奖吧" />
+        <van-divider content-position="center">
           附近商家
+        </van-divider>
+        <div class="w-full flex flex-col gap-2 p-2">
+          <shop-item v-for="item of shopList" :key="item.shopId" :item="item" @click="uni.navigateTo({ url: `/pages/nearby/details?id=${item.shopId}` })" />
+        </div>
+        <van-button @click="uni.switchTab({ url: '/pages/nearby/nearby' })">
+          查看更多
         </van-button>
       </view>
       <view v-else class="flex flex-col p-2 box-border w-full">

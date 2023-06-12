@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use((response) => {
   if (response.header['Content-Type']?.includes('application/json') && response.data.head?.status !== 0) {
     return createApiError({
       url: response?.config.url,
-      status: response?.config.statusCode,
+      status: response?.statusCode,
       response,
       message: response.data.head.msg,
       code: response.data.head.status,

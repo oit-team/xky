@@ -4,7 +4,10 @@ export default {
     return {
       today: 0,
       yestDay: 0,
-      chartData: {},
+      chartData: {
+        categories: [],
+        series: [],
+      },
       opts: {
         padding: [15, 10, 0, 15],
         enableScroll: false,

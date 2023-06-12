@@ -1,9 +1,8 @@
 <script>
 import Service from '../service/serviceList.vue'
 import Operation from '../operation/operation.vue'
-import ShopItem from './components/shopItem.vue'
 import Product from './../product/list.vue'
-import * as api from '@/api/shop'
+import ShopItem from '@/components/business/ShopItem/ShopItem.vue'
 import { getShopById } from '@/api/system'
 
 export default {

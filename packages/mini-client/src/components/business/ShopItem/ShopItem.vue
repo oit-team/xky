@@ -13,7 +13,7 @@ export default {
 </script>
 
 <template>
-  <view class="flex items-center">
+  <view class="flex items-center box-border rounded bg-white overflow-hidden p-2" @click="$emit('click')">
     <van-image
       width="70"
       height="70"
