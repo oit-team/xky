@@ -60,7 +60,7 @@ export default {
     },
     back() {
       clearInterval(this.timer)
-      uni.switchTab({
+      uni.redirectTo({
         url: '/pages/activity/activity',
       })
     },

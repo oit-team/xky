@@ -19,7 +19,7 @@ export default {
       height="70"
       fit="contain"
       class="mr-2"
-      :src="item.shopLogo"
+      :src="item.brandLogo"
     />
     <view class="h-full w-full overflow-hidden">
       <view class="font-bold truncate w-full">
@@ -33,7 +33,7 @@ export default {
         <view class="flex justify-between">
           <view><span class="text-[#666]">联系电话：</span>{{ item.telephone || '暂无' }}</view>
           <view v-if="show" class="text-[#666]">
-            {{ `离您: < ${item.distance || 0} km` }}
+            {{ `距离 ${item.distance || 0} km` }}
           </view>
         </view>
       </view>
