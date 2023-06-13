@@ -243,7 +243,9 @@
       "van-stepper": "/wxcomponents/vant/stepper/index",
       "van-tag": "/wxcomponents/vant/tag/index",
       "van-transition": "/wxcomponents/vant/transition/index",
-      "van-rate": "/wxcomponents/vant/rate/index"
+      "van-rate": "/wxcomponents/vant/rate/index",
+      "van-radio-group": "/wxcomponents/vant/radio-group/index",
+      "van-radio": "/wxcomponents/vant/radio/index"
     }
   },
   "tabBar": {
