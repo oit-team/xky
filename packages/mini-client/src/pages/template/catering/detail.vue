@@ -31,7 +31,7 @@ export default {
           <van-rate :value="4" :size="16" />
         </div>
         <div class="flex gap-2">
-          <van-tag v-for="tag of getValue('productLabel')" :key="tag" plain type="danger">
+          <van-tag v-for="tag of getValue('productLabel', [])" :key="tag" plain type="danger">
             {{ tag }}
           </van-tag>
         </div>
