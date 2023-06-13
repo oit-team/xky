@@ -344,15 +344,15 @@ export default {
       </view>
     </view>
 
-    <view v-show="showMore" class="fixed bottom-4 right-4 p-2 rounded-full bg-gray-100 z-101 leading-4 text-center shadow">
+    <view v-show="showMore" class="fixed bottom-16 right-4 p-2 rounded-full bg-gray-100 z-101 leading-4 text-center shadow">
       <view class="">
         <van-transition :show="show" custom-class="block" name="fade-up">
           <view class="grid gird-cols-1 gap-2 mb-2">
-            <van-icon name="exchange" color="#6FA7FF" size="20px" @click="showPicker = true" />
-            <van-icon name="replay" color="#6FA7FF" size="20px" @click="getDevState(true)" />
+            <van-icon name="exchange" color="#6FA7FF" size="28px" @click="showPicker = true" />
+            <van-icon name="replay" color="#6FA7FF" size="28px" @click="getDevState(true)" />
           </view>
         </van-transition>
-        <van-icon :name="show ? 'arrow-up' : 'arrow-down'" color="#6FA7FF" size="20px" @click="show = !show" />
+        <van-icon :name="show ? 'arrow-up' : 'arrow-down'" color="#6FA7FF" size="30px" @click="show = !show" />
       </view>
     </view>
 

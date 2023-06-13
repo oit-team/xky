@@ -60,11 +60,11 @@ export default {
   },
   async onShow() {
     await this.$store.state.userPromise
-
+    if (!this.logged)
+      return
     uni.setNavigationBarTitle({
       title: this.$store.state.userInfo.shopName,
     })
-
     this.getLottery()
     this.getAppointment()
     this.$refs.flowMonitoring.loadData()
