@@ -4,13 +4,11 @@ import { convertImageSize } from '@/utils/helper'
 import notLogged from '@/components/business/notLogged/notLogged'
 import { hasToken } from '@/utils/token'
 import { getDictItemList } from '@/api/system'
-import ScrollBtm from '@/components/business/ScrollBtm/ScrollBtm'
 import ShopItem from '@/components/business/ShopItem/ShopItem'
 
 export default {
   components: {
     NotLogged: notLogged,
-    ScrollBtm,
     ShopItem,
   },
   data() {
@@ -20,13 +18,11 @@ export default {
       y: 0,
       x: 0,
       formData: {
-        pageNum: 1,
-        pageSize: 20,
         // shopName: '',
         industryId: 1,
         // address: '',
         startDistance: 0,
-        endDistance: 2,
+        endDistance: 10,
       },
       showPopup: false,
       active: 0,
@@ -46,11 +42,7 @@ export default {
       }, {
         num: 5,
         title: '5km',
-      }, {
-        num: 10,
-        title: '10km',
-      },
-      ],
+      }],
     }
   },
   computed: {
@@ -71,20 +63,17 @@ export default {
     await this.getDictItemList()
     await this.getLocation()
   },
-  async onPullDownRefresh() {
-    this.formData.pageNum = 1
-    await this.getData()
-    uni.stopPullDownRefresh()
-  },
-  async onReachBottom() {
-    if (!this.canReload)
-      return
-    this.formData.pageNum++
-    await this.reload()
-  },
   methods: {
     convertImageSize,
-
+    loadData({ page, next, done, fail }) {
+      this.getData(page)
+        .then(isDone => isDone ? done() : next())
+        .catch(fail)
+    },
+    async reload() {
+      await this.$nextTick()
+      this.$refs.list.reset().load()
+    },
     async getDictItemList() {
       const res = await getDictItemList({
         dictCode: 'INDUSTRY_CATEGORY',
@@ -94,36 +83,21 @@ export default {
         item.url = 'https://picsum.photos/200/200'
       })
     },
-    async getData() {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-      })
+    async getData(pageNum = 1) {
+      if (pageNum === 1)
+        this.enterpriseList = []
+
       const res = await getNearbyMerchants({
         userId: this.$store.state.userInfo.id,
         lng: this.y,
         lat: this.x,
+        pageNum,
+        pageSize: 20,
         ...this.formData,
-      }).finally(() => this.$toast.clear())
-      this.enterpriseList = res.body.nearbyMerchants
+      })
+      this.enterpriseList = pageNum === 1 ? res.body.nearbyMerchants : [...this.enterpriseList, ...res.body.nearbyMerchants]
       this.showEmpty = res.body.nearbyMerchants.length === 0
-      this.canReload = res.body.nearbyMerchants.length === this.formData.pageSize
-    },
-    async reload() {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-      })
-      const res = await getNearbyMerchants({
-        userId: this.$store.state.userInfo.id,
-        lng: this.y,
-        lat: this.x,
-        ...this.formData,
-      }).finally(() => this.$toast.clear())
-      this.enterpriseList = [...this.enterpriseList, ...res.body.nearbyMerchants]
-      this.canReload = res.body.nearbyMerchants.length === this.formData.pageSize
+      return res.body.count <= this.enterpriseList.length
     },
     toDetails(item) {
       uni.navigateTo({
@@ -147,7 +121,7 @@ export default {
                   success: (res) => {
                     this.y = res.longitude
                     this.x = res.latitude
-                    this.getData()
+                    this.reload()
                   },
                   fail: () => {
                     this.$toast.fail('失败')
@@ -194,7 +168,7 @@ export default {
                 success: (res) => {
                   this.y = res.longitude
                   this.x = res.latitude
-                  this.getData()
+                  this.reload()
                 },
                 fail: () => {
                   this.$toast.fail('请勿频繁调用！')
@@ -209,7 +183,7 @@ export default {
     onChange(e) {
       this.active = e.detail.name
       this.formData.industryId = e.detail.name
-      this.getData()
+      this.reload()
     },
     filterForm() {
       this.showPopup = true
@@ -219,7 +193,7 @@ export default {
     },
     submit() {
       this.showPopup = false
-      this.getData()
+      this.reload()
     },
     onSearch(e) {
       this.formData.shopName = e.detail
@@ -229,11 +203,11 @@ export default {
 </script>
 
 <template>
-  <container classes="flex flex-col bg-neutral-100 text-sm">
+  <container classes="flex flex-col h-screen bg-neutral-100 text-sm overflow-hidden">
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
       <not-logged @login="getLocation()" />
     </view>
-    <view v-else class="w-full flex flex-col flex-1">
+    <view v-else class="w-full flex flex-col flex-1 overflow-hidden pb-50px">
       <view class="text-xs w-full">
         <van-tabs :active="active" :swipe-threshold="4" color="#6FA7FF" @change="onChange">
           <van-tab v-for="item in dictItemList" :key="item.id" :title="item.name" :name="item.id" />
@@ -244,17 +218,19 @@ export default {
           </template>
         </van-tabs>
       </view>
-      <view v-if="showEmpty" class="w-full flex-1">
-        <van-empty description="暂无数据" />
-      </view>
-      <view v-else class="w-full h-full">
-        <view class="flex h-full flex-col p-2 box-border">
+      <vc-list
+        ref="list"
+        load-more
+        pull-refresh
+        @refresh="loadData"
+        @load="loadData"
+      >
+        <view class="flex flex-col p-2 box-border">
           <view v-for="(item, index) in enterpriseList" :key="index" class="w-full mb-2" @click="toDetails(item)">
             <shop-item :item="item" />
           </view>
-          <scroll-btm :can-reload="canReload" />
         </view>
-      </view>
+      </vc-list>
     </view>
 
     <view class="fixed bottom-4 right-4">

@@ -62,16 +62,20 @@ export default {
 
       this.reset()
       this.refreshStatus = REFRESH_STATUS.LOADING
+      this.status = STATUS.LOADING
       this.$emit('refresh', {
         page: this.page,
         next: () => {
           this.refreshStatus = REFRESH_STATUS.INACTIVE
+          this.status = STATUS.INACTIVE
         },
         done: () => {
           this.refreshStatus = REFRESH_STATUS.DONE
+          this.status = STATUS.DONE
         },
         fail: (err) => {
           this.refreshStatus = REFRESH_STATUS.ERROR
+          this.status = STATUS.ERROR
           return Promise.reject(err)
         },
       })

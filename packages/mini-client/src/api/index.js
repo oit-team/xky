@@ -38,6 +38,7 @@ axiosInstance.interceptors.response.use((response) => {
     error,
     url: error?.config?.url,
     message: error?.errMsg,
+    status: error?.statusCode,
   })
 })
 
@@ -79,11 +80,13 @@ wx.onUnhandledRejection(({ reason }) => {
     if (reason.resolved)
       return
 
-    const httpStatusCode = reason.error?.statusCode
+    const httpStatusCode = reason.status
     let msg = reason.message
 
     if (httpStatusCode > 500)
       msg = '服务器出错\n请稍后重试'
+    else if (httpStatusCode === 403)
+      uni.redirectTo('/pages/login/login')
 
     // 弹出提示
     Toast.fail(msg)
