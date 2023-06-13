@@ -1,6 +1,6 @@
 <script>
 import { addServiceOrder, getServiceInfoDetail } from '@/api/shop'
-import { wxPayment } from '@/utils/helper'
+import { wxPayment } from '@/utils/actions'
 export default {
   components: {
   },
@@ -62,7 +62,7 @@ export default {
       await this.$dialog.confirm({ title: '提示', message: '确定下单吗？', zIndex: 101 })
 
       this.show = false
-      await addServiceOrder({
+      const res = await addServiceOrder({
         serviceId: this.serviceInfo.id,
         userName: this.$store.state.userInfo.weChatName,
         telephone: this.phone,
@@ -70,17 +70,22 @@ export default {
         appointmentTime: this.date,
       })
 
-      uni.navigateBack()
-      // await wxPayment({
-      //   nonceStr: res.body.nonceStr,
-      //   prepayid: res.body.prepayId,
-      //   timeStamp: res.body.timeStamp,
-      //   paySign: res.body.sign,
-      // })
-      //   .catch((err) => {
-      //     uni.navigateTo(`/pages/order-detail/index?orderNo=${res.body.orderNo}`)
-      //     throw err
-      //   })
+      this.$toast.loading({
+        message: '请求支付中...',
+        duration: 0,
+        forbidClick: true,
+      })
+      await wxPayment({
+        nonceStr: res.body.nonceStr,
+        prepayid: res.body.prepayId,
+        timeStamp: res.body.timeStamp,
+        paySign: res.body.sign,
+      }).finally(() => {
+        this.$toast.clear()
+        uni.redirectTo({
+          url: `/pages/service/orderDetail?id=${res.body.id}`,
+        })
+      })
     },
   },
 }
