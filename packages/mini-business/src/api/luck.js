@@ -170,3 +170,21 @@ export function getActivityProcureOrderById(params) {
 export function addActivityOrderConfirm(params) {
   return post('/jackpot/activity/addActivityOrderConfirm', params)
 }
+
+/**
+ * 微信支付
+ * @param {*} params
+ * @returns
+ */
+export function wxPay(params) {
+  return post('/system/pay/wxPay', params)
+}
+
+/**
+ * 获取用户唯一标识
+ * @param {*} params
+ * @returns
+ */
+export function getUserOpenId(params) {
+  return post('/system/user/getUserOpenId', params)
+}

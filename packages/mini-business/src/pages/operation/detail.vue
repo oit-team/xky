@@ -1,6 +1,7 @@
 <script>
 import cardItem from './components/cardItem.vue'
-import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList, getActivityOrderList } from '@/api/luck'
+import { addActivityOrder, addParticipateActivity, getActivityById, getActivityJackpotList, getActivityOrderList, getUserOpenId, wxPay } from '@/api/luck'
+import { unwrapPromise, wxPayment } from '@/utils/helper'
 
 export default {
   components: {
@@ -51,6 +52,8 @@ export default {
     orderList: [],
     orderEmpty: true,
     canReloadOrder: true,
+    payType: 2,
+    showLog: false,
   }),
   computed: {
     total() {
@@ -101,6 +104,7 @@ export default {
     }
   },
   methods: {
+    wxPayment,
     // 活动详情
     async getData() {
       this.$toast.loading({
@@ -213,7 +217,7 @@ export default {
     },
     // 删除选中奖券
     delSingle(item) {
-      this.$delete(this.selectCards, item.jackpotId)
+      this.$delete(this.selectCards, item)
     },
     checkSelected(item) {
       return !!this.selectCards[item.jackpotId]
@@ -230,27 +234,47 @@ export default {
         this.show = true
     },
     // 活动奖池下单
-    onsubmit() {
+    async onsubmit() {
       if (this.total === 0)
         return this.$toast.fail('您还未选择奖券')
-      this.$dialog.confirm({
-        title: '提示',
-        message: '确定添加奖券吗？',
-      }).then(async () => {
-        const list = Object.values(this.selectCards)
-        await addActivityOrder({
-          jackpots: list.map(item => ({
-            jackpotId: item.jackpotId,
-            jackpotNumber: item.stepper,
-          })),
-          payType: 2, // 支付方式
-          orderTotalPrice: this.totalPrice,
-        })
-        this.$toast.success('成功')
-        this.total = 0
-        this.selectCards = {}
-        this.getActivity()
+      // await this.$dialog.confirm({
+      //   title: '提示',
+      //   message: '确定购买吗？',
+      // })
+      const list = Object.values(this.selectCards)
+      await this.$store.dispatch('getOpenId')
+
+      const { body } = await addActivityOrder({
+        jackpots: list.map(item => ({
+          jackpotId: item.jackpotId,
+          jackpotNumber: item.stepper,
+        })),
+        payType: this.payType, // 支付方式
+        orderTotalPrice: this.totalPrice,
+        activityId: this.activityId,
+        openId: this.$store.state.openId,
       })
+
+      const pay = await wxPay({
+        orderNo: body.orderNo,
+        stylePrice: body.stylePrice,
+        notifyUrl: body.notifyUrl,
+        openId: this.$store.state.openId,
+        accountType: body.accountType,
+      })
+      await this.wxPayment({
+        nonceStr: pay.body.nonceStr,
+        prepayid: pay.body.prepayId,
+        timeStamp: pay.body.timeStamp,
+        paySign: pay.body.sign,
+      })
+      this.$toast.success('成功')
+      this.total = 0
+      this.selectCards = {}
+      this.getActivity()
+    },
+    payTypeChange(e) {
+      this.payType = $event.detail
     },
   },
 }
@@ -347,7 +371,7 @@ export default {
                 <span class="mr-2">已选：{{ total }}</span>
                 <span v-if="total > 0">总价：￥{{ totalPrice }}</span>
               </view>
-              <van-button class="py-2" size="small" type="info" round @click="onsubmit()">
+              <van-button class="py-2" size="small" type="info" round @click="showLog = true">
                 确认购买
               </van-button>
             </view>
@@ -431,36 +455,67 @@ export default {
       @click-overlay="show = false"
     >
       <view class="overflow-y-auto h-full">
-        <view class="grid grid-cols-3 gap-3 p-3">
+        <view class="grid grid-cols-1 gap-2 p-2 box-border">
           <view
             v-for="item of selectCards"
             :key="item.jackpotId"
-            class="p-1 box-border relative rounded"
+            class="box-border relative rounded"
           >
             <view class="pop-item__del" @click="delSingle(item)">
               <van-icon name="cross" color="#fff" size="14" />
             </view>
+            <card-item :item="item">
+              <template #price>
+                <view>
+                  ￥{{ item.jackpotBuyPrice || '0' }}
+                </view>
+              </template>
+              <view class="w-full flex justify-center">
+                <van-stepper
+                  :value="item.stepper"
+                  integer
+                  min="1"
+                  :max="item.jackpotInventory"
+                  button-size="30px"
+                  @change="($event) => stepperChange($event, item.jackpotId)"
+                />
+              </view>
+            </card-item>
+            <!--
             <van-image
               width="110px"
               height="110px"
               :src="item.impUrl"
               fit="contain"
-            />
-            <view class="w-full flex justify-center">
-              <van-stepper
-                :value="item.stepper"
-                integer
-                min="1"
-                :max="item.jackpotInventory"
-                input-width="45px"
-                button-size="25px"
-                @change="($event) => stepperChange($event, item.jackpotId)"
-              />
-            </view>
+            /> -->
           </view>
         </view>
       </view>
     </van-popup>
+
+    <van-dialog
+      title="提示"
+      :show="showLog"
+      use-slot
+      show-cancel-button
+      @confirm="onsubmit()"
+      @close="showLog = false"
+    >
+      <view class="w-full p-4 box-border text-sm">
+        <view class="mb-2">
+          请选择支付方式
+        </view>
+        <van-radio-group :value="payType" class="ml-2" @change="payType = $event.detail">
+          <van-radio :name="2" custom-class="margin-bottom: 2px; margin-left: 2px;">
+            积分支付
+          </van-radio>
+          <view class="h-2" />
+          <van-radio :name="3" custom-class="margin-bottom: 2px; margin-left: 2px;">
+            微信支付
+          </van-radio>
+        </van-radio-group>
+      </view>
+    </van-dialog>
   </container>
 </template>
 
@@ -470,8 +525,8 @@ export default {
 }
 .pop-item__del {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 8px;
+  left: 2px;
   width: 18px;
   height: 18px;
   background-color: red;
