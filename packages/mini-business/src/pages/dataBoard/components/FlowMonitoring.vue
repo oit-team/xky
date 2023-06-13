@@ -34,7 +34,7 @@ export default {
         series: [
           {
             name: '流量',
-            data: res.body.yList,
+            data: res.body.yList.reverse(),
           },
         ],
       }
