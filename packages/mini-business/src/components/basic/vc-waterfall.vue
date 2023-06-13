@@ -37,7 +37,7 @@ export default {
       class="vc-waterfall-columns"
       :style="{ gap }"
     >
-      <div v-for="item of group" :key="getKey(item)" class="vc-waterfall-item">
+      <div v-for="item of group" :key="getKey(item)" class="vc-waterfall-item" @click="$emit('click-item', { item })">
         <slot :item="item" />
       </div>
     </div>

@@ -30,11 +30,11 @@ export default {
       this.today = res.body.today
       this.yestDay = res.body.yestDay
       this.chartData = {
-        categories: res.body.xList,
+        categories: res.body.xList.reverse(),
         series: [
           {
             name: '流量',
-            data: res.body.yList,
+            data: res.body.yList.reverse(),
           },
         ],
       }

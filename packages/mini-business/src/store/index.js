@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { getTokenUser, userLogin } from '../api/account'
 import { clearToken, setToken } from '../utils/token'
+import { unwrapPromise } from '@/utils/helper'
+import { getUserOpenId } from '@/api/luck'
+import Toast from '@/wxcomponents/vant/toast/toast'
 
 Vue.use(Vuex)
 
@@ -13,6 +16,7 @@ export default new Vuex.Store({
   state: {
     userInfo: {},
     userPromise: null,
+    openId: null,
   },
 
   getters: {
@@ -41,6 +45,25 @@ export default new Vuex.Store({
         clearToken()
         throw err
       }
+    },
+    async getOpenId(ctx) {
+      // 用户授权后拿用户信息  获取用户唯一Id
+      const loginPromise = unwrapPromise(uni.login({ provider: 'weixin' }))
+      const { encryptedData, iv } = await unwrapPromise(uni.getUserProfile({
+        desc: '登录小程序',
+        lang: 'zh_CN',
+      })).catch((err) => {
+        Toast.fail('取消授权')
+        throw err
+      })
+      const { code } = await loginPromise
+
+      const res = await getUserOpenId({
+        encryptedData,
+        iv,
+        jsCode: code,
+      })
+      ctx.state.openId = res.body.resultList.openId
     },
     // 更新用户信息
     async updateUserInfo(ctx) {

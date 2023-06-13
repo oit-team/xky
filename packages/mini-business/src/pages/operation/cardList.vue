@@ -16,9 +16,6 @@ export default {
     showEmpty: false,
     styleEmpty: false,
     clickConfirm: false,
-    defaultDate: [dayjs().subtract(6, 'month').toDate(), new Date()], // 默认开始时间为半年前
-    minDate: dayjs().subtract(1, 'year').toDate(), // 日历可选当前时间前后一年
-    maxDate: dayjs().add(1, 'year').toDate(),
     formData: {
       pageNum: 1,
       pageSize: 20,

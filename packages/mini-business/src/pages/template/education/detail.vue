@@ -4,6 +4,8 @@ import { getVideoFrame, isVideo, previewImg } from '@/utils/helper'
 
 export default {
   mixins: [product],
+  onShow() {
+  },
   methods: {
     previewImg,
     isVideo,
@@ -12,6 +14,7 @@ export default {
       return this.isVideo(item) ? this.getVideoFrame(item) : item
     },
     transformImageList(list) {
+      console.log(list)
       return list?.map((item) => {
         return {
           type: this.isVideo(item) ? 'video' : 'image',
@@ -19,6 +22,12 @@ export default {
           url: item,
         }
       })
+    },
+    preview({ item }) {
+      this.previewImg([item])
+    },
+    loge({ item }) {
+      console.log(item)
     },
   },
 }
@@ -85,11 +94,11 @@ export default {
           </div>
         </van-tab>
         <van-tab title="案例与课程">
-          <div class="p-3">
-            <vc-waterfall :data="data.detailsImgList" gap="12px">
+          <div v-if="data.detailsImgList" class="p-3">
+            <vc-waterfall :data="data.detailsImgList" gap="12px" @click-item="preview">
               <template #default="{ item }">
                 <div class="bg-gray-50 rounded-lg overflow-hidden flex">
-                  <image :src="item" class="w-full" mode="widthFix" @click="previewImg(data.detailsImgList)" />
+                  <image :src="item" class="w-full" mode="widthFix" />
                 </div>
               </template>
             </vc-waterfall>
@@ -99,9 +108,12 @@ export default {
           <div class="p-3">
             <vc-waterfall :data="transformImageList(data.videoList)" item-key="url" gap="12px">
               <template #default="{ item }">
-                <div class="bg-gray-50 rounded-lg overflow-hidden flex">
-                  <image :src="item.img" mode="widthFix" class="w-full" />
-                </div>
+                {{ { item } }}
+                <!-- <div class="bg-gray-50 rounded-lg overflow-hidden flex" @click-item="loge">
+                  {{ JSON.stringify(item) }} -->
+                <!-- <image :src="item.image" mode="widthFix" />
+                  <video :src="item.url" class="w-full" /> -->
+                <!-- </div> -->
               </template>
             </vc-waterfall>
           </div>
