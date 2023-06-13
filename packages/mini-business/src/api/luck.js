@@ -158,8 +158,8 @@ export function getActivityOrderList(params) {
  * @param {*} params
  * @returns
  */
-export function getActivitySupplierOrderById(params) {
-  return post('/jackpot/activity/getActivitySupplierOrderById', params)
+export function getActivityProcureOrderById(params) {
+  return post('/jackpot/activity/getActivityProcureOrderById', params)
 }
 
 /**

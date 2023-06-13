@@ -1,5 +1,5 @@
 <script>
-import { addActivityOrderConfirm, getActivitySupplierOrderById } from '@/api/luck'
+import { addActivityOrderConfirm, getActivityProcureOrderById } from '@/api/luck'
 
 export default {
   data: () => ({
@@ -19,7 +19,7 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      const { body } = await getActivitySupplierOrderById({
+      const { body } = await getActivityProcureOrderById({
         activityOrderId: id,
       }).finally(() => this.$toast.clear())
       this.info = body
@@ -98,7 +98,7 @@ export default {
               </view>
             </view>
             <view>
-              {{ item.periodValidity || '0' }}
+              有效期：{{ item.periodValidity || '0' }}
             </view>
           </view>
         </view>
