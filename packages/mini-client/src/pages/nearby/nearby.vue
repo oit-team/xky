@@ -240,7 +240,7 @@ export default {
 
     <view class="fixed bottom-4 right-4">
       <button class="bg-[#1296db] w-8 h-8 backTop rounded-1/2 flex place-content-center" open-type="getUserInfo" @tap="getLocation()">
-        <van-icon name="aim" color="#fff" />
+        <van-icon name="aim" color="#fff" size="20" />
       </button>
     </view>
 
