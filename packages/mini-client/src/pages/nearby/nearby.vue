@@ -61,7 +61,6 @@ export default {
 
     await this.$store.state.userPromise
     await this.getDictItemList()
-    await this.getLocation()
   },
   methods: {
     convertImageSize,
@@ -82,10 +81,13 @@ export default {
       this.dictItemList.forEach((item) => {
         item.url = 'https://picsum.photos/200/200'
       })
+      // this.getLocation()
     },
     async getData(pageNum = 1) {
       if (pageNum === 1)
         this.enterpriseList = []
+      // if (this.y === 0 && this.x === 0)
+      //   return
 
       const res = await getNearbyMerchants({
         userId: this.$store.state.userInfo.id,
@@ -109,8 +111,10 @@ export default {
       // 获取用户是否开启 授权获取当前的地理位置、速度的权限。
       uni.getSetting({
         success: (res) => {
+          console.log(res)
           // 如果没有授权
           if (!res.authSetting['scope.userFuzzyLocation']) {
+            console.log(888)
             // 则拉起授权窗口
             uni.authorize({
               scope: 'scope.userFuzzyLocation',
@@ -129,28 +133,23 @@ export default {
                 })
               },
               fail: () => {
-                // 点击了拒绝授权后--就一直会进入失败回调函数--此时就可以在这里重新拉起授权窗口
-                // console.log('拒绝授权', error)
-
                 this.$dialog.confirm({
                   title: '提示',
-                  message: '若点击不授权，将无法使用位置功能',
+                  message: '点击授权查看当前位置店铺信息',
                   confirmButtonText: '授权',
                   cancelButtonText: '拒绝',
                   confirmButtonColor: '#000',
                   cancelButtonColor: '#f94218',
                 })
                   .then((res) => {
-                    // 选择弹框内授权
                     uni.openSetting({
                       success(res) {
-                        // console.log(res.authSetting)
+                        console.log(res.authSetting)
                       },
                     })
                   })
                   .catch(() => {
-                    // 选择弹框内 不授权
-                    this.$toast.fail('用户点击不授权')
+                    this.$toast.fail('拒绝授权，无法获取附近信息')
                   })
               },
             })
@@ -198,6 +197,12 @@ export default {
     onSearch(e) {
       this.formData.shopName = e.detail
     },
+    login() {
+      this.getDictItemList()
+      setTimeout(() => {
+        this.getLocation()
+      }, 400)
+    },
   },
 }
 </script>
@@ -205,11 +210,11 @@ export default {
 <template>
   <container classes="flex flex-col h-screen bg-neutral-100 text-sm overflow-hidden">
     <view v-if="!logged" class="flex-1 rounded-xl w-full">
-      <not-logged @login="getLocation()" />
+      <not-logged @login="login()" />
     </view>
     <view v-else class="w-full flex flex-col flex-1 overflow-hidden pb-50px">
       <view class="text-xs w-full">
-        <van-tabs :active="active" :swipe-threshold="4" color="#6FA7FF" @change="onChange">
+        <van-tabs :active="active" :swipe-threshold="3" color="#6FA7FF" @change="onChange">
           <van-tab v-for="item in dictItemList" :key="item.id" :title="item.name" :name="item.id" />
           <template #nav-right>
             <view class="w-10 bg-[#f7f8fa] flex justify-center items-centert" @click="filterForm()">
@@ -234,9 +239,9 @@ export default {
     </view>
 
     <view class="fixed bottom-4 right-4">
-      <view class="bg-[#1296db] w-8 h-8 backTop rounded-1/2 flex place-content-center" @click="getLocation()">
+      <button class="bg-[#1296db] w-8 h-8 backTop rounded-1/2 flex place-content-center" open-type="getUserInfo" @tap="getLocation()">
         <van-icon name="aim" color="#fff" />
-      </view>
+      </button>
     </view>
 
     <van-popup
