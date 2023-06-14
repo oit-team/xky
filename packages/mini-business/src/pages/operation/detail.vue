@@ -218,6 +218,8 @@ export default {
     // 删除选中奖券
     delSingle(item) {
       this.$delete(this.selectCards, item)
+      if (this.total === 0)
+        this.show = false
     },
     checkSelected(item) {
       return !!this.selectCards[item.jackpotId]
@@ -243,6 +245,11 @@ export default {
       // })
       const list = Object.values(this.selectCards)
       await this.$store.dispatch('getOpenId')
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
 
       const { body } = await addActivityOrder({
         jackpots: list.map(item => ({
@@ -253,7 +260,7 @@ export default {
         orderTotalPrice: this.totalPrice,
         activityId: this.activityId,
         openId: this.$store.state.openId,
-      })
+      }).finally(() => this.$toast.clear())
 
       const pay = await wxPay({
         orderNo: body.orderNo,
@@ -261,7 +268,7 @@ export default {
         notifyUrl: body.notifyUrl,
         openId: this.$store.state.openId,
         accountType: body.accountType,
-      })
+      }).finally(() => this.$toast.clear())
       await this.wxPayment({
         nonceStr: pay.body.nonceStr,
         prepayid: pay.body.prepayId,
@@ -481,13 +488,6 @@ export default {
                 />
               </view>
             </card-item>
-            <!--
-            <van-image
-              width="110px"
-              height="110px"
-              :src="item.impUrl"
-              fit="contain"
-            /> -->
           </view>
         </view>
       </view>
@@ -501,19 +501,30 @@ export default {
       @confirm="onsubmit()"
       @close="showLog = false"
     >
-      <view class="w-full p-4 box-border text-sm">
-        <view class="mb-2">
-          请选择支付方式
+      <view class="text-sm">
+        <view class="w-full p-4 box-border">
+          <view class="">
+            支付方式
+          </view>
+          <van-radio-group :value="payType" class="ml-2" @change="payType = $event.detail">
+            <van-radio :name="2" custom-class="margin-bottom: 2px; margin-left: 2px;" checked-color="#6FA7FF">
+              <view class="flex items-center font-600">
+                <van-icon name="gold-coin" size="24" color="#fbbf24" class="mr-2" />
+                积分支付
+              </view>
+            </van-radio>
+            <view class="h-2" />
+            <van-radio :name="3" custom-class="margin-bottom: 2px; margin-left: 2px;" checked-color="#6FA7FF">
+              <view class="flex items-center font-600">
+                <van-icon name="wechat-pay" size="24" color="#07c160" class="mr-2" />
+                微信支付
+              </view>
+            </van-radio>
+          </van-radio-group>
         </view>
-        <van-radio-group :value="payType" class="ml-2" @change="payType = $event.detail">
-          <van-radio :name="2" custom-class="margin-bottom: 2px; margin-left: 2px;">
-            积分支付
-          </van-radio>
-          <view class="h-2" />
-          <van-radio :name="3" custom-class="margin-bottom: 2px; margin-left: 2px;">
-            微信支付
-          </van-radio>
-        </van-radio-group>
+        <view class="p-4">
+          支付金额： <span class="text-red-500 text-base"><span class="text-xs">￥</span>{{ totalPrice }}</span>
+        </view>
       </view>
     </van-dialog>
   </container>
