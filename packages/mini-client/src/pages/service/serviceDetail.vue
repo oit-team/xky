@@ -62,12 +62,16 @@ export default {
       await this.$dialog.confirm({ title: '提示', message: '确定下单吗？', zIndex: 101 })
 
       this.show = false
-      const res = await addServiceOrder({
+      const orderRes = await addServiceOrder({
         serviceId: this.serviceInfo.id,
         userName: this.$store.state.userInfo.weChatName,
         telephone: this.phone,
         remarks: this.remarks,
         appointmentTime: this.date,
+      })
+
+      const res = await this.$post('/system/serviceOrder/payServiceOrder', {
+        id: orderRes.body.id,
       })
 
       this.$toast.loading({
