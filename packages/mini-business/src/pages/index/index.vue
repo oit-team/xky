@@ -337,22 +337,23 @@ export default {
             </view>
           </template>
         </config>
+        <view v-show="showMore" class="fixed bottom-16 right-4 p-2 rounded-full bg-gray-100 z-101 leading-4 text-center shadow">
+          <view class="">
+            <van-transition :show="show" custom-class="block" name="fade-up">
+              <view class="grid gird-cols-1 gap-3 mb-2">
+                <van-icon name="exchange" color="#6FA7FF" size="24px" @click="showPicker = true" />
+                <van-divider custom-style="margin: 0;" />
+                <van-icon name="replay" color="#6FA7FF" size="24px" @click="getDevState(true)" />
+                <van-divider custom-style="margin: 0;" />
+              </view>
+            </van-transition>
+            <van-icon :name="show ? 'arrow-up' : 'arrow-down'" color="#6FA7FF" size="24px" @click="show = !show" />
+          </view>
+        </view>
       </view>
 
       <view v-if="!logged" class="flex-1 rounded-xl w-full">
         <not-logged />
-      </view>
-    </view>
-
-    <view v-show="showMore" class="fixed bottom-16 right-4 p-2 rounded-full bg-gray-100 z-101 leading-4 text-center shadow">
-      <view class="">
-        <van-transition :show="show" custom-class="block" name="fade-up">
-          <view class="grid gird-cols-1 gap-2 mb-2">
-            <van-icon name="exchange" color="#6FA7FF" size="28px" @click="showPicker = true" />
-            <van-icon name="replay" color="#6FA7FF" size="28px" @click="getDevState(true)" />
-          </view>
-        </van-transition>
-        <van-icon :name="show ? 'arrow-up' : 'arrow-down'" color="#6FA7FF" size="30px" @click="show = !show" />
       </view>
     </view>
 
